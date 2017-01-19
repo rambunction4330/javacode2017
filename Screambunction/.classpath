@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="output" path="bin"/>
+	<classpathentry kind="src" path="src/main/java"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER" exported="true"/>
+	<classpathentry sourcepath="C:/Users/Me/.gradle/caches/modules-2/files-2.1/jaci.openrio.toast/Toast/2.4.14/9a519498394b029c7746f5bed9ae50b7a12f8b9b/Toast-2.4.14-sources.jar" kind="lib" path="C:/Users/Me/.gradle/caches/modules-2/files-2.1/jaci.openrio.toast/Toast/2.4.14/ebc3193c12f174548dbf901e56a1c943e26a096d/Toast-2.4.14.jar" exported="true"/>
+</classpath>

@@ -6,6 +6,8 @@ import jaci.openrio.toast.lib.module.IterativeModule;
 public class RobotModule extends IterativeModule {
 
     public static Logger logger;
+    
+    SmartDashboard dash;
 
     @Override
     public String getModuleName() {
@@ -21,6 +23,8 @@ public class RobotModule extends IterativeModule {
     public void robotInit() {
         logger = new Logger("Screambunction", Logger.ATTR_DEFAULT);
         //TODO: Module Init
+        
+        dash = new SmartDashboard();
     }
     
     @Override

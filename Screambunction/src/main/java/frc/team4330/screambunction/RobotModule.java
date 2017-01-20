@@ -22,4 +22,24 @@ public class RobotModule extends IterativeModule {
         logger = new Logger("Screambunction", Logger.ATTR_DEFAULT);
         //TODO: Module Init
     }
+    
+    @Override
+    public void autonomousInit() {
+    	
+    }
+    
+    @Override
+    public void autonomousPeriodic() {
+    	
+    }
+    
+    @Override
+    public void teleopInit() {
+    	
+    }
+    
+    @Override
+    public void teleopPeriodic() {
+    	
+    }
 }

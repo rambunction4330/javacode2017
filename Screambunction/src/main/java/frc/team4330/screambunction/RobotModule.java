@@ -2,6 +2,7 @@ package frc.team4330.screambunction;
 
 import jaci.openrio.toast.lib.log.Logger;
 import jaci.openrio.toast.lib.module.IterativeModule;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class RobotModule extends IterativeModule {
 

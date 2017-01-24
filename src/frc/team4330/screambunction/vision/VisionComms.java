@@ -6,11 +6,14 @@ import java.io.InputStream;
 import java.io.LineNumberReader;
 import java.io.OutputStream;
 import java.io.StringReader;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
 
 public class VisionComms {
+	
+	public static int CONNECTION_TIMEOUT_SEC = 10;
 	
 	// TODO update after know the mDNS name of the vision processing host
 	private String host = "?.local";
@@ -31,14 +34,42 @@ public class VisionComms {
 		this.port = port;
 	}
 	
-	public void startUp() throws IOException {
-		socket = new Socket(host, port);
-		is = socket.getInputStream();
-		os = socket.getOutputStream();
-		active = true;
+	public synchronized void startUp() throws IOException {
+		
+		System.out.println("Opening connection to vision board on " + host + ":" + port + 
+				" with " + CONNECTION_TIMEOUT_SEC + " second timeout");
+		
+		socket = new Socket();
+		
+		// we don't want to block the calling thread for long time in case the
+		// connection doesn't work immediately, so try to connect to the vision board 
+		// on another thread
+		Thread connectThread = new Thread() {
+
+			@Override
+			public void run() {
+				try {
+					// connect is a blocking call which will throw a SocketException if the socket
+					// is asked to close while blocked, so this thread will die
+					socket.connect(new InetSocketAddress(host,port), CONNECTION_TIMEOUT_SEC * 1000); 
+					is = socket.getInputStream();
+					os = socket.getOutputStream();
+					active = true;
+					System.out.println("Successfully connected to vision board");
+				} catch ( Exception e ) {
+					System.err.println("Error connecting to vision board on startup. " + e.getMessage());
+				}
+			}
+			
+		};
+		
+		connectThread.setDaemon(true);
+		connectThread.start();
+
 	}
 	
-	public void shutDown() throws IOException {
+	public synchronized void shutDown() throws IOException {
+		System.out.println("Disconnecting from vision board");
 		active = false;
 		
 		if ( os != null ) {
@@ -51,18 +82,20 @@ public class VisionComms {
 		}
 		if ( socket != null ) {
 			socket.close();
+			socket = null;
 		}
+		System.out.println("Successfully disconnected from vision board");
 	}
 
-	public Map<String, String> retrieveData() {
+	public synchronized Map<String, String> retrieveData() {
 		if ( !active ) {
-			throw new RuntimeException("Please call the " + this.getClass().getName() + ".startUp() method before calling retrieveData()");
+			// the client may still be trying to connect
+			return new HashMap<String,String>();
 		}
 		try {
 			return getMessages(os, is);
 		} catch ( Exception e ) {
-			// TODO find out how to handle exceptions on robot
-			System.err.println("Error communicating to raspberry pi. " + e.getMessage());
+			System.err.println("Error getting messages from the vision board. " + e.getMessage());
 			return new HashMap<String, String>();
 		}
 	}

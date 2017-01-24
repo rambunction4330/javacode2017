@@ -1,10 +1,12 @@
 package frc.team4330.screambunction.vision;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.util.Date;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 /**
@@ -12,6 +14,21 @@ import org.junit.Test;
  *
  */
 public class VisionCommsTest {
+	
+	public static void main ( String[] args ) {
+		try {
+			VisionComms comms = new VisionComms("10.10.20.61", 9001);
+			comms.startUp();
+			while ( true ) {
+				Map<String,String> messages = comms.retrieveData();
+				if ( messages.size() > 0 ) {
+					System.out.println(new Date() + " - x=" + messages.get("rb"));
+				}
+			}
+		} catch ( Exception e ) {
+			e.printStackTrace();
+		}
+	}
 	
 	@Test
 	public void testGetMessages0() throws Exception {

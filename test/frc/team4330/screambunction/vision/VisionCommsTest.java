@@ -9,10 +9,6 @@ import java.util.Map;
 
 import org.junit.Test;
 
-/**
- * @author rltiel
- *
- */
 public class VisionCommsTest {
 	
 	public static void main ( String[] args ) {

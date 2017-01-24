@@ -11,13 +11,21 @@ import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * The vision board has a custom TCP/IP protocol to indicate where the target is located.
+ * The client sends a "DATA\n" request to ask for target data.  The server will respond
+ * with "key1=value\nkey2=value\n\n" where an empty line indicates the end of the response.
+ * If the server has no target data, it will respond with "\n" ( an empty line only ). 
+ */
 public class VisionComms {
 	
-	public static int CONNECTION_TIMEOUT_SEC = 10;
+	public static final int CONNECTION_TIMEOUT_SEC = 10;
+	public static final String DEFAULT_VISION_BOARD_HOST = "?.local";
+	public static final int DEFAULT_VISION_BOARD_PORT = 9001;
 	
 	// TODO update after know the mDNS name of the vision processing host
-	private String host = "?.local";
-	private int port = 9001;
+	private String host = DEFAULT_VISION_BOARD_HOST;
+	private int port = DEFAULT_VISION_BOARD_PORT;
 	
 	private Socket socket;
 	private InputStream is;
@@ -26,9 +34,21 @@ public class VisionComms {
 	private static final byte[] GET_DATA_COMMAND = "DATA\n".getBytes();
 	private static final byte[] STOP_COMMAND = "STOP\n".getBytes();
 	
-	public static final String RELATIVE_BEARING = "rb";
-	public static final String VERTICAL_ANGLE = "nya";
+	public static final String KEY_RELATIVE_BEARING = "rb";
+	public static final String KEY_VERTICAL_ANGLE = "nya";
 	
+	/**
+	 * This constructor will use the default values for hostname and constructor
+	 */
+	public VisionComms() {
+		
+	}
+	
+	/**
+	 * Use this constructor to change the default values of hostname and constructor
+	 * @param host
+	 * @param port
+	 */
 	public VisionComms(String host, int port) {
 		this.host = host;
 		this.port = port;

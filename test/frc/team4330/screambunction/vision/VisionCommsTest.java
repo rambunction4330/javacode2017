@@ -13,13 +13,16 @@ public class VisionCommsTest {
 	
 	public static void main ( String[] args ) {
 		try {
-			VisionComms comms = new VisionComms("10.10.20.61", 9001);
+			VisionComms comms = new VisionComms("10.10.61.20", 9001);
 			comms.startUp();
 			while ( true ) {
 				Map<String,String> messages = comms.retrieveData();
 				if ( messages.size() > 0 ) {
 					System.out.println(new Date() + " - x=" + messages.get("rb"));
+				} else {
+					System.out.println(new Date() + " - No data"); 
 				}
+				Thread.sleep(50);
 			}
 		} catch ( Exception e ) {
 			e.printStackTrace();

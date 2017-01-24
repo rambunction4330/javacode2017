@@ -1,7 +1,5 @@
 package frc.team4330.screambunction.commands;
 
-import jaci.openrio.toast.lib.registry.Registrar;
-
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.SerialPort.Port;
@@ -15,8 +13,8 @@ public class Turn extends Command {
 	private boolean finished = false;
 	private double desHeading;
 
-	Talon left = Registrar.talon(3);
-	Talon right = Registrar.talon(4);
+	Talon left = new Talon(3);
+	Talon right = new Talon(4);
 
 
 	public Turn(double desHeading, Port port) {

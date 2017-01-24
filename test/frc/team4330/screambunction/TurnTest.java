@@ -4,13 +4,10 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
 import edu.wpi.first.wpilibj.SerialPort.Port;
 import frc.team4330.screambunction.commands.Turn;
-import frc.team4330.screambunction.testingutils.ToastRunner;
 
-@RunWith(ToastRunner.class)
 public class TurnTest {
     private Turn testObject;
     

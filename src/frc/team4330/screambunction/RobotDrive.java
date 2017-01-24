@@ -1,6 +1,5 @@
 package frc.team4330.screambunction;
 
-import jaci.openrio.toast.lib.registry.Registrar;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Spark;
 
@@ -11,10 +10,10 @@ public class RobotDrive {
 	private Spark backLeft;
 
 	public RobotDrive() {
-		frontRight = Registrar.spark(RobotMap.FRONT_RIGHT_PORT);
-		backRight = Registrar.spark(RobotMap.BACK_RIGHT_PORT);
-		frontLeft = Registrar.spark(RobotMap.FRONT_LEFT_PORT);
-		backLeft = Registrar.spark(RobotMap.BACK_LEFT_PORT);
+		frontRight = new Spark(RobotMap.FRONT_RIGHT_PORT);
+		backRight = new Spark(RobotMap.BACK_RIGHT_PORT);
+		frontLeft = new Spark(RobotMap.FRONT_LEFT_PORT);
+		backLeft = new Spark(RobotMap.BACK_LEFT_PORT);
 
 	}
 

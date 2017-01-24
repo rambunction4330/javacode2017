@@ -11,9 +11,8 @@ import edu.wpi.first.wpilibj.command.Command;
 
 public class Turn extends Command {
 	private AHRS gyro;
-	private double curHeading;
+	private double curHeading, desHeading;
 	private boolean finished = false;
-	private double desHeading;
 
 	Talon left = Registrar.talon(3);
 	Talon right = Registrar.talon(4);
@@ -56,11 +55,11 @@ public class Turn extends Command {
 	@Override
 	protected void end() {
 	}
-	
+
 	public double getLeftMotorSpeed() {
 		return left.get();
 	}
-	
+
 	public double getRightMotorSpeed() {
 		return right.get();
 	}

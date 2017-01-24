@@ -1,18 +1,20 @@
 package frc.team4330.screambunction;
 
+import org.usfirst.frc.team4330.robot.RobotDrive;
+import org.usfirst.frc.team4330.robot.RobotMap;
+
 import jaci.openrio.toast.lib.log.Logger;
 import jaci.openrio.toast.lib.module.IterativeModule;
-import jaci.openrio.toast.lib.registry.Registrar;
-import edu.wpi.first.wpilibj.Relay;
-import edu.wpi.first.wpilibj.Relay.Direction;
-import edu.wpi.first.wpilibj.Relay.Value;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class RobotModule extends IterativeModule {
 
 	public static Logger logger;
-	public Relay spiky;
 	SmartDashboard dash;
+	RobotDrive myRobot;
+
+	private Joystick leftj, rightj;
 
 	@Override
 	public String getModuleName() {
@@ -28,9 +30,10 @@ public class RobotModule extends IterativeModule {
 	public void robotInit() {
 		logger = new Logger("Screambunction", Logger.ATTR_DEFAULT);
 		//TODO: Module Init
-		spiky = Registrar.relay(0);
-		spiky.setDirection(Direction.kForward);
 		dash = new SmartDashboard();
+		myRobot = new RobotDrive();
+		leftj = new Joystick(RobotMap.LEFT_JOYSTICK_PORT);
+		rightj = new Joystick(RobotMap.RIGHT_JOYSTICK_PORT);
 	}
 
 	@Override
@@ -50,6 +53,6 @@ public class RobotModule extends IterativeModule {
 
 	@Override
 	public void teleopPeriodic() {
-		spiky.set(Value.kOn);
+		myRobot.tankDrive(leftj, rightj);
 	}
 }

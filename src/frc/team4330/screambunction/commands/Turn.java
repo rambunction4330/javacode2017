@@ -1,26 +1,21 @@
 package frc.team4330.screambunction.commands;
 
-import com.kauailabs.navx.frc.AHRS;
-
-import edu.wpi.first.wpilibj.SerialPort.Port;
-import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.command.Command;
-import frc.team4330.screambunction.utils.Registrar;
-
+import frc.team4330.screambunction.parts.HeadingProvider;
+import frc.team4330.screambunction.parts.TankDrive;
 
 public class Turn extends Command {
-	private AHRS gyro;
+
 	private double curHeading;
 	private boolean finished = false;
 	private double desHeading;
+	private HeadingProvider headingProvider;
+	private TankDrive tankDrive;
 
-	Talon left = Registrar.talon(3);
-	Talon right = Registrar.talon(4);
-
-
-	public Turn(double desHeading, Port port) {
+	public Turn(double desHeading, HeadingProvider headingProvider, TankDrive tankDrive ) {
 		this.desHeading = desHeading;
-		gyro = new AHRS(port);
+		this.headingProvider = headingProvider;
+		this.tankDrive = tankDrive;
 	}
 
 	/**
@@ -29,21 +24,19 @@ public class Turn extends Command {
 	 */
 	@Override
 	protected void initialize() {
-		curHeading = gyro.getAngle();
+		curHeading = headingProvider.getAngle();
 	}
 
 	@Override
 	public void execute() {
-		curHeading = gyro.getAngle();
+		curHeading = headingProvider.getAngle();
 
 		if (Math.abs(curHeading - desHeading) <= 5) {
 			finished = true;
 		} else if (desHeading - curHeading > 0) {
-			left.set(.5);
-			right.set(-.5);
+			tankDrive.setSpeed(0.5, -0.5);
 		} else {
-			left.set(-.5);
-			right.set(.5);
+			tankDrive.setSpeed(-0.5, 0.5);
 		}
 	}
 
@@ -54,14 +47,6 @@ public class Turn extends Command {
 
 	@Override
 	protected void end() {
-	}
-	
-	public double getLeftMotorSpeed() {
-		return left.get();
-	}
-	
-	public double getRightMotorSpeed() {
-		return right.get();
 	}
 
 	@Override

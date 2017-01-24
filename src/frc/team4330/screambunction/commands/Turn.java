@@ -5,6 +5,7 @@ import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.SerialPort.Port;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.command.Command;
+import frc.team4330.screambunction.utils.Registrar;
 
 
 public class Turn extends Command {
@@ -13,8 +14,8 @@ public class Turn extends Command {
 	private boolean finished = false;
 	private double desHeading;
 
-	Talon left = new Talon(3);
-	Talon right = new Talon(4);
+	Talon left = Registrar.talon(3);
+	Talon right = Registrar.talon(4);
 
 
 	public Turn(double desHeading, Port port) {

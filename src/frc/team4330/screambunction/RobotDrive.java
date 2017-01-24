@@ -2,18 +2,19 @@ package frc.team4330.screambunction;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Spark;
+import frc.team4330.screambunction.utils.Registrar;
 
 public class RobotDrive {
 	private Spark frontRight;
-	private Spark backRight;  // YEAH TOAST
+	private Spark backRight;
 	private Spark frontLeft;
 	private Spark backLeft;
 
 	public RobotDrive() {
-		frontRight = new Spark(RobotMap.FRONT_RIGHT_PORT);
-		backRight = new Spark(RobotMap.BACK_RIGHT_PORT);
-		frontLeft = new Spark(RobotMap.FRONT_LEFT_PORT);
-		backLeft = new Spark(RobotMap.BACK_LEFT_PORT);
+		frontRight = Registrar.spark(RobotMap.FRONT_RIGHT_PORT);
+		backRight = Registrar.spark(RobotMap.BACK_RIGHT_PORT);
+		frontLeft = Registrar.spark(RobotMap.FRONT_LEFT_PORT);
+		backLeft = Registrar.spark(RobotMap.BACK_LEFT_PORT);
 
 	}
 

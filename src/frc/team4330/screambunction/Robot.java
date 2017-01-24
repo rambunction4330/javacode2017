@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.Relay.Direction;
 import edu.wpi.first.wpilibj.Relay.Value;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.team4330.screambunction.utils.Registrar;
 
 public class Robot extends IterativeRobot {
 
@@ -15,7 +16,7 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void robotInit() {
 		//TODO: Module Init
-		spiky = new Relay(0);
+		spiky = Registrar.relay(0);
 		spiky.setDirection(Direction.kForward);
 		dash = new SmartDashboard();
 	}

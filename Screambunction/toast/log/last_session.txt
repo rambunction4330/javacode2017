@@ -1,0 +1,17 @@
+ ________    ______                 __   
+((       )  /_  __/___  ____ ______/ /_  
+||  o o  |   / / / __ \/ __ `/ ___/ __/  
+||   3   |  / / / /_/ / /_/ (__  ) /_    
+\\_______/ /_/  \____/\__,_/____/\__/    
+
+[21/01/17-02:42:37] [Toast] [Bootstrap] [INFO] Toast Version: 2.4.14
+[21/01/17-02:42:37] [Toast] [Bootstrap] [INFO] Toast Commit Hash: 2022e41
+[21/01/17-02:42:37] [Toast] [Core-Initialization] [INFO] Toast Started with Run Arguments: [-nogui, -sim, --color, -ide, eclipse]
+[21/01/17-02:42:37] [Toast] [Pre-Initialization] [INFO] Slicing Loaf...
+[21/01/17-02:42:37] [Toast] [Initialization] [INFO] Nuking Toast...
+platform: /Windows/amd64/
+[21/01/17-02:42:37] [Toast] [Pre-Start] [INFO] Buttering Bread...
+[21/01/17-02:42:37] [Toast] [Start] [INFO] Fabricating Sandwich...
+[21/01/17-02:42:37] [Toast] [Start] [INFO] Verdict: Hot, Hot, HOT!!
+[21/01/17-02:42:37] [Toast] [Main] [INFO] Total Initiation Time: 0.468 seconds
+[21/01/17-02:42:37] [Toast] [main] [INFO] Robot Shutting Down...

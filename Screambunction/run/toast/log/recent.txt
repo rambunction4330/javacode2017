@@ -1,0 +1,356 @@
+ ________    ______                 __   
+((       )  /_  __/___  ____ ______/ /_  
+||  o o  |   / / / __ \/ __ `/ ___/ __/  
+||   3   |  / / / /_/ / /_/ (__  ) /_    
+\\_______/ /_/  \____/\__,_/____/\__/    
+
+[21/01/17-11:54:17] [Toast] [Bootstrap] [INFO] Toast Version: 2.4.14
+[21/01/17-11:54:17] [Toast] [Bootstrap] [INFO] Toast Commit Hash: 2022e41
+[21/01/17-11:54:17] [Toast] [Core-Initialization] [INFO] Toast Started with Run Arguments: [-sim, --search, --no-color, -ide, ECLIPSE]
+[21/01/17-11:54:17] [Toast] [Pre-Initialization] [INFO] Slicing Loaf...
+[21/01/17-11:54:18] [Toast] [Initialization] [INFO] Nuking Toast...
+platform: /Windows/amd64/
+[21/01/17-11:54:19] [Toast] [Pre-Start] [INFO] Buttering Bread...
+ ________    ______                 __   
+((       )  /_  __/___  ____ ______/ /_  
+||  o o  |   / / / __ \/ __ `/ ___/ __/  
+||   3   |  / / / /_/ / /_/ (__  ) /_    
+\\_______/ /_/  \____/\__,_/____/\__/    
+
+[21/01/17-11:54:19] [Toast] [Bootstrap] [INFO] Toast Version: 2.4.14
+[21/01/17-11:54:19] [Toast] [Bootstrap] [INFO] Toast Commit Hash: 2022e41
+[21/01/17-11:54:19] [Toast] [Core-Initialization] [INFO] Toast Started with Run Arguments: [-nogui, -sim, --color, -ide, eclipse]
+[21/01/17-11:54:19] [Toast] [Pre-Initialization] [INFO] Slicing Loaf...
+[21/01/17-11:54:19] [Toast] [Pre-Initialization] [ERROR] Could not load Patch: edu.wpi.first.wpilibj.hal.JNIWrapper
+[21/01/17-11:54:19] [Toast] [Pre-Initialization] [ERROR] java.lang.reflect.InvocationTargetException
+	at sun.reflect.GeneratedMethodAccessor1.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:483)
+	at jaci.openrio.toast.core.loader.ClassPatcher.loadClass(ClassPatcher.java:52)
+	at jaci.openrio.toast.core.loader.ClassPatcher.identifyPatches(ClassPatcher.java:85)
+	at jaci.openrio.toast.core.ToastBootstrap.main(ToastBootstrap.java:249)
+	at frc.team4330.screambunction.testingutils.ToastRunner$1.run(ToastRunner.java:24)
+Caused by: java.lang.LinkageError: loader (instance of  sun/misc/Launcher$AppClassLoader): attempted  duplicate class definition for name: "edu/wpi/first/wpilibj/hal/JNIWrapper"
+	at java.lang.ClassLoader.defineClass1(Native Method)
+	at java.lang.ClassLoader.defineClass(ClassLoader.java:760)
+	at java.lang.ClassLoader.defineClass(ClassLoader.java:642)
+	... 7 more
+
+[21/01/17-11:54:19] [Toast] [Pre-Initialization] [ERROR] Could not load Patch: edu.wpi.first.wpilibj.RobotBase
+[21/01/17-11:54:19] [Toast] [Pre-Initialization] [ERROR] java.lang.reflect.InvocationTargetException
+	at sun.reflect.GeneratedMethodAccessor1.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:483)
+	at jaci.openrio.toast.core.loader.ClassPatcher.loadClass(ClassPatcher.java:52)
+	at jaci.openrio.toast.core.loader.ClassPatcher.identifyPatches(ClassPatcher.java:85)
+	at jaci.openrio.toast.core.ToastBootstrap.main(ToastBootstrap.java:249)
+	at frc.team4330.screambunction.testingutils.ToastRunner$1.run(ToastRunner.java:24)
+Caused by: java.lang.LinkageError: loader (instance of  sun/misc/Launcher$AppClassLoader): attempted  duplicate class definition for name: "edu/wpi/first/wpilibj/RobotBase"
+	at java.lang.ClassLoader.defineClass1(Native Method)
+	at java.lang.ClassLoader.defineClass(ClassLoader.java:760)
+	at java.lang.ClassLoader.defineClass(ClassLoader.java:642)
+	... 7 more
+
+[21/01/17-11:54:19] [Toast] [Pre-Initialization] [ERROR] Could not load Patch: edu.wpi.first.wpilibj.communication.FRCNetworkCommunicationsLibrary$tInstances
+[21/01/17-11:54:19] [Toast] [Pre-Initialization] [ERROR] java.lang.reflect.InvocationTargetException
+	at sun.reflect.GeneratedMethodAccessor1.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:483)
+	at jaci.openrio.toast.core.loader.ClassPatcher.loadClass(ClassPatcher.java:52)
+	at jaci.openrio.toast.core.loader.ClassPatcher.identifyPatches(ClassPatcher.java:85)
+	at jaci.openrio.toast.core.ToastBootstrap.main(ToastBootstrap.java:249)
+	at frc.team4330.screambunction.testingutils.ToastRunner$1.run(ToastRunner.java:24)
+Caused by: java.lang.LinkageError: loader (instance of  sun/misc/Launcher$AppClassLoader): attempted  duplicate class definition for name: "edu/wpi/first/wpilibj/communication/FRCNetworkCommunicationsLibrary$tInstances"
+	at java.lang.ClassLoader.defineClass1(Native Method)
+	at java.lang.ClassLoader.defineClass(ClassLoader.java:760)
+	at java.lang.ClassLoader.defineClass(ClassLoader.java:642)
+	... 7 more
+
+[21/01/17-11:54:19] [Toast] [Pre-Initialization] [ERROR] Could not load Patch: edu.wpi.first.wpilibj.communication.FRCNetworkCommunicationsLibrary$tModuleType
+[21/01/17-11:54:19] [Toast] [Pre-Initialization] [ERROR] java.lang.reflect.InvocationTargetException
+	at sun.reflect.GeneratedMethodAccessor1.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:483)
+	at jaci.openrio.toast.core.loader.ClassPatcher.loadClass(ClassPatcher.java:52)
+	at jaci.openrio.toast.core.loader.ClassPatcher.identifyPatches(ClassPatcher.java:85)
+	at jaci.openrio.toast.core.ToastBootstrap.main(ToastBootstrap.java:249)
+	at frc.team4330.screambunction.testingutils.ToastRunner$1.run(ToastRunner.java:24)
+Caused by: java.lang.LinkageError: loader (instance of  sun/misc/Launcher$AppClassLoader): attempted  duplicate class definition for name: "edu/wpi/first/wpilibj/communication/FRCNetworkCommunicationsLibrary$tModuleType"
+	at java.lang.ClassLoader.defineClass1(Native Method)
+	at java.lang.ClassLoader.defineClass(ClassLoader.java:760)
+	at java.lang.ClassLoader.defineClass(ClassLoader.java:642)
+	... 7 more
+
+[21/01/17-11:54:19] [Toast] [Pre-Initialization] [ERROR] Could not load Patch: edu.wpi.first.wpilibj.communication.FRCNetworkCommunicationsLibrary$tResourceType
+[21/01/17-11:54:19] [Toast] [Pre-Initialization] [ERROR] java.lang.reflect.InvocationTargetException
+	at sun.reflect.GeneratedMethodAccessor1.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:483)
+	at jaci.openrio.toast.core.loader.ClassPatcher.loadClass(ClassPatcher.java:52)
+	at jaci.openrio.toast.core.loader.ClassPatcher.identifyPatches(ClassPatcher.java:85)
+	at jaci.openrio.toast.core.ToastBootstrap.main(ToastBootstrap.java:249)
+	at frc.team4330.screambunction.testingutils.ToastRunner$1.run(ToastRunner.java:24)
+Caused by: java.lang.LinkageError: loader (instance of  sun/misc/Launcher$AppClassLoader): attempted  duplicate class definition for name: "edu/wpi/first/wpilibj/communication/FRCNetworkCommunicationsLibrary$tResourceType"
+	at java.lang.ClassLoader.defineClass1(Native Method)
+	at java.lang.ClassLoader.defineClass(ClassLoader.java:760)
+	at java.lang.ClassLoader.defineClass(ClassLoader.java:642)
+	... 7 more
+
+[21/01/17-11:54:19] [Toast] [Pre-Initialization] [ERROR] Could not load Patch: edu.wpi.first.wpilibj.communication.FRCNetworkCommunicationsLibrary$tTargetClass
+[21/01/17-11:54:19] [Toast] [Pre-Initialization] [ERROR] java.lang.reflect.InvocationTargetException
+	at sun.reflect.GeneratedMethodAccessor1.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:483)
+	at jaci.openrio.toast.core.loader.ClassPatcher.loadClass(ClassPatcher.java:52)
+	at jaci.openrio.toast.core.loader.ClassPatcher.identifyPatches(ClassPatcher.java:85)
+	at jaci.openrio.toast.core.ToastBootstrap.main(ToastBootstrap.java:249)
+	at frc.team4330.screambunction.testingutils.ToastRunner$1.run(ToastRunner.java:24)
+Caused by: java.lang.LinkageError: loader (instance of  sun/misc/Launcher$AppClassLoader): attempted  duplicate class definition for name: "edu/wpi/first/wpilibj/communication/FRCNetworkCommunicationsLibrary$tTargetClass"
+	at java.lang.ClassLoader.defineClass1(Native Method)
+	at java.lang.ClassLoader.defineClass(ClassLoader.java:760)
+	at java.lang.ClassLoader.defineClass(ClassLoader.java:642)
+	... 7 more
+
+[21/01/17-11:54:19] [Toast] [Pre-Initialization] [ERROR] Could not load Patch: edu.wpi.first.wpilibj.communication.FRCNetworkCommunicationsLibrary
+[21/01/17-11:54:19] [Toast] [Pre-Initialization] [ERROR] java.lang.reflect.InvocationTargetException
+	at sun.reflect.GeneratedMethodAccessor1.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:483)
+	at jaci.openrio.toast.core.loader.ClassPatcher.loadClass(ClassPatcher.java:52)
+	at jaci.openrio.toast.core.loader.ClassPatcher.identifyPatches(ClassPatcher.java:85)
+	at jaci.openrio.toast.core.ToastBootstrap.main(ToastBootstrap.java:249)
+	at frc.team4330.screambunction.testingutils.ToastRunner$1.run(ToastRunner.java:24)
+Caused by: java.lang.LinkageError: loader (instance of  sun/misc/Launcher$AppClassLoader): attempted  duplicate class definition for name: "edu/wpi/first/wpilibj/communication/FRCNetworkCommunicationsLibrary"
+	at java.lang.ClassLoader.defineClass1(Native Method)
+	at java.lang.ClassLoader.defineClass(ClassLoader.java:760)
+	at java.lang.ClassLoader.defineClass(ClassLoader.java:642)
+	... 7 more
+
+[21/01/17-11:54:19] [Toast] [Pre-Initialization] [ERROR] Could not load Patch: edu.wpi.first.wpilibj.hal.AccelerometerJNI
+[21/01/17-11:54:19] [Toast] [Pre-Initialization] [ERROR] java.lang.reflect.InvocationTargetException
+	at sun.reflect.GeneratedMethodAccessor1.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:483)
+	at jaci.openrio.toast.core.loader.ClassPatcher.loadClass(ClassPatcher.java:52)
+	at jaci.openrio.toast.core.loader.ClassPatcher.identifyPatches(ClassPatcher.java:85)
+	at jaci.openrio.toast.core.ToastBootstrap.main(ToastBootstrap.java:249)
+	at frc.team4330.screambunction.testingutils.ToastRunner$1.run(ToastRunner.java:24)
+Caused by: java.lang.LinkageError: loader (instance of  sun/misc/Launcher$AppClassLoader): attempted  duplicate class definition for name: "edu/wpi/first/wpilibj/hal/AccelerometerJNI"
+	at java.lang.ClassLoader.defineClass1(Native Method)
+	at java.lang.ClassLoader.defineClass(ClassLoader.java:760)
+	at java.lang.ClassLoader.defineClass(ClassLoader.java:642)
+	... 7 more
+
+[21/01/17-11:54:19] [Toast] [Pre-Initialization] [ERROR] Could not load Patch: edu.wpi.first.wpilibj.hal.AnalogJNI
+[21/01/17-11:54:19] [Toast] [Pre-Initialization] [ERROR] java.lang.reflect.InvocationTargetException
+	at sun.reflect.GeneratedMethodAccessor1.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:483)
+	at jaci.openrio.toast.core.loader.ClassPatcher.loadClass(ClassPatcher.java:52)
+	at jaci.openrio.toast.core.loader.ClassPatcher.identifyPatches(ClassPatcher.java:85)
+	at jaci.openrio.toast.core.ToastBootstrap.main(ToastBootstrap.java:249)
+	at frc.team4330.screambunction.testingutils.ToastRunner$1.run(ToastRunner.java:24)
+Caused by: java.lang.LinkageError: loader (instance of  sun/misc/Launcher$AppClassLoader): attempted  duplicate class definition for name: "edu/wpi/first/wpilibj/hal/AnalogJNI"
+	at java.lang.ClassLoader.defineClass1(Native Method)
+	at java.lang.ClassLoader.defineClass(ClassLoader.java:760)
+	at java.lang.ClassLoader.defineClass(ClassLoader.java:642)
+	... 7 more
+
+[21/01/17-11:54:19] [Toast] [Pre-Initialization] [ERROR] Could not load Patch: edu.wpi.first.wpilibj.hal.DIOJNI
+[21/01/17-11:54:19] [Toast] [Pre-Initialization] [ERROR] java.lang.reflect.InvocationTargetException
+	at sun.reflect.GeneratedMethodAccessor1.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:483)
+	at jaci.openrio.toast.core.loader.ClassPatcher.loadClass(ClassPatcher.java:52)
+	at jaci.openrio.toast.core.loader.ClassPatcher.identifyPatches(ClassPatcher.java:85)
+	at jaci.openrio.toast.core.ToastBootstrap.main(ToastBootstrap.java:249)
+	at frc.team4330.screambunction.testingutils.ToastRunner$1.run(ToastRunner.java:24)
+Caused by: java.lang.LinkageError: loader (instance of  sun/misc/Launcher$AppClassLoader): attempted  duplicate class definition for name: "edu/wpi/first/wpilibj/hal/DIOJNI"
+	at java.lang.ClassLoader.defineClass1(Native Method)
+	at java.lang.ClassLoader.defineClass(ClassLoader.java:760)
+	at java.lang.ClassLoader.defineClass(ClassLoader.java:642)
+	... 7 more
+
+[21/01/17-11:54:19] [Toast] [Pre-Initialization] [ERROR] Could not load Patch: edu.wpi.first.wpilibj.hal.HALUtil
+[21/01/17-11:54:19] [Toast] [Pre-Initialization] [ERROR] java.lang.reflect.InvocationTargetException
+	at sun.reflect.GeneratedMethodAccessor1.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:483)
+	at jaci.openrio.toast.core.loader.ClassPatcher.loadClass(ClassPatcher.java:52)
+	at jaci.openrio.toast.core.loader.ClassPatcher.identifyPatches(ClassPatcher.java:85)
+	at jaci.openrio.toast.core.ToastBootstrap.main(ToastBootstrap.java:249)
+	at frc.team4330.screambunction.testingutils.ToastRunner$1.run(ToastRunner.java:24)
+Caused by: java.lang.LinkageError: loader (instance of  sun/misc/Launcher$AppClassLoader): attempted  duplicate class definition for name: "edu/wpi/first/wpilibj/hal/HALUtil"
+	at java.lang.ClassLoader.defineClass1(Native Method)
+	at java.lang.ClassLoader.defineClass(ClassLoader.java:760)
+	at java.lang.ClassLoader.defineClass(ClassLoader.java:642)
+	... 7 more
+
+[21/01/17-11:54:19] [Toast] [Pre-Initialization] [ERROR] Could not load Patch: edu.wpi.first.wpilibj.hal.InterruptJNI$InterruptJNIHandlerFunction
+[21/01/17-11:54:19] [Toast] [Pre-Initialization] [ERROR] java.lang.reflect.InvocationTargetException
+	at sun.reflect.GeneratedMethodAccessor1.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:483)
+	at jaci.openrio.toast.core.loader.ClassPatcher.loadClass(ClassPatcher.java:52)
+	at jaci.openrio.toast.core.loader.ClassPatcher.identifyPatches(ClassPatcher.java:85)
+	at jaci.openrio.toast.core.ToastBootstrap.main(ToastBootstrap.java:249)
+	at frc.team4330.screambunction.testingutils.ToastRunner$1.run(ToastRunner.java:24)
+Caused by: java.lang.LinkageError: loader (instance of  sun/misc/Launcher$AppClassLoader): attempted  duplicate class definition for name: "edu/wpi/first/wpilibj/hal/InterruptJNI$InterruptJNIHandlerFunction"
+	at java.lang.ClassLoader.defineClass1(Native Method)
+	at java.lang.ClassLoader.defineClass(ClassLoader.java:760)
+	at java.lang.ClassLoader.defineClass(ClassLoader.java:642)
+	... 7 more
+
+[21/01/17-11:54:19] [Toast] [Pre-Initialization] [ERROR] Could not load Patch: edu.wpi.first.wpilibj.hal.InterruptJNI
+[21/01/17-11:54:19] [Toast] [Pre-Initialization] [ERROR] java.lang.reflect.InvocationTargetException
+	at sun.reflect.GeneratedMethodAccessor1.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:483)
+	at jaci.openrio.toast.core.loader.ClassPatcher.loadClass(ClassPatcher.java:52)
+	at jaci.openrio.toast.core.loader.ClassPatcher.identifyPatches(ClassPatcher.java:85)
+	at jaci.openrio.toast.core.ToastBootstrap.main(ToastBootstrap.java:249)
+	at frc.team4330.screambunction.testingutils.ToastRunner$1.run(ToastRunner.java:24)
+Caused by: java.lang.LinkageError: loader (instance of  sun/misc/Launcher$AppClassLoader): attempted  duplicate class definition for name: "edu/wpi/first/wpilibj/hal/InterruptJNI"
+	at java.lang.ClassLoader.defineClass1(Native Method)
+	at java.lang.ClassLoader.defineClass(ClassLoader.java:760)
+	at java.lang.ClassLoader.defineClass(ClassLoader.java:642)
+	... 7 more
+
+[21/01/17-11:54:19] [Toast] [Pre-Initialization] [ERROR] Could not load Patch: edu.wpi.first.wpilibj.hal.PDPJNI
+[21/01/17-11:54:19] [Toast] [Pre-Initialization] [ERROR] java.lang.reflect.InvocationTargetException
+	at sun.reflect.GeneratedMethodAccessor1.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:483)
+	at jaci.openrio.toast.core.loader.ClassPatcher.loadClass(ClassPatcher.java:52)
+	at jaci.openrio.toast.core.loader.ClassPatcher.identifyPatches(ClassPatcher.java:85)
+	at jaci.openrio.toast.core.ToastBootstrap.main(ToastBootstrap.java:249)
+	at frc.team4330.screambunction.testingutils.ToastRunner$1.run(ToastRunner.java:24)
+Caused by: java.lang.LinkageError: loader (instance of  sun/misc/Launcher$AppClassLoader): attempted  duplicate class definition for name: "edu/wpi/first/wpilibj/hal/PDPJNI"
+	at java.lang.ClassLoader.defineClass1(Native Method)
+	at java.lang.ClassLoader.defineClass(ClassLoader.java:760)
+	at java.lang.ClassLoader.defineClass(ClassLoader.java:642)
+	... 7 more
+
+[21/01/17-11:54:19] [Toast] [Pre-Initialization] [ERROR] Could not load Patch: edu.wpi.first.wpilibj.hal.PowerJNI
+[21/01/17-11:54:19] [Toast] [Pre-Initialization] [ERROR] java.lang.reflect.InvocationTargetException
+	at sun.reflect.GeneratedMethodAccessor1.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:483)
+	at jaci.openrio.toast.core.loader.ClassPatcher.loadClass(ClassPatcher.java:52)
+	at jaci.openrio.toast.core.loader.ClassPatcher.identifyPatches(ClassPatcher.java:85)
+	at jaci.openrio.toast.core.ToastBootstrap.main(ToastBootstrap.java:249)
+	at frc.team4330.screambunction.testingutils.ToastRunner$1.run(ToastRunner.java:24)
+Caused by: java.lang.LinkageError: loader (instance of  sun/misc/Launcher$AppClassLoader): attempted  duplicate class definition for name: "edu/wpi/first/wpilibj/hal/PowerJNI"
+	at java.lang.ClassLoader.defineClass1(Native Method)
+	at java.lang.ClassLoader.defineClass(ClassLoader.java:760)
+	at java.lang.ClassLoader.defineClass(ClassLoader.java:642)
+	... 7 more
+
+[21/01/17-11:54:19] [Toast] [Pre-Initialization] [ERROR] Could not load Patch: edu.wpi.first.wpilibj.hal.PWMJNI
+[21/01/17-11:54:19] [Toast] [Pre-Initialization] [ERROR] java.lang.reflect.InvocationTargetException
+	at sun.reflect.GeneratedMethodAccessor1.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:483)
+	at jaci.openrio.toast.core.loader.ClassPatcher.loadClass(ClassPatcher.java:52)
+	at jaci.openrio.toast.core.loader.ClassPatcher.identifyPatches(ClassPatcher.java:85)
+	at jaci.openrio.toast.core.ToastBootstrap.main(ToastBootstrap.java:249)
+	at frc.team4330.screambunction.testingutils.ToastRunner$1.run(ToastRunner.java:24)
+Caused by: java.lang.LinkageError: loader (instance of  sun/misc/Launcher$AppClassLoader): attempted  duplicate class definition for name: "edu/wpi/first/wpilibj/hal/PWMJNI"
+	at java.lang.ClassLoader.defineClass1(Native Method)
+	at java.lang.ClassLoader.defineClass(ClassLoader.java:760)
+	at java.lang.ClassLoader.defineClass(ClassLoader.java:642)
+	... 7 more
+
+[21/01/17-11:54:19] [Toast] [Pre-Initialization] [ERROR] Could not load Patch: edu.wpi.first.wpilibj.hal.CompressorJNI
+[21/01/17-11:54:19] [Toast] [Pre-Initialization] [ERROR] java.lang.reflect.InvocationTargetException
+	at sun.reflect.GeneratedMethodAccessor1.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:483)
+	at jaci.openrio.toast.core.loader.ClassPatcher.loadClass(ClassPatcher.java:52)
+	at jaci.openrio.toast.core.loader.ClassPatcher.identifyPatches(ClassPatcher.java:85)
+	at jaci.openrio.toast.core.ToastBootstrap.main(ToastBootstrap.java:249)
+	at frc.team4330.screambunction.testingutils.ToastRunner$1.run(ToastRunner.java:24)
+Caused by: java.lang.LinkageError: loader (instance of  sun/misc/Launcher$AppClassLoader): attempted  duplicate class definition for name: "edu/wpi/first/wpilibj/hal/CompressorJNI"
+	at java.lang.ClassLoader.defineClass1(Native Method)
+	at java.lang.ClassLoader.defineClass(ClassLoader.java:760)
+	at java.lang.ClassLoader.defineClass(ClassLoader.java:642)
+	... 7 more
+
+[21/01/17-11:54:19] [Toast] [Pre-Initialization] [ERROR] Could not load Patch: edu.wpi.first.wpilibj.hal.RelayJNI
+[21/01/17-11:54:19] [Toast] [Pre-Initialization] [ERROR] java.lang.reflect.InvocationTargetException
+	at sun.reflect.GeneratedMethodAccessor1.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:483)
+	at jaci.openrio.toast.core.loader.ClassPatcher.loadClass(ClassPatcher.java:52)
+	at jaci.openrio.toast.core.loader.ClassPatcher.identifyPatches(ClassPatcher.java:85)
+	at jaci.openrio.toast.core.ToastBootstrap.main(ToastBootstrap.java:249)
+	at frc.team4330.screambunction.testingutils.ToastRunner$1.run(ToastRunner.java:24)
+Caused by: java.lang.LinkageError: loader (instance of  sun/misc/Launcher$AppClassLoader): attempted  duplicate class definition for name: "edu/wpi/first/wpilibj/hal/RelayJNI"
+	at java.lang.ClassLoader.defineClass1(Native Method)
+	at java.lang.ClassLoader.defineClass(ClassLoader.java:760)
+	at java.lang.ClassLoader.defineClass(ClassLoader.java:642)
+	... 7 more
+
+[21/01/17-11:54:19] [Toast] [Pre-Initialization] [ERROR] Could not load Patch: edu.wpi.first.wpilibj.hal.SolenoidJNI
+[21/01/17-11:54:19] [Toast] [Pre-Initialization] [ERROR] java.lang.reflect.InvocationTargetException
+	at sun.reflect.GeneratedMethodAccessor1.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:483)
+	at jaci.openrio.toast.core.loader.ClassPatcher.loadClass(ClassPatcher.java:52)
+	at jaci.openrio.toast.core.loader.ClassPatcher.identifyPatches(ClassPatcher.java:85)
+	at jaci.openrio.toast.core.ToastBootstrap.main(ToastBootstrap.java:249)
+	at frc.team4330.screambunction.testingutils.ToastRunner$1.run(ToastRunner.java:24)
+Caused by: java.lang.LinkageError: loader (instance of  sun/misc/Launcher$AppClassLoader): attempted  duplicate class definition for name: "edu/wpi/first/wpilibj/hal/SolenoidJNI"
+	at java.lang.ClassLoader.defineClass1(Native Method)
+	at java.lang.ClassLoader.defineClass(ClassLoader.java:760)
+	at java.lang.ClassLoader.defineClass(ClassLoader.java:642)
+	... 7 more
+
+[21/01/17-11:54:19] [Toast] [Pre-Initialization] [ERROR] Could not load Patch: edu.wpi.first.wpilibj.hal.CanTalonJNI
+[21/01/17-11:54:19] [Toast] [Pre-Initialization] [ERROR] java.lang.reflect.InvocationTargetException
+	at sun.reflect.GeneratedMethodAccessor1.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:483)
+	at jaci.openrio.toast.core.loader.ClassPatcher.loadClass(ClassPatcher.java:52)
+	at jaci.openrio.toast.core.loader.ClassPatcher.identifyPatches(ClassPatcher.java:85)
+	at jaci.openrio.toast.core.ToastBootstrap.main(ToastBootstrap.java:249)
+	at frc.team4330.screambunction.testingutils.ToastRunner$1.run(ToastRunner.java:24)
+Caused by: java.lang.LinkageError: loader (instance of  sun/misc/Launcher$AppClassLoader): attempted  duplicate class definition for name: "edu/wpi/first/wpilibj/hal/CanTalonJNI"
+	at java.lang.ClassLoader.defineClass1(Native Method)
+	at java.lang.ClassLoader.defineClass(ClassLoader.java:760)
+	at java.lang.ClassLoader.defineClass(ClassLoader.java:642)
+	... 7 more
+
+[21/01/17-11:54:19] [Toast] [Pre-Initialization] [ERROR] Could not load Patch: edu.wpi.first.wpilibj.hal.DigitalGlitchFilterJNI
+[21/01/17-11:54:19] [Toast] [Pre-Initialization] [ERROR] java.lang.reflect.InvocationTargetException
+	at sun.reflect.GeneratedMethodAccessor1.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:483)
+	at jaci.openrio.toast.core.loader.ClassPatcher.loadClass(ClassPatcher.java:52)
+	at jaci.openrio.toast.core.loader.ClassPatcher.identifyPatches(ClassPatcher.java:85)
+	at jaci.openrio.toast.core.ToastBootstrap.main(ToastBootstrap.java:249)
+	at frc.team4330.screambunction.testingutils.ToastRunner$1.run(ToastRunner.java:24)
+Caused by: java.lang.LinkageError: loader (instance of  sun/misc/Launcher$AppClassLoader): attempted  duplicate class definition for name: "edu/wpi/first/wpilibj/hal/DigitalGlitchFilterJNI"
+	at java.lang.ClassLoader.defineClass1(Native Method)
+	at java.lang.ClassLoader.defineClass(ClassLoader.java:760)
+	at java.lang.ClassLoader.defineClass(ClassLoader.java:642)
+	... 7 more
+
+[21/01/17-11:54:19] [Toast] [Pre-Initialization] [ERROR] Could not load Patch: edu.wpi.first.wpilibj.hal.NotifierJNI
+[21/01/17-11:54:19] [Toast] [Pre-Initialization] [ERROR] java.lang.reflect.InvocationTargetException
+	at sun.reflect.GeneratedMethodAccessor1.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:483)
+	at jaci.openrio.toast.core.loader.ClassPatcher.loadClass(ClassPatcher.java:52)
+	at jaci.openrio.toast.core.loader.ClassPatcher.identifyPatches(ClassPatcher.java:85)
+	at jaci.openrio.toast.core.ToastBootstrap.main(ToastBootstrap.java:249)
+	at frc.team4330.screambunction.testingutils.ToastRunner$1.run(ToastRunner.java:24)
+Caused by: java.lang.LinkageError: loader (instance of  sun/misc/Launcher$AppClassLoader): attempted  duplicate class definition for name: "edu/wpi/first/wpilibj/hal/NotifierJNI"
+	at java.lang.ClassLoader.defineClass1(Native Method)
+	at java.lang.ClassLoader.defineClass(ClassLoader.java:760)
+	at java.lang.ClassLoader.defineClass(ClassLoader.java:642)
+	... 7 more
+
+[21/01/17-11:54:19] [Toast] [Initialization] [INFO] Nuking Toast...
+[21/01/17-11:54:19] [Toast] [Pre-Start] [INFO] Buttering Bread...
+[21/01/17-11:54:20] [Toast] [AWT-EventQueue-0] [INFO] Robot Shutting Down...

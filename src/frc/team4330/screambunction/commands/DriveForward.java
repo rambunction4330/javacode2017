@@ -1,11 +1,14 @@
 package frc.team4330.screambunction.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
+import frc.team4330.screambunction.HeadingCalculator;
 import frc.team4330.screambunction.Robot;
 import frc.team4330.screambunction.RobotMap;
 
 public class DriveForward extends Command {
 	double desDistance;
+	double curHeading;
+	double pastHeading;
 
 	/**
 	 * A command that can be used to drive forward for a designated distance.
@@ -19,25 +22,39 @@ public class DriveForward extends Command {
 
 	@Override
 	protected void initialize() {
-
+		pastHeading = HeadingCalculator.normalize(Robot.gyro.getAngle());
+		Robot.gyro.resetDisplacement();
 	}
+
 
 	@Override
 	protected void execute() {
+		curHeading = HeadingCalculator.normalize(Robot.gyro.getAngle());
+
+		double rightval = 0;
+		double leftval = 0;
+
 		if (Math.abs(Robot.gyro.getDisplacementY() - desDistance) <= 5) {
-			Robot.myRobot.tankAuto(RobotMap.SLOW_SPEED, RobotMap.SLOW_SPEED);
+			rightval = RobotMap.SLOW_SPEED;
+			leftval = RobotMap.SLOW_SPEED;
 		} else {
-			Robot.myRobot.tankAuto(RobotMap.FAST_SPEED, RobotMap.FAST_SPEED);
+			rightval = RobotMap.FAST_SPEED;
+			leftval = RobotMap.FAST_SPEED;		
 		}
+
+		if (Math.abs(pastHeading - curHeading) > 5) {
+			if (pastHeading - curHeading > 0) rightval += .1;
+			else leftval += .1;
+		}
+
+		Robot.myRobot.tankAuto(leftval, rightval);
 	}
 
-	// Make this return true when this Command no longer needs to run execute()
 	@Override
 	protected boolean isFinished() {
 		return Math.abs(Robot.gyro.getDisplacementY() - desDistance) <= .2;
 	}
 
-	// Called once after isFinished returns true
 	@Override
 	protected void end() {
 		Robot.myRobot.stop();

@@ -1,9 +1,10 @@
 package frc.team4330.screambunction.testingUtils;
 
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.team4330.screambunction.parts.AbsRobotDrive;
 
-public class TestAbsRobotDrive implements AbsRobotDrive {
+public class TestAbsRobotDrive extends Subsystem implements AbsRobotDrive {
 	private static double leftS, rightS;
 	
 	@Override
@@ -32,6 +33,10 @@ public class TestAbsRobotDrive implements AbsRobotDrive {
 	@Override
 	public double getRightSpeed() {
 		return rightS;
+	}
+
+	@Override
+	protected void initDefaultCommand() {		
 	}
 
 	

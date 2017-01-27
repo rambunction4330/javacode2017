@@ -12,6 +12,7 @@ public class RobotMap {
 	public final static int LEFT_JOYSTICK_PORT = 0;
 	public final static int RIGHT_JOYSTICK_PORT = 1;
 
+	// Motor Speeds
 	public final static double SLOW_SPEED = .5;
 	public final static double FAST_SPEED = .8;
 }

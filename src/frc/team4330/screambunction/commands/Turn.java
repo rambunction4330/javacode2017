@@ -3,14 +3,16 @@ package frc.team4330.screambunction.commands;
 import edu.wpi.first.wpilibj.command.Command;
 import frc.team4330.screambunction.HeadingCalculator;
 import frc.team4330.screambunction.Robot;
+import frc.team4330.screambunction.RobotMap;
+import frc.team4330.screambunction.parts.HeadingProvider;
 import frc.team4330.screambunction.parts.TankDrive;
 
 public class Turn extends Command {
 
 	private double curHeading, desHeading;
-//	private HeadingProvider headingProvider;
+	private HeadingProvider headingProvider;
 	private TankDrive tankDrive;
-
+	private boolean test;
 	
 	/**
 	 * Turn Command for if you don't know the current or desired heading.
@@ -21,11 +23,26 @@ public class Turn extends Command {
 		curHeading = HeadingCalculator.normalize(Robot.gyro.getAngle());
 		this.desHeading = HeadingCalculator.normalize(curHeading + headingChange);
 		
-//		this.headingProvider = headingProvider;
-//		this.tankDrive = tankDrive;
+		test = false;
 		
 		requires (Robot.myRobot);
-//		requires (headingProvider);
+	}
+	
+	/**
+	 * Used for testing the Turn Command (unit tests).
+	 * 
+	 * @param desHeading Desired heading.
+	 * @param headingProvider The angle provider.
+	 * @param tankDrive Abstract driver.
+	 */
+	public Turn( double desHeading, HeadingProvider headingProvider, TankDrive tankDrive ) {
+		curHeading = HeadingCalculator.normalize(headingProvider.getAngle());
+		this.desHeading = HeadingCalculator.normalize(desHeading);
+		
+		this.headingProvider = headingProvider;
+		this.tankDrive = tankDrive;
+		
+		test = true;
 	}
 	
 	/**
@@ -38,6 +55,8 @@ public class Turn extends Command {
 		curHeading = HeadingCalculator.normalize(Robot.gyro.getAngle());
 		this.desHeading = HeadingCalculator.normalize(desHeading);
 		
+		test = false;
+		
 		requires (Robot.myRobot);
 	}
 
@@ -46,20 +65,23 @@ public class Turn extends Command {
 	 */
 	@Override
 	protected void initialize() {
-		curHeading = HeadingCalculator.normalize(Robot.gyro.getAngle());
+		if (!test) curHeading = HeadingCalculator.normalize(Robot.gyro.getAngle());
+		else curHeading = HeadingCalculator.normalize(headingProvider.getAngle());
+
 	}
 
 	@Override
 	public void execute() {
-		curHeading = HeadingCalculator.normalize(Robot.gyro.getAngle());
-
+		if (!test) curHeading = HeadingCalculator.normalize(Robot.gyro.getAngle());
+		else curHeading = HeadingCalculator.normalize(headingProvider.getAngle());
+		
 		// TODO Make the smaller adjustment type thing.
 		if (desHeading - curHeading > 0) {
-			tankDrive.setSpeed(-0.5, .5);
-//			Robot.myRobot.tankAuto(-.5, .5);
+			if (test) tankDrive.setSpeed(-0.5, .5);
+			else Robot.myRobot.tankAuto(-RobotMap.FAST_SPEED, RobotMap.FAST_SPEED);
 		} else {
-			tankDrive.setSpeed(0.5, -0.5);
-//			Robot.myRobot.tankAuto(.5, -.5);
+			if (test) tankDrive.setSpeed(0.5, -0.5);
+			else Robot.myRobot.tankAuto(RobotMap.FAST_SPEED, -RobotMap.FAST_SPEED);
 		}
 	}
 
@@ -70,14 +92,15 @@ public class Turn extends Command {
 
 	@Override
 	protected void end() {
-		Robot.myRobot.stop();
+		if (!test) Robot.myRobot.stop();
+		else tankDrive.setSpeed(0, 0);
 	}
 
 
 	@Override
 	protected void interrupted() {
-
+		if (!test) Robot.myRobot.stop();
+		else tankDrive.setSpeed(0, 0);
 	}
-
 
 }

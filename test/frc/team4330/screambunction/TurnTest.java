@@ -14,23 +14,20 @@ import frc.team4330.screambunction.testingUtils.TestTankDrive;
 public class TurnTest {
     private Turn testObject;
     private TankDrive tankDrive;
+//    TankDrive test;
     
     @Before
     public void setUp () {
     	HeadingProvider headingProvider = Mockito.mock(HeadingProvider.class);
     	tankDrive = new TestTankDrive();
+    	
     	testObject = new Turn(10, headingProvider, tankDrive);
     }
 
     @Test
     public void testExecute () {
     	testObject.execute();
-    	assertEquals(.5, tankDrive.getLeftSpeed(), 0);
-    	assertEquals(-.5, tankDrive.getRightSpeed(), 0);
-    }
-
-    // @Test
-    public void testExecute2 () {
-//        assertEquals(0.0, testObject.getSpeed(), 0.01);
+    	assertEquals(-.5, tankDrive.getLeftSpeed(), 0);
+    	assertEquals(.5, tankDrive.getRightSpeed(), 0);
     }
 }

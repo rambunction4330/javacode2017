@@ -4,11 +4,20 @@ import edu.wpi.first.wpilibj.command.Command;
 import frc.team4330.screambunction.HeadingCalculator;
 import frc.team4330.screambunction.Robot;
 import frc.team4330.screambunction.RobotMap;
+import frc.team4330.screambunction.parts.HeadingProvider;
+import frc.team4330.screambunction.parts.TankDrive;
 
+/**
+ * Drive the robot forward command.
+ * 
+ * @author Amanda
+ */
 public class DriveForward extends Command {
-	double desDistance;
-	double curHeading;
-	double pastHeading;
+	private double desDistance, curHeading, pastHeading;
+	private boolean test;
+
+	private HeadingProvider headingProvider;
+	private TankDrive tankDrive;
 
 	/**
 	 * A command that can be used to drive forward for a designated distance.
@@ -17,7 +26,17 @@ public class DriveForward extends Command {
 	 */
 	public DriveForward(double desDistance) {
 		this.desDistance = desDistance;
+		test = false;
+
 		requires(Robot.myRobot);
+	}
+
+	public DriveForward(double desDistance, HeadingProvider headingProvider, TankDrive tankDrive) {
+		this.desDistance = desDistance;
+		this.headingProvider = headingProvider;
+		this.tankDrive = tankDrive;
+
+		test = true;
 	}
 
 	@Override
@@ -28,13 +47,18 @@ public class DriveForward extends Command {
 
 
 	@Override
-	protected void execute() {
-		curHeading = HeadingCalculator.normalize(Robot.gyro.getAngle());
+	public void execute() {
+		double difference = 0;
+		if (!test) curHeading = HeadingCalculator.normalize(Robot.gyro.getAngle());
+		else curHeading = HeadingCalculator.normalize(headingProvider.getAngle());
 
 		double rightval = 0;
 		double leftval = 0;
 
-		if (Math.abs(Robot.gyro.getDisplacementY() - desDistance) <= 5) {
+		if (!test) difference = Math.abs(Robot.gyro.getDisplacementY() - desDistance);
+		else difference = Math.abs(headingProvider.getAngle() - desDistance);
+		
+		if (difference <= 5) {
 			rightval = RobotMap.SLOW_SPEED;
 			leftval = RobotMap.SLOW_SPEED;
 		} else {
@@ -47,7 +71,8 @@ public class DriveForward extends Command {
 			else leftval += .1;
 		}
 
-		Robot.myRobot.tankAuto(leftval, rightval);
+		if (!test) Robot.myRobot.tankAuto(leftval, rightval);
+		else tankDrive.setSpeed(leftval, rightval);
 	}
 
 	@Override
@@ -56,14 +81,16 @@ public class DriveForward extends Command {
 	}
 
 	@Override
-	protected void end() {
-		Robot.myRobot.stop();
+	public void end() {
+		if (!test) Robot.myRobot.stop();
+		else tankDrive.setSpeed(0, 0);
 	}
 
-	// Called when another command which requires one or more of the same
-	// subsystems is scheduled to run
+	// TODO change back to protected?
 	@Override
-	protected void interrupted() {
+	public void interrupted() {
+		if (!test) Robot.myRobot.stop();
+		else tankDrive.setSpeed(0, 0);
 	}
 
 }

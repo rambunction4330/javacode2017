@@ -1,9 +1,6 @@
 package org.usfirst.frc.team4330.utils;
 
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.logging.Logger;
-
-import org.jfree.util.Log;
 
 import edu.wpi.first.wpilibj.DigitalOutput;
 import edu.wpi.first.wpilibj.SerialPort;
@@ -35,9 +32,9 @@ public class MaxSonar implements IUltrasonic
 	public static enum Resolution
 	{
 		//inch-resolution sensors, such as the MB1010
-		INCH(Length.in, 3, 255),
-		CM(Length.cm, 3, 765), //cm-resolution sensors
-		MM(Length.mm, 4, 5000); //mm-resolution sensors, such as the MB1013
+		INCH(1, 3, 255),
+		CM(1, 3, 765), //cm-resolution sensors
+		MM(1, 4, 5000); //mm-resolution sensors, such as the MB1013
 
 		double conversionFactor;
 		int bytesPerResponse; //including the carriage return
@@ -94,7 +91,7 @@ public class MaxSonar implements IUltrasonic
 		//Response looks like "R1024"
 		if(response == null || response.length() < 2)
 		{
-			Logger.recoverable("MaxSonar", "Got bad response from sensor:\"" + (response == null ? "<null>" : response) +  "\"!");
+//			Logger.recoverable("MaxSonar", "Got bad response from sensor:\"" + (response == null ? "<null>" : response) +  "\"!");
 			return new Pair<Boolean, Integer>(Boolean.FALSE, 0);
 		}
 		//Log.debug("MaxSonar", response);
@@ -111,7 +108,7 @@ public class MaxSonar implements IUltrasonic
 		catch(NumberFormatException ex)
 		{
 			ex.printStackTrace();
-			Log.recoverable("MaxSonar", "Got bad response from sensor, coudn't convert to an integer: " + numberPart + "!");
+//			Log.recoverable("MaxSonar", "Got bad response from sensor, coudn't convert to an integer: " + numberPart + "!");
 			return new Pair<Boolean, Integer>(Boolean.FALSE, 0);
 		}
 
@@ -218,7 +215,7 @@ public class MaxSonar implements IUltrasonic
 			if(readerThread.isAlive())
 			{
 				readerThread.interrupt();
-				long startTime = System.currentTimeMillis();
+//				long startTime = System.currentTimeMillis();
 				try
 				{
 					readerThread.join();
@@ -227,7 +224,7 @@ public class MaxSonar implements IUltrasonic
 				{
 					e.printStackTrace();
 				}
-				Log.debug("MaxSonar", "Shutting down thread took " + (System.currentTimeMillis() - startTime) + " ms");
+//				Log.debug("MaxSonar", "Shutting down thread took " + (System.currentTimeMillis() - startTime) + " ms");
 
 				ultrasonicPort.reset();
 			}
@@ -244,7 +241,7 @@ public class MaxSonar implements IUltrasonic
 	public boolean canSeeAnything()
 	{
 		double distance = getDistance();
-		return (distance <= sensorResolution.maxDistance) && (distance >= 47 * Length.cm);
+		return (distance <= sensorResolution.maxDistance) && (distance >= 47 * 1);
 	}
 
 }

@@ -5,7 +5,6 @@ import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.team4330.screambunction.RobotMap;
-import frc.team4330.screambunction.parts.AbsRobotDrive;
 
 /**
  * RobotDrive drives the robot!!!
@@ -13,7 +12,7 @@ import frc.team4330.screambunction.parts.AbsRobotDrive;
  * @author Amander
  *
  */
-public class RobotDrive extends Subsystem implements AbsRobotDrive  {
+public class RobotDrive extends Subsystem {
 	private SpeedController frontRight, backRight, frontLeft, backLeft;
 
 	public RobotDrive() {
@@ -69,17 +68,6 @@ public class RobotDrive extends Subsystem implements AbsRobotDrive  {
 	}
 
 	@Override
-	protected void initDefaultCommand() {
-	}
-
-	@Override
-	public double getLeftSpeed() {
-		return frontLeft.get();
-	}
-
-	@Override
-	public double getRightSpeed() {
-		return frontRight.get();
-	}
+	protected void initDefaultCommand() { }
 
 }

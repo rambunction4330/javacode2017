@@ -31,24 +31,33 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void autonomousInit() {
 		SmartDashboardSetup.autonomousDashboard();
+
+		try {
+			vis.startUp();
+		} catch (Exception e) {
+			System.out.println("********* Error Message *********" + "\n" + e.getMessage());
+		}
+		
+		gyro.resetDisplacement();
 	}
 
 	@Override
 	public void autonomousPeriodic() {
-
+		
 	}
 
 	@Override
 	public void teleopInit() {
-		gyro.reset();
+		SmartDashboardSetup.teleOpDashboard();
 
+		gyro.reset();
+		gyro.resetDisplacement();
 	}
 
 	@Override
 	public void teleopPeriodic() {
-		//				System.out.println("NavX angle output: " + gyro.getAngle());
+		//		System.out.println("NavX angle output: " + gyro.getAngle());
 		System.out.println("NavX displacement output: " + gyro.getVelocityX());
-		//		kms
 		myRobot.tankDrive(leftj, rightj);
 	}
 

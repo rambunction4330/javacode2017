@@ -28,6 +28,8 @@ public class Robot extends IterativeRobot {
 
 	public static final AHRS gyro = new AHRS(Port.kMXP);
 	
+//	MaxbotixUltrasonic dis = new MaxbotixUltrasonic();o
+	
 	SmartDashboardSetup dash;
 	Command autonomousCommand;
 

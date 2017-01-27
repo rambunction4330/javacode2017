@@ -1,9 +1,8 @@
-package org.usfirst.frc.team4330.robot.commands;
-
-import org.usfirst.frc.team4330.robot.Robot;
-import org.usfirst.frc.team4330.robot.RobotMap;
+package frc.team4330.screambunction.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
+import frc.team4330.screambunction.Robot;
+import frc.team4330.screambunction.RobotMap;
 
 public class DriveForward extends Command {
 	double desDistance;
@@ -15,7 +14,7 @@ public class DriveForward extends Command {
 	 */
 	public DriveForward(double desDistance) {
 		this.desDistance = desDistance;
-		requires(Robot.draven);
+		requires(Robot.myRobot);
 	}
 
 	@Override
@@ -26,9 +25,9 @@ public class DriveForward extends Command {
 	@Override
 	protected void execute() {
 		if (Math.abs(Robot.gyro.getDisplacementY() - desDistance) <= 5) {
-			Robot.draven.tankAuto(RobotMap.SLOW_SPEED, RobotMap.SLOW_SPEED);
+			Robot.myRobot.tankAuto(RobotMap.SLOW_SPEED, RobotMap.SLOW_SPEED);
 		} else {
-			Robot.draven.tankAuto(RobotMap.FAST_SPEED, RobotMap.FAST_SPEED);
+			Robot.myRobot.tankAuto(RobotMap.FAST_SPEED, RobotMap.FAST_SPEED);
 		}
 	}
 
@@ -41,7 +40,7 @@ public class DriveForward extends Command {
 	// Called once after isFinished returns true
 	@Override
 	protected void end() {
-		Robot.draven.stop();
+		Robot.myRobot.stop();
 	}
 
 	// Called when another command which requires one or more of the same

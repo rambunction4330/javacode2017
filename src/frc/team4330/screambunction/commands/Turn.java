@@ -1,6 +1,7 @@
 package frc.team4330.screambunction.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
+import frc.team4330.screambunction.Robot;
 import frc.team4330.screambunction.parts.HeadingProvider;
 import frc.team4330.screambunction.parts.TankDrive;
 
@@ -12,10 +13,13 @@ public class Turn extends Command {
 	private HeadingProvider headingProvider;
 	private TankDrive tankDrive;
 
-	public Turn(double desHeading, HeadingProvider headingProvider, TankDrive tankDrive ) {
+	public Turn(double desHeading, HeadingProvider headingProvider ) {
 		this.desHeading = desHeading;
 		this.headingProvider = headingProvider;
 		this.tankDrive = tankDrive;
+		
+		requires (Robot.myRobot);
+//		requires (headingProvider);
 	}
 
 	/**

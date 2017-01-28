@@ -1,4 +1,4 @@
-package frc.team4330.screambunction;
+package frc.team4330.screambunction.utils;
 
 public class HeadingCalculator {
 

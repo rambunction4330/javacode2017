@@ -27,7 +27,7 @@ public class TurnTest {
     @Test
     public void testExecute () {
     	testObject.execute();
-    	assertEquals(-.5, tankDrive.getLeftSpeed(), 0);
-    	assertEquals(.5, tankDrive.getRightSpeed(), 0);
+    	assertEquals(-RobotMap.TEST_SPEED, tankDrive.getLeftSpeed(), 0);
+    	assertEquals(RobotMap.TEST_SPEED, tankDrive.getRightSpeed(), 0);
     }
 }

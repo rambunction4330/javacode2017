@@ -1,11 +1,11 @@
 package frc.team4330.screambunction.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
-import frc.team4330.screambunction.HeadingCalculator;
 import frc.team4330.screambunction.Robot;
 import frc.team4330.screambunction.RobotMap;
 import frc.team4330.screambunction.parts.HeadingProvider;
 import frc.team4330.screambunction.parts.TankDrive;
+import frc.team4330.screambunction.utils.HeadingCalculator;
 
 public class Turn extends Command {
 
@@ -77,10 +77,10 @@ public class Turn extends Command {
 		
 		// TODO Make the smaller adjustment type thing.
 		if (desHeading - curHeading > 0) {
-			if (test) tankDrive.setSpeed(-0.5, .5);
+			if (test) tankDrive.setSpeed(-RobotMap.TEST_SPEED, RobotMap.TEST_SPEED);
 			else Robot.myRobot.tankAuto(-RobotMap.FAST_SPEED, RobotMap.FAST_SPEED);
 		} else {
-			if (test) tankDrive.setSpeed(0.5, -0.5);
+			if (test) tankDrive.setSpeed(RobotMap.TEST_SPEED, -RobotMap.TEST_SPEED);
 			else Robot.myRobot.tankAuto(RobotMap.FAST_SPEED, -RobotMap.FAST_SPEED);
 		}
 	}

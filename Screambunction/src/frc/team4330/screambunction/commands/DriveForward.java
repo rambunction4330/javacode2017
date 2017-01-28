@@ -1,11 +1,11 @@
 package frc.team4330.screambunction.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
-import frc.team4330.screambunction.HeadingCalculator;
 import frc.team4330.screambunction.Robot;
 import frc.team4330.screambunction.RobotMap;
 import frc.team4330.screambunction.parts.HeadingProvider;
 import frc.team4330.screambunction.parts.TankDrive;
+import frc.team4330.screambunction.utils.HeadingCalculator;
 
 /**
  * Drive the robot forward command.

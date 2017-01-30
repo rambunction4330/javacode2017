@@ -13,17 +13,30 @@ import edu.wpi.first.wpilibj.command.Subsystem;
  */
 public class RobotDrive extends Subsystem {
 	private SpeedController rightMotor1, rightMotor2, leftMotor1, leftMotor2;
+	private boolean reverse = false;
+	boolean lastPressed = false;
 
 	public RobotDrive() {
 		rightMotor1 = new Victor(RobotMap.MOTOR_THREE_PORT);
 		rightMotor2 = new Victor(RobotMap.MOTOR_FOUR_PORT);
 		leftMotor1 = new Victor(RobotMap.MOTOR_ONE_PORT);
 		leftMotor2 = new Victor(RobotMap.MOTOR_TWO_PORT);
-		
+
 		rightMotor1.setInverted(false);
 		rightMotor2.setInverted(false);
 		leftMotor1.setInverted(true);
 		leftMotor2.setInverted(true);
+	}
+
+	public void reverseDrive(boolean button) {
+		if (!lastPressed && button) {
+			reverse = !reverse;
+			if (reverse) {
+				System.out.println("*************** Robot has reverse ***************");
+			}
+		}
+
+		lastPressed = button;
 	}
 
 	/**
@@ -33,14 +46,21 @@ public class RobotDrive extends Subsystem {
 	 * @param right the right joystick.
 	 */
 	public void tankDrive(Joystick left, Joystick right) {
-		rightMotor1.set(right.getY()* RobotMap.FAST_SPEED);
-		rightMotor2.set(right.getY() * RobotMap.FAST_SPEED);
-		leftMotor1.set(left.getY() * RobotMap.FAST_SPEED);
-		leftMotor2.set(left.getY() * RobotMap.FAST_SPEED);
+		if (reverse) {
+			rightMotor1.set(-right.getY()* RobotMap.FAST_SPEED);
+			rightMotor2.set(-right.getY() * RobotMap.FAST_SPEED);
+			leftMotor1.set(-left.getY() * RobotMap.FAST_SPEED);
+			leftMotor2.set(-left.getY() * RobotMap.FAST_SPEED);
+		} else {
+			rightMotor1.set(right.getY()* RobotMap.FAST_SPEED);
+			rightMotor2.set(right.getY() * RobotMap.FAST_SPEED);
+			leftMotor1.set(left.getY() * RobotMap.FAST_SPEED);
+			leftMotor2.set(left.getY() * RobotMap.FAST_SPEED);
+		}
 	}
 
 	// TODO Uncomment for testing only.
-//	SpeedController motor = new Talon(RobotMap.MOTOR_FOUR_PORT);
+	//	SpeedController motor = new Talon(RobotMap.MOTOR_FOUR_PORT);
 
 	/**
 	 * Method for testing the tank drive wheels. Uncomment one at a time. Set at slow speed
@@ -50,7 +70,7 @@ public class RobotDrive extends Subsystem {
 	 */
 	public void tankTesting(Joystick stick) {
 		// TODO Uncomment for testing only.
-//		motor.set(stick.getY() * RobotMap.TEST_SPEED);
+		//		motor.set(stick.getY() * RobotMap.TEST_SPEED);
 	}
 
 	/**

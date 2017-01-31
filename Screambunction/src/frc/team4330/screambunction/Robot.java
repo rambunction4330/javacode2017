@@ -29,7 +29,7 @@ public class Robot extends IterativeRobot {
 
 	// Components
 	public static AnalogInput channel;
-	public static VisionComms vis;
+	public static VisionComms visGears, visBoiler;
 	public static AHRS gyro;
 	public static Relay ledSwitch;
 
@@ -46,7 +46,8 @@ public class Robot extends IterativeRobot {
 
 
 		channel = new AnalogInput(0);
-		vis = new VisionComms();  
+		visGears = new VisionComms("tegra-ubuntu", 9001);
+		visBoiler = new VisionComms("tegra-ubuntu", 9002);
 		gyro = new AHRS(SerialPort.Port.kMXP);
 		ledSwitch = new Relay(0);
 		ledSwitch.setDirection(Direction.kForward);
@@ -74,7 +75,8 @@ public class Robot extends IterativeRobot {
 		phase = AutonomousPhase.one;
 
 		try {
-			vis.startUp();
+			visGears.startUp();
+			visBoiler.startUp();
 			ledSwitch.set(Value.kOn);
 		} catch (Exception e) {
 			System.out.println("********* Error Message *********" + "\n" + e.getMessage());
@@ -83,7 +85,7 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void autonomousPeriodic() {
-		System.out.println(vis.retrieveData());
+		System.out.println(visGears.retrieveData());
 		
 		// TODO Develop phase 1 of autonomous
 		if (phase == AutonomousPhase.one) {
@@ -129,7 +131,9 @@ public class Robot extends IterativeRobot {
 		SmartDashboardSetup.testDashboard();
 
 		try {
-			vis.startUp();
+			ledSwitch.set(Value.kOn);
+			visGears.startUp();
+			visBoiler.startUp();
 		} catch (Exception e) {
 			System.out.println("********* Error Message *********" + "\n" + e.getMessage());
 		}
@@ -150,7 +154,8 @@ public class Robot extends IterativeRobot {
 		ledSwitch.set(Value.kOff);
 
 		try {
-			vis.shutDown();
+			visGears.shutDown();
+			visBoiler.shutDown();
 		} catch (Exception e) {
 			System.out.println("********* Error Message *********" + "\n" + e.getMessage());
 		}

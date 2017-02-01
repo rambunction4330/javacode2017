@@ -25,7 +25,7 @@ public class Robot extends IterativeRobot {
 	// Subsystems
 	public final static RobotDrive myRobot = new RobotDrive();
 	public final static RopeClimber tarzan = new RopeClimber();
-	public final static VisionSystem vision = new VisionSystem();
+//	public final static VisionSystem vision = new VisionSystem();
 	public final static AutonomousManager manager = new AutonomousManager();
 //	public final static Shooter skittyskittybangbang = new Shooter();
 
@@ -72,7 +72,7 @@ public class Robot extends IterativeRobot {
 		Scheduler.getInstance().enable();   
 
 		gyro.resetDisplacement();
-		vision.startUp();
+//		vision.startUp();
 
 		phase = AutonomousPhase.one;
 
@@ -96,11 +96,11 @@ public class Robot extends IterativeRobot {
 
 			// TODO Develop phase 2 of autonomous		
 		} else if (phase == AutonomousPhase.two){
-			Map<String, String> vals = vision.getLiftData();
-			double angle = Integer.parseInt(vals.get("rb"));
-			System.out.println(angle + "");
-
-			Scheduler.getInstance().add(new Turn(angle));
+//			Map<String, String> vals = vision.getLiftData();
+//			double angle = Integer.parseInt(vals.get("rb"));
+//			System.out.println(angle + "");
+//
+//			Scheduler.getInstance().add(new Turn(angle));
 
 			phase = AutonomousPhase.three;
 			// TODO Develop phase 3 of autonomous		
@@ -122,7 +122,8 @@ public class Robot extends IterativeRobot {
 	public void teleopPeriodic() {
 		myRobot.tankDrive(leftj, rightj);
 		tarzan.setClimb(buttonj.getRawButton(RobotMap.CLIMB_SLOW_SPEED_BUTTON),
-				buttonj.getRawButton(RobotMap.CLIMB_FAST_SPEED_BUTTON));
+				buttonj.getRawButton(RobotMap.CLIMB_FAST_SPEED_BUTTON), false);
+		
 //		skittyskittybangbang.manualShoot(, buttonOn, feederOn, addPwr, subPwr);
 	}
 
@@ -136,14 +137,13 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void testPeriodic() {
-		tarzan.setClimb(leftj.getRawButton(11), leftj.getRawButton(12));
-		
+		tarzan.setClimb(leftj.getRawButton(11), leftj.getRawButton(12), leftj.getRawButton(7));
 		myRobot.tankDrive(leftj, rightj);
 	}
 
 	@Override
 	public void disabledInit() {
-		vision.shutDown();
+//		vision.shutDown();
 
 		Scheduler.getInstance().disable();
 	}

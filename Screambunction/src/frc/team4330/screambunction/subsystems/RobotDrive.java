@@ -23,10 +23,10 @@ public class RobotDrive extends Subsystem {
 		leftMotor1 = new Victor(RobotMap.MOTOR_ONE_PORT);
 		leftMotor2 = new Victor(RobotMap.MOTOR_TWO_PORT);
 
-		rightMotor1.setInverted(false);
-		rightMotor2.setInverted(false);
-		leftMotor1.setInverted(true);
-		leftMotor2.setInverted(true);
+		rightMotor1.setInverted(true);
+		rightMotor2.setInverted(true);
+		leftMotor1.setInverted(false);
+		leftMotor2.setInverted(false);
 	}
 
 	public void reverseDrive(boolean button) {
@@ -48,15 +48,16 @@ public class RobotDrive extends Subsystem {
 	 */
 	public void tankDrive(Joystick left, Joystick right) {
 		if (reverse) {
-			rightMotor1.set(-right.getY()* RobotMap.FAST_SPEED);
-			rightMotor2.set(-right.getY() * RobotMap.FAST_SPEED);
-			leftMotor1.set(-left.getY() * RobotMap.FAST_SPEED);
-			leftMotor2.set(-left.getY() * RobotMap.FAST_SPEED);
-		} else {
 			rightMotor1.set(right.getY()* RobotMap.FAST_SPEED);
 			rightMotor2.set(right.getY() * RobotMap.FAST_SPEED);
 			leftMotor1.set(left.getY() * RobotMap.FAST_SPEED);
 			leftMotor2.set(left.getY() * RobotMap.FAST_SPEED);
+		} else {
+			rightMotor1.set(-right.getY()* RobotMap.FAST_SPEED);
+			rightMotor2.set(-right.getY() * RobotMap.FAST_SPEED);
+			leftMotor1.set(-left.getY() * RobotMap.FAST_SPEED);
+			leftMotor2.set(-left.getY() * RobotMap.FAST_SPEED);
+			// negative because joysticks
 		}
 	}
 

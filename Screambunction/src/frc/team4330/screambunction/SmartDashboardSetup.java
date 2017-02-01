@@ -53,8 +53,6 @@ public class SmartDashboardSetup {
 	}
 
 	public static void allDashboards() {
-
-		SmartDashboardSetup.allDashboards();
 		positionChooser = new SendableChooser();
 		positionChooser.addDefault("Left", one);
 		positionChooser.addObject("Middle", two);

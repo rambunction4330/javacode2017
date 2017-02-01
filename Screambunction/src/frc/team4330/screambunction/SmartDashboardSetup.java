@@ -18,8 +18,6 @@ public class SmartDashboardSetup {
 		System.out.println("\n*****************************************");
 		System.out.println("************ TEST INITIATED ************" + "\n");
 
-		SmartDashboard.putData("Turn Command (default)", new Turn(90.0));
-		SmartDashboard.putData("Drive Robot (default)", new DriveForward(1.0));
 		allDashboards();
 	}
 

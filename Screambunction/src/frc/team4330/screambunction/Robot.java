@@ -25,9 +25,9 @@ public class Robot extends IterativeRobot {
 	// Subsystems
 	public final static RobotDrive myRobot = new RobotDrive();
 	public final static RopeClimber tarzan = new RopeClimber();
-//	public final static VisionSystem vision = new VisionSystem();
+	public final static VisionSystem vision = new VisionSystem();
 	public final static AutonomousManager manager = new AutonomousManager();
-//	public final static Shooter skittyskittybangbang = new Shooter();
+	//	public final static Shooter skittyskittybangbang = new Shooter();
 
 	// Joysticks
 	private Joystick leftj, rightj, buttonj;
@@ -72,7 +72,7 @@ public class Robot extends IterativeRobot {
 		Scheduler.getInstance().enable();   
 
 		gyro.resetDisplacement();
-//		vision.startUp();
+		vision.startUp();
 
 		phase = AutonomousPhase.one;
 
@@ -96,11 +96,14 @@ public class Robot extends IterativeRobot {
 
 			// TODO Develop phase 2 of autonomous		
 		} else if (phase == AutonomousPhase.two){
-//			Map<String, String> vals = vision.getLiftData();
-//			double angle = Integer.parseInt(vals.get("rb"));
-//			System.out.println(angle + "");
-//
-//			Scheduler.getInstance().add(new Turn(angle));
+			Map<String, String> vals = vision.getLiftData();
+			double angle = 0;
+			if (vals.get("rb") != null) angle = Integer.parseInt(vals.get("rb"));
+			else angle = 0;
+
+			System.out.println(angle + "");
+
+			Scheduler.getInstance().add(new Turn(angle));
 
 			phase = AutonomousPhase.three;
 			// TODO Develop phase 3 of autonomous		
@@ -112,10 +115,10 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void teleopInit() {
-//		SmartDashboardSetup.teleOpDashboard();
+		SmartDashboardSetup.teleOpDashboard();
 
-//		gyro.reset();
-//		gyro.resetDisplacement();
+		gyro.reset();
+		gyro.resetDisplacement();
 	}
 
 	@Override
@@ -123,16 +126,16 @@ public class Robot extends IterativeRobot {
 		myRobot.tankDrive(leftj, rightj);
 		tarzan.setClimb(buttonj.getRawButton(RobotMap.CLIMB_SLOW_SPEED_BUTTON),
 				buttonj.getRawButton(RobotMap.CLIMB_FAST_SPEED_BUTTON), false);
-		
-//		skittyskittybangbang.manualShoot(, buttonOn, feederOn, addPwr, subPwr);
+
+		//		skittyskittybangbang.manualShoot(, buttonOn, feederOn, addPwr, subPwr);
 	}
 
 
 	@Override
 	public void testInit() {
-//		SmartDashboardSetup.testDashboard();
+		SmartDashboardSetup.testDashboard();
 
-//		vision.startUp();
+		vision.startUp();
 	}
 
 	@Override
@@ -143,7 +146,7 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void disabledInit() {
-//		vision.shutDown();
+		vision.shutDown();
 
 		Scheduler.getInstance().disable();
 	}

@@ -1,6 +1,5 @@
 package frc.team4330.screambunction.subsystems;
 
-import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.team4330.screambunction.commands.DriveForward;
@@ -10,30 +9,21 @@ import frc.team4330.screambunction.utils.RobotMap;
 public class AutonomousManager extends Subsystem {
 
 	public void travelToLeftLift() {
-		CommandGroup group = new CommandGroup();
-		
-		group.addSequential(new DriveForward(RobotMap.DISTANCE_TO_BASELINES
+		Scheduler.getInstance().add(new DriveForward(RobotMap.DISTANCE_TO_BASELINES
 				+ RobotMap.ROBOT_WIDTH));
-		group.addSequential(new Turn(-90));
-		
-		Scheduler.getInstance().add(group);
+		Scheduler.getInstance().add(new Turn(-90));
 	}
-	
+
 	public void travelToRightLift() {
-		CommandGroup group = new CommandGroup();
+		Scheduler.getInstance().add(new DriveForward(RobotMap.DISTANCE_TO_BASELINES
+				+ RobotMap.ROBOT_WIDTH));
+		Scheduler.getInstance().add(new Turn(90));
 
-		group.addSequential(new DriveForward(RobotMap.DISTANCE_TO_BASELINES + RobotMap.ROBOT_WIDTH));
-		group.addSequential(new Turn(90));
-		
-		Scheduler.getInstance().add(group);
 	}
-	
-	public void travelToCenterLift() {
-		CommandGroup group = new CommandGroup();
 
-		group.addSequential(new DriveForward(RobotMap.DISTANCE_TO_BASELINES - RobotMap.ROBOT_WIDTH));
-		
-		Scheduler.getInstance().add(group);
+	public void travelToCenterLift() {
+		Scheduler.getInstance().add(new DriveForward(RobotMap.DISTANCE_TO_BASELINES 
+				- RobotMap.ROBOT_WIDTH));
 	}
 
 	@Override

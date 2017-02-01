@@ -21,12 +21,12 @@ public class RobotMap {
 	
 	// Buttons
 	public final static int CLIMB_SLOW_SPEED_BUTTON = 4;
-	public final static int CLIMB_FAST_SPEED_BUTTON = 2;
+	public final static int CLIMB_FAST_SPEED_BUTTON = 6;
 	public final static int SHOOT_POWER_OFF_BUTTON = 3;
-	public final static int SHOOT_POWER_ON_BUTTON = 1;
+	public final static int SHOOT_POWER_ON_BUTTON = 2;
 	public final static int SHOOT_ADD_POWER_BUTTON = 11;
 	public final static int SHOOT_SUB_POWER_BUTTON = 12;
-	public final static int FEED_POWER_BUTTON = 5;
+	public final static int FEED_POWER_BUTTON = 1;
 
 	// Motor Speeds
 	public final static double SLOW_SPEED = .5;

@@ -1,6 +1,6 @@
 package frc.team4330.screambunction;
 
-import java.util.Map;
+import java.util.List;
 
 import com.kauailabs.navx.frc.AHRS;
 
@@ -9,11 +9,13 @@ import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.command.Scheduler;
-import frc.team4330.screambunction.commands.Turn;
+import frc.team4330.screambunction.canbus.LeddarDistanceSensor;
+import frc.team4330.screambunction.canbus.LeddarDistanceSensor.LeddarDistanceSensorData;
 import frc.team4330.screambunction.subsystems.AutonomousManager;
 import frc.team4330.screambunction.subsystems.RobotDrive;
 import frc.team4330.screambunction.subsystems.RopeClimber;
 import frc.team4330.screambunction.subsystems.VisionSystem;
+import frc.team4330.screambunction.utils.AutonomousPhase;
 import frc.team4330.screambunction.utils.RobotMap;
 
 /**
@@ -33,11 +35,12 @@ public class Robot extends IterativeRobot {
 	private Joystick leftj, rightj, buttonj;
 
 	// Components
+	public static LeddarDistanceSensor leddar;
 	public static AnalogInput channel;
 	public static AHRS gyro;
 
 	// Variables
-	protected AutonomousPhase phase;
+	protected AutonomousPhase phase = AutonomousPhase.one;
 
 	@Override
 	public void robotInit() {
@@ -49,6 +52,7 @@ public class Robot extends IterativeRobot {
 
 		//		channel = new AnalogInput(0);
 		gyro = new AHRS(SerialPort.Port.kMXP);
+		leddar = new LeddarDistanceSensor();
 
 
 		System.out.println("\n*********************************");
@@ -61,10 +65,6 @@ public class Robot extends IterativeRobot {
 
 	}
 
-	protected enum AutonomousPhase {
-		one, two, three, done;
-	}
-
 	@Override
 	public void autonomousInit() {
 		SmartDashboardSetup.autonomousDashboard();
@@ -73,9 +73,9 @@ public class Robot extends IterativeRobot {
 
 		gyro.resetDisplacement();
 		vision.startUp();
+		leddar.startUp();
 
 		phase = AutonomousPhase.one;
-
 	}
 
 	@Override
@@ -87,37 +87,50 @@ public class Robot extends IterativeRobot {
 			int position = SmartDashboardSetup.getStart();
 
 			switch(position) {
-			case (1):
+			case 1:
 				manager.travelToLeftLift();
+				phase = AutonomousPhase.two;
 				break;
-			case (2):
+			case 2:
 				manager.travelToCenterLift();
+				phase = AutonomousPhase.two;
 				break;
-			case (3):
+			case 3:
 				manager.travelToRightLift();
+				phase = AutonomousPhase.two;
+				break;
+			default:
+				System.out.println("No autonomous was selected.");
 				break;
 			}
 
-			phase = AutonomousPhase.two;
-
 			// TODO Develop phase 2 of autonomous		
 		} else if (phase == AutonomousPhase.two){
-			Map<String, String> vals = vision.getLiftData();
 			double angle = 0;
-			if (vals.get("rb") != null) angle = Integer.parseInt(vals.get("rb"));
+			if (vision.getLiftData().get("rb") != null) 
+				angle = Integer.parseInt(vision.getLiftData().get("rb"));
 			else angle = 0;
 
-			System.out.println(angle + "");
+			System.out.println(-angle + "");
 
-			Scheduler.getInstance().add(new Turn(angle));
+			if (angle != 0) 
+				if (manager.turnToAngle(-angle)) 
+					phase = AutonomousPhase.three;
 
-			phase = AutonomousPhase.three;
 			// TODO Develop phase 3 of autonomous		
 		} else if (phase == AutonomousPhase.three) {
+			List<LeddarDistanceSensorData> distances = null;
+
+			if (leddar.getDistances() != null) {
+				distances = leddar.getDistances();
+				manager.driveToLift(distances.get(distances.size()/2));
+			}
 
 			phase = AutonomousPhase.done;
 		} else { }
 	}
+
+
 
 	@Override
 	public void teleopInit() {
@@ -153,6 +166,7 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void disabledInit() {
 		vision.shutDown();
+		leddar.shutDown();
 
 		Scheduler.getInstance().disable();
 	}

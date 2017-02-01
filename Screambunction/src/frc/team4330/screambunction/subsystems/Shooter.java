@@ -12,8 +12,8 @@ public class Shooter extends Subsystem {
 
 	private SpeedController motor;
 	private Relay feeder;
-	
-	private Value feederOn;
+
+	private Value feederVal;
 
 	private double motorVal = 0;
 
@@ -22,8 +22,8 @@ public class Shooter extends Subsystem {
 
 		feeder = new Relay(RobotMap.RELAY_FEED_PORT);
 		feeder.setDirection(Direction.kForward);
-		
-		feederOn = Value.kOff;
+
+		feederVal = Value.kOff;
 	}
 
 	/**
@@ -36,24 +36,42 @@ public class Shooter extends Subsystem {
 	 * @param subPwr
 	 */
 	public void manualShoot(boolean buttonOff, boolean buttonOn, boolean feederOn, boolean addPwr, boolean subPwr) {
-		if (buttonOn) motorVal = RobotMap.SHOOTING_SPEED;
-		else if (addPwr) motorVal += RobotMap.INCREMENT_VALUE;
+		if (buttonOff) stop();
+		else if (buttonOn) motorVal = RobotMap.SHOOTING_SPEED;
+
+		if (addPwr) motorVal += RobotMap.INCREMENT_VALUE;
 		else if (subPwr) motorVal -= RobotMap.INCREMENT_VALUE;
-		else if (buttonOff) stop();
-		
-		if (feederOn || buttonOn) this.feederOn = Value.kOn;
+
+		if (feederOn && motor.get() >= .35) {
+			this.feederVal = Value.kOn;
+		} else if (feederOn && motor.get() <= .35) {
+			System.out.println("Turning motor on. Let motor power up.");
+			motorVal = RobotMap.SHOOTING_SPEED;
+		}
 
 		motor.set(motorVal);
-		feeder.set(this.feederOn);
+		feeder.set(this.feederVal);
 	}
 
 	public void autoShoot() {
 		motor.set(RobotMap.SHOOTING_SPEED);
+
+		if (motor.get() >= .35) feeder.set(Value.kOn);
 	}
 
 	public void stop() {
-		feederOn = Value.kOff;
+		stopFeed();
+		stopMotor();
+	}
+
+	private void stopFeed() {
+		feederVal = Value.kOff;
+		feeder.set(feederVal);
+	}
+
+	private void stopMotor() {
 		motorVal = 0;
+		motor.set(motorVal);
 	}
 
 	@Override

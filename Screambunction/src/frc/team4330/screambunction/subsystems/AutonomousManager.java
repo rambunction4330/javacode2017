@@ -1,6 +1,7 @@
 package frc.team4330.screambunction.subsystems;
 
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.team4330.screambunction.canbus.LeddarDistanceSensor.LeddarDistanceSensorData;
@@ -20,8 +21,11 @@ public class AutonomousManager extends Subsystem {
 					+ RobotMap.ROBOT_WIDTH);
 		}
 				
-		Scheduler.getInstance().add(driveInitial);
-		Scheduler.getInstance().add(new Turn(-90));
+		CommandGroup group = new CommandGroup();
+		group.addSequential(driveInitial);
+		group.addSequential(new Turn(-90));
+		
+		Scheduler.getInstance().add(group);
 	}
 
 	public void travelToRightLift() {

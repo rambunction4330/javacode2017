@@ -59,6 +59,6 @@ public class SmartDashboardSetup {
 	}
 	
 	public static int getStart(){
-		return (int)positionChooser.getSelected();
+		return (int) positionChooser.getSelected();
 	}
 }

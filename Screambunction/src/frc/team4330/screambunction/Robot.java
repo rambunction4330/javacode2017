@@ -69,13 +69,34 @@ public class Robot extends IterativeRobot {
 	public void autonomousInit() {
 		SmartDashboardSetup.autonomousDashboard();
 
-		Scheduler.getInstance().enable();   
 
 		gyro.resetDisplacement();
 		vision.startUp();
 		leddar.startUp();
-
 		phase = AutonomousPhase.one;
+
+		int position = 1; //SmartDashboardSetup.getStart();
+
+		switch(position) {
+		case 1:
+			manager.travelToLeftLift();
+			phase = AutonomousPhase.two;
+			break;
+		case 2:
+			manager.travelToCenterLift();
+			phase = AutonomousPhase.two;
+			break;
+		case 3:
+			manager.travelToRightLift();
+			phase = AutonomousPhase.two;
+			break;
+		default:
+			System.out.println("No autonomous was selected.");
+			break;
+		}
+		
+		Scheduler.getInstance().enable();   
+		
 	}
 
 	@Override
@@ -83,7 +104,7 @@ public class Robot extends IterativeRobot {
 		//		System.out.println(visGears.retrieveData());
 
 		// TODO Develop phase 1 of autonomous
-		if (phase == AutonomousPhase.one) {
+		/*if (phase == AutonomousPhase.one) {
 			int position = SmartDashboardSetup.getStart();
 
 			switch(position) {
@@ -103,6 +124,7 @@ public class Robot extends IterativeRobot {
 				System.out.println("No autonomous was selected.");
 				break;
 			}
+			
 
 			// TODO Develop phase 2 of autonomous		
 		} else if (phase == AutonomousPhase.two){
@@ -127,7 +149,11 @@ public class Robot extends IterativeRobot {
 			}
 
 			phase = AutonomousPhase.done;
-		} else { }
+		} else {
+			*/
+		
+		Scheduler.getInstance().run();
+//		}
 	}
 
 

@@ -37,10 +37,10 @@ public class RobotMap {
 	public final static double SHOOTING_SPEED = .4;
 	public final static double INCREMENT_VALUE = .02;
 	
-	// Robot Measurements (in)
+	// Robot Measurements (m)
 	public final static double ROBOT_WIDTH = 0.9017;
 
-	// Field Distances (in)
+	// Field Distances (m)
 	public final static double DISTANCE_TO_BASELINES = 2.8448 - ROBOT_WIDTH;
 
 }

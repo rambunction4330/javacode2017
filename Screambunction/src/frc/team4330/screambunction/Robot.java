@@ -69,6 +69,7 @@ public class Robot extends IterativeRobot {
 	public void autonomousInit() {
 		SmartDashboardSetup.autonomousDashboard();
 
+		Scheduler.getInstance().removeAll();
 
 		gyro.resetDisplacement();
 		vision.startUp();

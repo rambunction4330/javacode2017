@@ -19,7 +19,13 @@ public class RopeClimber extends Subsystem {
 		motor.set(Math.abs(stick.getY()));
 	}
 	
-	public void setClimb(boolean slowSpd, boolean fastSpd, boolean backwards) {
+	public void setClimb(boolean slowSpd, boolean fastSpd) {
+		if (slowSpd) motor.set(RobotMap.REEL_SPEED);
+		else if (fastSpd) motor.set(RobotMap.CLIMB_SPEED);
+		else stop();
+	}
+	
+	public void testClimb(boolean slowSpd, boolean fastSpd, boolean backwards) {
 		if (slowSpd) motor.set(RobotMap.REEL_SPEED);
 		else if (fastSpd) motor.set(RobotMap.CLIMB_SPEED);
 		else if (backwards) motor.set(-RobotMap.REEL_SPEED);

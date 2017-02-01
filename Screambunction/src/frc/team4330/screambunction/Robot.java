@@ -83,13 +83,19 @@ public class Robot extends IterativeRobot {
 		//		System.out.println(visGears.retrieveData());
 
 		// TODO Develop phase 1 of autonomous
-		if (phase == AutonomousPhase.one) {			
-			if (SmartDashboardSetup.getStart() == SmartDashboardSetup.one) { //LEFT
+		if (phase == AutonomousPhase.one) {
+			int position = SmartDashboardSetup.getStart();
+
+			switch(position) {
+			case (1):
 				manager.travelToLeftLift();
-			} else if (SmartDashboardSetup.getStart() == SmartDashboardSetup.two) { //CENTER
+				break;
+			case (2):
 				manager.travelToCenterLift();
-			} else { //RIGHT
+				break;
+			case (3):
 				manager.travelToRightLift();
+				break;
 			}
 
 			phase = AutonomousPhase.two;
@@ -125,7 +131,7 @@ public class Robot extends IterativeRobot {
 	public void teleopPeriodic() {
 		myRobot.tankDrive(leftj, rightj);
 		tarzan.setClimb(buttonj.getRawButton(RobotMap.CLIMB_SLOW_SPEED_BUTTON),
-				buttonj.getRawButton(RobotMap.CLIMB_FAST_SPEED_BUTTON), false);
+				buttonj.getRawButton(RobotMap.CLIMB_FAST_SPEED_BUTTON));
 
 		//		skittyskittybangbang.manualShoot(, buttonOn, feederOn, addPwr, subPwr);
 	}
@@ -140,7 +146,7 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void testPeriodic() {
-		tarzan.setClimb(leftj.getRawButton(11), leftj.getRawButton(12), leftj.getRawButton(7));
+		tarzan.testClimb(leftj.getRawButton(11), leftj.getRawButton(12), leftj.getRawButton(7));
 		myRobot.tankDrive(leftj, rightj);
 	}
 

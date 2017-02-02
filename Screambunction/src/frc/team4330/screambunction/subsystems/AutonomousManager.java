@@ -16,36 +16,26 @@ public class AutonomousManager extends Subsystem {
 	Command driveLift = null;
 	
 	public void travelToLeftLift() {
-		if (driveInitial == null) {
-			driveInitial = new DriveForward(RobotMap.DISTANCE_TO_BASELINES
-					+ RobotMap.ROBOT_WIDTH);
-		}
-				
 		CommandGroup group = new CommandGroup();
-		group.addSequential(driveInitial);
+		group.addSequential(new DriveForward(RobotMap.DISTANCE_TO_BASELINES
+				+ RobotMap.ROBOT_WIDTH));
 		group.addSequential(new Turn(-90));
 		
 		Scheduler.getInstance().add(group);
 	}
 
 	public void travelToRightLift() {
-		if (driveInitial == null) {
-			driveInitial = new DriveForward(RobotMap.DISTANCE_TO_BASELINES
-					+ RobotMap.ROBOT_WIDTH);
-		}
-				
-		Scheduler.getInstance().add(driveInitial);
-		Scheduler.getInstance().add(new Turn(90));
+		CommandGroup group = new CommandGroup();
+		group.addSequential(new DriveForward(RobotMap.DISTANCE_TO_BASELINES
+				+ RobotMap.ROBOT_WIDTH));
+		group.addSequential(new Turn(90)); 
+		Scheduler.getInstance().add(group);
 
 	}
 
 	public void travelToCenterLift() {
-		if (driveInitial == null) {
-			driveInitial = new DriveForward(RobotMap.DISTANCE_TO_BASELINES 
-					- RobotMap.ROBOT_WIDTH);
-		}
-				
-		Scheduler.getInstance().add(driveInitial);
+		Scheduler.getInstance().add(new DriveForward(RobotMap.DISTANCE_TO_BASELINES 
+				- RobotMap.ROBOT_WIDTH));
 	}
 	
 	/**

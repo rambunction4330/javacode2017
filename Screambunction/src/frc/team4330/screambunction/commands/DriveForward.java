@@ -55,7 +55,7 @@ public class DriveForward extends Command {
 		double rightval = 0;
 		double leftval = 0;
 
-		if (!test) difference = Math.abs(Robot.gyro.getDisplacementY() - desDistance);
+		if (!test) difference = Math.abs(Robot.gyro.getDisplacementX() - desDistance);
 		else difference = Math.abs(headingProvider.getAngle() - desDistance);
 		
 		if (difference <= 5) {

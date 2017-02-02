@@ -1,7 +1,5 @@
 package frc.team4330.screambunction;
 
-import java.util.List;
-
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.AnalogInput;
@@ -10,7 +8,6 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import frc.team4330.screambunction.canbus.LeddarDistanceSensor;
-import frc.team4330.screambunction.canbus.LeddarDistanceSensor.LeddarDistanceSensorData;
 import frc.team4330.screambunction.subsystems.AutonomousManager;
 import frc.team4330.screambunction.subsystems.RobotDrive;
 import frc.team4330.screambunction.subsystems.RopeClimber;

@@ -13,7 +13,8 @@ import frc.team4330.screambunction.utils.RobotMap;
  * @author Amanda
  */
 public class DriveForward extends Command {
-	private double desDistance, curHeading, pastHeading;
+	private double desDistance, curHeading, pastHeading, startX, startY, 
+		deltaX, deltaY, deltaDis;
 	private boolean test;
 
 	private HeadingProvider headingProvider;
@@ -42,21 +43,26 @@ public class DriveForward extends Command {
 	@Override
 	protected void initialize() {
 		pastHeading = HeadingCalculator.normalize(Robot.gyro.getAngle());
-		Robot.gyro.resetDisplacement();
+		startX = Robot.gyro.getDisplacementX();
+		startY = Robot.gyro.getDisplacementY();
 	}
 
 
 	@Override
 	public void execute() {
 		double difference = 0;
-		if (!test) curHeading = HeadingCalculator.normalize(Robot.gyro.getAngle());
+		if (!test) curHeading = HeadingCalculator.normalize(-Robot.gyro.getAngle());
 		else curHeading = HeadingCalculator.normalize(headingProvider.getAngle());
 
 		double rightval = 0;
 		double leftval = 0;
 
-		if (!test) difference = Math.abs(Robot.gyro.getDisplacementX() - desDistance);
-		else difference = Math.abs(headingProvider.getAngle() - desDistance);
+		if (!test) {
+			deltaX = Robot.gyro.getDisplacementX() - startX;
+			deltaY = Robot.gyro.getDisplacementY() - startY;
+			deltaDis = Math.sqrt(deltaX*deltaX + deltaY*deltaY);
+			difference = Math.abs(desDistance - deltaDis);
+		} else difference = Math.abs(headingProvider.getAngle() - desDistance);
 		
 		if (difference <= 5) {
 			rightval = RobotMap.SLOW_SPEED;

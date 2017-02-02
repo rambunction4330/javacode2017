@@ -19,8 +19,7 @@ public class AutonomousManager extends Subsystem {
 		CommandGroup group = new CommandGroup();
 //		group.addSequential(new DriveForward(RobotMap.DISTANCE_TO_BASELINES
 //				+ RobotMap.ROBOT_WIDTH));
-		group.addSequential(new DriveForward(10));
-//		group.addSequential(new Turn(-90));
+		group.addSequential(new Turn(-90));
 		
 		Scheduler.getInstance().add(group);
 	}

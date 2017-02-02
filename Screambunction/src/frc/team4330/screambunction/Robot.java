@@ -68,6 +68,7 @@ public class Robot extends IterativeRobot {
 
 		Scheduler.getInstance().removeAll();
 
+		gyro.reset();
 		gyro.resetDisplacement();
 		vision.startUp();
 		leddar.startUp();

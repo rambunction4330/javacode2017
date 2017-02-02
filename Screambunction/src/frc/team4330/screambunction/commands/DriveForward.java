@@ -51,7 +51,7 @@ public class DriveForward extends Command {
 	@Override
 	public void execute() {
 		double difference = 0;
-		if (!test) curHeading = HeadingCalculator.normalize(-Robot.gyro.getAngle());
+		if (!test) curHeading = HeadingCalculator.normalize(Robot.gyro.getAngle());
 		else curHeading = HeadingCalculator.normalize(headingProvider.getAngle());
 
 		double rightval = 0;
@@ -59,24 +59,33 @@ public class DriveForward extends Command {
 
 		if (!test) {
 			deltaX = Robot.gyro.getDisplacementX() - startX;
+			
 			deltaY = Robot.gyro.getDisplacementY() - startY;
 			deltaDis = Math.sqrt(deltaX*deltaX + deltaY*deltaY);
 			difference = Math.abs(desDistance - deltaDis);
 		} else difference = Math.abs(headingProvider.getAngle() - desDistance);
 		
-		if (difference <= 5) {
+		if (difference <= .5) {
 			rightval = RobotMap.SLOW_SPEED;
 			leftval = RobotMap.SLOW_SPEED;
 		} else {
 			rightval = RobotMap.FAST_SPEED;
 			leftval = RobotMap.FAST_SPEED;		
 		}
+		
+		final double chg = .1;
+		final double thr = 2;
+		double courseChange = HeadingCalculator.calculateCourseChange(curHeading, pastHeading);
+		
+		if (courseChange > thr) {
+			rightval += chg;
+			leftval -= chg;
+		} else if (courseChange < -thr) {
+			leftval += chg;
+			rightval -= chg;
+		} else;
 
-		if (Math.abs(pastHeading - curHeading) > 5) {
-			if (pastHeading - curHeading > 0) rightval += .1;
-			else leftval += .1;
-		}
-
+		
 		if (!test) Robot.myRobot.tankAuto(leftval, rightval);
 		else tankDrive.setSpeed(leftval, rightval);
 	}

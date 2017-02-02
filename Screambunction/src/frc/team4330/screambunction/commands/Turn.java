@@ -9,7 +9,7 @@ import frc.team4330.screambunction.utils.RobotMap;
 
 public class Turn extends Command {
 
-	private double curHeading, desHeading;
+	private double curHeading, desHeading, change;
 	private HeadingProvider headingProvider;
 	private TankDrive tankDrive;
 	private boolean test;
@@ -22,6 +22,8 @@ public class Turn extends Command {
 	public Turn( double headingChange ) {
 		curHeading = HeadingCalculator.normalize(Robot.gyro.getAngle());
 		this.desHeading = HeadingCalculator.normalize(curHeading + headingChange);
+		
+		change = HeadingCalculator.calculateCourseChange(curHeading, desHeading);
 		
 		test = false;
 		
@@ -72,22 +74,24 @@ public class Turn extends Command {
 
 	@Override
 	public void execute() {
-		if (!test) curHeading = HeadingCalculator.normalize(Robot.gyro.getAngle());
-		else curHeading = HeadingCalculator.normalize(headingProvider.getAngle());
+		if (!test) {
+			curHeading = HeadingCalculator.normalize(Robot.gyro.getAngle());
+			change = HeadingCalculator.calculateCourseChange(curHeading, desHeading);
+		} else curHeading = HeadingCalculator.normalize(headingProvider.getAngle());
 		
 		// TODO Make the smaller adjustment type thing.
-		if (desHeading - curHeading > 0) {
-			if (test) tankDrive.setSpeed(-RobotMap.TEST_SPEED, RobotMap.TEST_SPEED);
-			else Robot.myRobot.tankAuto(-RobotMap.FAST_SPEED, RobotMap.FAST_SPEED);
-		} else {
+		if (change > 0) {
 			if (test) tankDrive.setSpeed(RobotMap.TEST_SPEED, -RobotMap.TEST_SPEED);
 			else Robot.myRobot.tankAuto(RobotMap.FAST_SPEED, -RobotMap.FAST_SPEED);
+		} else {
+			if (test) tankDrive.setSpeed(-RobotMap.TEST_SPEED, RobotMap.TEST_SPEED);
+			else Robot.myRobot.tankAuto(-RobotMap.FAST_SPEED, RobotMap.FAST_SPEED);
 		}
 	}
 
 	@Override
 	protected boolean isFinished() {
-		return (Math.abs(curHeading - desHeading) <= 1);
+		return (Math.abs(change) <= .5);
 	}
 
 	@Override

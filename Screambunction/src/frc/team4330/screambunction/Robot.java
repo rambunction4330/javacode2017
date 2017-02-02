@@ -193,6 +193,8 @@ public class Robot extends IterativeRobot {
 		vision.shutDown();
 		leddar.shutDown();
 
+		myRobot.stop();
+		
 		Scheduler.getInstance().disable();
 	}
 }

@@ -1,9 +1,11 @@
-package frc.team4330.screambunction.canbus;
+package frc.team4330.sensors.distance;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import edu.wpi.first.wpilibj.can.CANMessageNotFoundException;
+import frc.team4330.sensors.canbus.ByteHelper;
+import frc.team4330.sensors.canbus.CanDevice;
 
 public class LeddarDistanceSensor extends CanDevice {
 	
@@ -164,8 +166,8 @@ public class LeddarDistanceSensor extends CanDevice {
 			// by looping until the CANMessageNotFoundException occurs
 			while(true) {
 				CANMessage message = pullNextSensorMessage();
-				int messageId = message.messageId;
-				byte[] data = message.data;
+				int messageId = message.getMessageId();
+				byte[] data = message.getData();
 				if ( messageId == getSizeMessageId() ) {
 					// a size message has 1 byte of data
 					handleSizeMessage(data[0]);
@@ -240,54 +242,6 @@ public class LeddarDistanceSensor extends CanDevice {
 			updateDistances(updatedDistances);
 			initializeReceivedState();
 		}
-	}
-	
-	public static final class LeddarDistanceSensorData implements Comparable<LeddarDistanceSensorData> {
-		
-		@Override
-		public int compareTo(LeddarDistanceSensorData o) {
-			return this.segmentNumber - o.getSegmentNumber();
-		}
-
-		private int segmentNumber;
-		private int distanceInCentimeters;
-		private double amplitude;
-		
-		public LeddarDistanceSensorData(int segmentNumber, int distanceInCentimeters, double amplitude) {
-			this.segmentNumber = segmentNumber;
-			this.distanceInCentimeters = distanceInCentimeters;
-			this.amplitude = amplitude;
-		}
-		
-
-		/**
-		 * The Leddar distance sensor has 16 segments
-		 * @return the segment number: 0 based index with values 0-15
-		 */
-		public int getSegmentNumber() {
-			return segmentNumber;
-		}
-
-		/**
-		 * 
-		 * @return the distance measurement in centimeters
-		 */
-		public int getDistanceInCentimeters() {
-			return distanceInCentimeters;
-		}
-
-		/**
-		 * 
-		 * @return the strength of the signal, max value is 1024
-		 */
-		public double getAmplitude() {
-			return amplitude;
-		}
-		
-		public String toString() {
-			return ("Seg: " + segmentNumber + ";" + "Dist: " + distanceInCentimeters + ";" + "amp: " + amplitude);
-		}
-		
 	}
 
 }

@@ -1,4 +1,4 @@
-package frc.team4330.screambunction.canbus;
+package frc.team4330.sensors.canbus;
 
 public class ByteHelper {
 	

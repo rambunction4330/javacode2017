@@ -81,11 +81,11 @@ public class DriveForward extends Command {
 		double courseChange = HeadingCalculator.calculateCourseChange(curHeading, pastHeading);
 		
 		if (courseChange > thr) {
-			rightval += chg;
-			leftval -= chg;
-		} else if (courseChange < -thr) {
-			leftval += chg;
 			rightval -= chg;
+			leftval += chg;
+		} else if (courseChange < -thr) {
+			leftval -= chg;
+			rightval += chg;
 		} else;
 
 		

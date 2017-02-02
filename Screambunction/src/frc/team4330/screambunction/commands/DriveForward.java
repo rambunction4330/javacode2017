@@ -20,6 +20,8 @@ public class DriveForward extends Command {
 	private HeadingProvider headingProvider;
 	private TankDrive tankDrive;
 
+	double distanceLeftToDrive;
+	
 	/**
 	 * A command that can be used to drive forward for a designated distance.
 	 * 
@@ -28,7 +30,8 @@ public class DriveForward extends Command {
 	public DriveForward(double desDistance) {
 		this.desDistance = desDistance;
 		test = false;
-
+		distanceLeftToDrive = desDistance;
+		
 		requires(Robot.myRobot);
 	}
 
@@ -37,6 +40,8 @@ public class DriveForward extends Command {
 		this.headingProvider = headingProvider;
 		this.tankDrive = tankDrive;
 
+		distanceLeftToDrive = desDistance;
+		
 		test = true;
 	}
 
@@ -50,7 +55,6 @@ public class DriveForward extends Command {
 
 	@Override
 	public void execute() {
-		double difference = 0;
 		if (!test) curHeading = HeadingCalculator.normalize(Robot.gyro.getAngle());
 		else curHeading = HeadingCalculator.normalize(headingProvider.getAngle());
 
@@ -59,13 +63,12 @@ public class DriveForward extends Command {
 
 		if (!test) {
 			deltaX = Robot.gyro.getDisplacementX() - startX;
-			
 			deltaY = Robot.gyro.getDisplacementY() - startY;
 			deltaDis = Math.sqrt(deltaX*deltaX + deltaY*deltaY);
-			difference = Math.abs(desDistance - deltaDis);
-		} else difference = Math.abs(headingProvider.getAngle() - desDistance);
+			distanceLeftToDrive = Math.abs(desDistance - deltaDis);
+		} else distanceLeftToDrive = Math.abs(headingProvider.getAngle() - desDistance);
 		
-		if (difference <= .5) {
+		if (distanceLeftToDrive <= .5) {
 			rightval = RobotMap.SLOW_SPEED;
 			leftval = RobotMap.SLOW_SPEED;
 		} else {
@@ -92,7 +95,7 @@ public class DriveForward extends Command {
 
 	@Override
 	protected boolean isFinished() {
-		return Math.abs(Robot.gyro.getDisplacementY() - desDistance) <= .2;
+		return distanceLeftToDrive <= .05;
 	}
 
 	@Override

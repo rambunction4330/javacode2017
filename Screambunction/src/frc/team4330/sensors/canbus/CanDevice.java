@@ -1,4 +1,4 @@
-package frc.team4330.screambunction.canbus;
+package frc.team4330.sensors.canbus;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -82,6 +82,14 @@ public abstract class CanDevice {
 			this.data = data;
 		}
 		
+		public int getMessageId() {
+			return messageId;
+		}
+
+		public byte[] getData() {
+			return data;
+		}
+
 		public String toString() {
 			return "messageId=" + messageId + " data=" + ByteHelper.bytesToHex(data);
 		}

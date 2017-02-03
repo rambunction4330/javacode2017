@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.command.WaitCommand;
 import frc.team4330.screambunction.commands.DriveForward;
 import frc.team4330.screambunction.commands.Turn;
 import frc.team4330.screambunction.utils.RobotMap;
+import frc.team4330.sensors.distance.LeddarDistanceSensorData;
 
 public class AutonomousManager extends Subsystem {
 

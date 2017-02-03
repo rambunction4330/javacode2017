@@ -66,21 +66,20 @@ public class Turn extends Command {
 			change = HeadingCalculator.calculateCourseChange(curHeading, desHeading);
 		} else curHeading = headingProvider.getAngle();
 
-		double tempSpd = .5; 
 		
 		if (change > 0) { // means we need to turn right
 			if (change < 10) {
-				Robot.myRobot.tankAuto(tempSpd/2, -tempSpd/2);
+				Robot.myRobot.tankAuto(RobotMap.SLOW_SPEED/2, -RobotMap.SLOW_SPEED/2);
 			} else {
 				if (test) tankDrive.setSpeed(RobotMap.TEST_SPEED, -RobotMap.TEST_SPEED);
-				else Robot.myRobot.tankAuto(tempSpd, -tempSpd);
+				else Robot.myRobot.tankAuto(RobotMap.SLOW_SPEED, -RobotMap.SLOW_SPEED);
 			}
 		} else { // need to turn left
 			if (change > -10) {
-				Robot.myRobot.tankAuto(-tempSpd/2, tempSpd/2);
+				Robot.myRobot.tankAuto(-RobotMap.SLOW_SPEED/2, RobotMap.SLOW_SPEED/2);
 			} else {
 				if (test) tankDrive.setSpeed(-RobotMap.TEST_SPEED, RobotMap.TEST_SPEED);
-				else Robot.myRobot.tankAuto(-tempSpd, tempSpd);
+				else Robot.myRobot.tankAuto(-RobotMap.SLOW_SPEED, RobotMap.SLOW_SPEED);
 			}
 		}
 	}

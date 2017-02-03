@@ -65,7 +65,7 @@ public class DriveForward extends Command {
 			deltaX = Robot.gyro.getDisplacementX() - startX;
 			deltaY = Robot.gyro.getDisplacementY() - startY;
 			deltaDis = Math.sqrt(deltaX*deltaX + deltaY*deltaY);
-			distanceLeftToDrive = Math.abs(desDistance - deltaDis);
+			distanceLeftToDrive = desDistance - deltaDis;
 		} else distanceLeftToDrive = Math.abs(headingProvider.getAngle() - desDistance);
 		
 		if (distanceLeftToDrive <= .5) {

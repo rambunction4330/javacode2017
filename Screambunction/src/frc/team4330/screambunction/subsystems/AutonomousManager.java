@@ -17,9 +17,9 @@ public class AutonomousManager extends Subsystem {
 	
 	public void travelToLeftLift() {
 		CommandGroup group = new CommandGroup();
-//		group.addSequential(new DriveForward(RobotMap.DISTANCE_TO_BASELINES
-//				+ RobotMap.ROBOT_WIDTH));
-//		group.addSequential(new WaitCommand(1));
+		group.addSequential(new DriveForward(RobotMap.DISTANCE_TO_BASELINES
+				+ RobotMap.ROBOT_WIDTH));
+		group.addSequential(new WaitCommand(.5));
 		group.addSequential(new Turn(90, true));
 		
 		Scheduler.getInstance().add(group);

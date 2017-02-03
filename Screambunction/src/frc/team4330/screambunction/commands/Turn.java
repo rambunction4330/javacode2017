@@ -13,23 +13,25 @@ public class Turn extends Command {
 	private HeadingProvider headingProvider;
 	private TankDrive tankDrive;
 	private boolean test;
-	
+
 	/**
 	 * Turn Command for if you don't know the current or desired heading.
 	 * 
 	 * @param headingChange The change in heading. Negative means to the right.
 	 */
-	public Turn( double headingChange ) {
-		curHeading = HeadingCalculator.normalize(Robot.gyro.getAngle());
-		this.desHeading = HeadingCalculator.normalize(curHeading + headingChange);
-		
-		change = HeadingCalculator.calculateCourseChange(curHeading, desHeading);
-		
+	public Turn( double heading, boolean absolute ) {
+		curHeading = Robot.gyro.getAngle();
+
+		if (absolute) this.desHeading = heading;
+		else this.desHeading = curHeading + heading;
+
+		//		change = HeadingCalculator.calculateCourseChange(curHeading, desHeading);
+
 		test = false;
-		
+
 		requires (Robot.myRobot);
 	}
-	
+
 	/**
 	 * Used for testing the Turn Command (unit tests).
 	 * 
@@ -38,28 +40,13 @@ public class Turn extends Command {
 	 * @param tankDrive Abstract driver.
 	 */
 	public Turn( double desHeading, HeadingProvider headingProvider, TankDrive tankDrive ) {
-		curHeading = HeadingCalculator.normalize(headingProvider.getAngle());
-		this.desHeading = HeadingCalculator.normalize(desHeading);
-		
+		curHeading = headingProvider.getAngle();
+		this.desHeading = desHeading;
+
 		this.headingProvider = headingProvider;
 		this.tankDrive = tankDrive;
-		
+
 		test = true;
-	}
-	
-	/**
-	 * Turn Command for a specific heading.
-	 * 
-	 * @param desHeading The desired heading.
-	 * @param tru Doesn't matter.
-	 */
-	public Turn( double desHeading, boolean tru ) {
-		curHeading = HeadingCalculator.normalize(Robot.gyro.getAngle());
-		this.desHeading = HeadingCalculator.normalize(desHeading);
-		
-		test = false;
-		
-		requires (Robot.myRobot);
 	}
 
 	/**
@@ -67,7 +54,7 @@ public class Turn extends Command {
 	 */
 	@Override
 	protected void initialize() {
-		if (!test) curHeading = HeadingCalculator.normalize(Robot.gyro.getAngle());
+		if (!test) curHeading = Robot.gyro.getAngle();
 		else curHeading = HeadingCalculator.normalize(headingProvider.getAngle());
 
 	}
@@ -75,23 +62,30 @@ public class Turn extends Command {
 	@Override
 	public void execute() {
 		if (!test) {
-			curHeading = HeadingCalculator.normalize(Robot.gyro.getAngle());
+			curHeading = Robot.gyro.getAngle();
 			change = HeadingCalculator.calculateCourseChange(curHeading, desHeading);
-		} else curHeading = HeadingCalculator.normalize(headingProvider.getAngle());
-		
-		// TODO Make the smaller adjustment type thing.
-		if (change > 0) {
-			if (test) tankDrive.setSpeed(RobotMap.TEST_SPEED, -RobotMap.TEST_SPEED);
-			else Robot.myRobot.tankAuto(RobotMap.FAST_SPEED, -RobotMap.FAST_SPEED);
-		} else {
-			if (test) tankDrive.setSpeed(-RobotMap.TEST_SPEED, RobotMap.TEST_SPEED);
-			else Robot.myRobot.tankAuto(-RobotMap.FAST_SPEED, RobotMap.FAST_SPEED);
+		} else curHeading = headingProvider.getAngle();
+
+		if (change > 0) { // means we need to turn right
+			if (change < 10) {
+				Robot.myRobot.tankAuto(RobotMap.SLOW_SPEED, -RobotMap.SLOW_SPEED);
+			} else {
+				if (test) tankDrive.setSpeed(RobotMap.TEST_SPEED, -RobotMap.TEST_SPEED);
+				else Robot.myRobot.tankAuto(RobotMap.FAST_SPEED, -RobotMap.FAST_SPEED);
+			}
+		} else { // need to turn left
+			if (change > -10) {
+				Robot.myRobot.tankAuto(-RobotMap.SLOW_SPEED, RobotMap.SLOW_SPEED);
+			} else {
+				if (test) tankDrive.setSpeed(-RobotMap.TEST_SPEED, RobotMap.TEST_SPEED);
+				else Robot.myRobot.tankAuto(-RobotMap.FAST_SPEED, RobotMap.FAST_SPEED);
+			}
 		}
 	}
 
 	@Override
 	protected boolean isFinished() {
-		return (Math.abs(change) <= .5);
+		return (Math.abs(change) <= 1);
 	}
 
 	@Override

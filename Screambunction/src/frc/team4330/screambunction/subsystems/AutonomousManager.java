@@ -12,6 +12,7 @@ import frc.team4330.screambunction.commands.DriveForward;
 import frc.team4330.screambunction.commands.Turn;
 import frc.team4330.screambunction.utils.AutonomousPhase;
 import frc.team4330.screambunction.utils.RobotMap;
+import frc.team4330.sensors.distance.LeddarDistanceSensorData;
 
 public class AutonomousManager extends Subsystem {
 	private double xCord, yCord;
@@ -59,19 +60,24 @@ public class AutonomousManager extends Subsystem {
 	public void run() {
 		updateCoordinates();
 		
-		if (isPhaseOneFinished()) phase = AutonomousPhase.two;
-		else if (iSPhaSetWofinIshEd()) phase = AutonomousPhase.three;
+		if (isPhaseOneFinished()) {
+			phase = AutonomousPhase.two;
+			loadPhases();
+		} else if (isPhaseTwoFinished()) {
+			phase = AutonomousPhase.three;
+			loadPhases();
+		} else;
 		
-		loadPhases();
+		
 		Scheduler.getInstance().run();
 	}
 	
 	private void loadPhases() {
 		if (phase == AutonomousPhase.two) {
-			
+			turnToAngle(vision.getLiftAngle());
 		} else if (phase == AutonomousPhase.three) {
-			
-		} else return;
+			driveToLift(Robot.leddar.getDistances().get(8));
+		} else;
 	}
 	
 	private void updateCoordinates() {
@@ -117,17 +123,16 @@ public class AutonomousManager extends Subsystem {
 		Scheduler.getInstance().add(new DriveForward(driveDistance));
 	}
 	
-	/*private void turnToAngle(double angle) {
+	private void turnToAngle(double angle) {
 		if (angle != 0) 
 			Scheduler.getInstance().add(new Turn(angle, false));
 	}
 	
 	private void driveToLift(LeddarDistanceSensorData data) {
 		if (data.getDistanceInCentimeters() != 0 || data != null) {
-			driveDistance = data.getDistanceInCentimeters() / 100;
-			Scheduler.getInstance().add(new DriveForward(driveDistance));
+			Scheduler.getInstance().add(new DriveForward(data.getDistanceInCentimeters() / 100));
 		}
-	}*/
+	}
 	
 	public void testDriveCommand(double distance) {
 		Scheduler.getInstance().add(new DriveForward(distance));
@@ -158,7 +163,7 @@ public class AutonomousManager extends Subsystem {
 		} else return false;
 	}
 	
-	private boolean iSPhaSetWofinIshEd() {
+	private boolean isPhaseTwoFinished() {
 		updateCoordinates();
 		
 		if (phase == AutonomousPhase.two) {

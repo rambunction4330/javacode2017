@@ -78,8 +78,12 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void teleopPeriodic() {
 		myRobot.tankDrive(leftj, rightj, leftj.getRawButton(RobotMap.REVERSE_BUTTON));
-		tarzan.setClimb(buttonj.getRawButton(RobotMap.CLIMB_SLOW_SPEED_BUTTON),
-				buttonj.getRawButton(RobotMap.CLIMB_FAST_SPEED_BUTTON));
+		
+//		tarzan.setClimb(buttonj.getRawButton(RobotMap.CLIMB_SLOW_SPEED_BUTTON),
+//				buttonj.getRawButton(RobotMap.CLIMB_FAST_SPEED_BUTTON));
+		
+		tarzan.testClimb(leftj.getRawButton(11), leftj.getRawButton(12), leftj.getRawButton(7));
+
 
 		//				skittyskittybangbang.manualShoot(, buttonOn, feederOn, addPwr, subPwr);
 	}
@@ -89,7 +93,7 @@ public class Robot extends IterativeRobot {
 	public void testInit() {
 		SmartDashboardSetup.testDashboard();
 
-		//		vision.startUp();
+		vision.startUp();
 	}
 
 	@Override

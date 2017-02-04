@@ -61,8 +61,9 @@ public class AutonomousManager extends Subsystem {
 		} else if (isPhaseTwoFinished()) {
 			phase = AutonomousPhase.three;
 			loadPhases();
+		} else if (isPhaseThreeFinished()) {
+			phase = AutonomousPhase.done;
 		} else;
-
 
 		Scheduler.getInstance().run();
 	}
@@ -129,21 +130,18 @@ public class AutonomousManager extends Subsystem {
 
 	private boolean isPhaseOneFinished() {
 		updateCoordinates();
-		double distance = Math.sqrt(xCord*xCord + yCord*yCord);
+//		double distance = Math.sqrt(xCord*xCord + yCord*yCord);
 
 		if (phase == AutonomousPhase.one) {
 			switch(position) {
 			case 1:
-				if (gyro.getAngle() == RobotMap.TURN_ANGLE && distance == RobotMap.DISTANCE_TO_BASELINES + RobotMap.ROBOT_WIDTH)
-					return true;
+				if (Math.abs(gyro.getAngle() - RobotMap.TURN_ANGLE) <= 3) return true;
 				else return false;
 			case 2:
-				if (gyro.getAngle() == 0 && distance == RobotMap.DISTANCE_TO_BASELINES - RobotMap.ROBOT_WIDTH) 
-					return true;
+				if (Math.abs(gyro.getAngle()) <= 2) return true;
 				else return false;
 			case 3:
-				if (gyro.getAngle() == -RobotMap.TURN_ANGLE && distance == RobotMap.DISTANCE_TO_BASELINES + RobotMap.ROBOT_WIDTH) 
-					return true;
+				if (Math.abs(gyro.getAngle() - RobotMap.TURN_ANGLE) <= 3) return true;
 				else return false;
 			default:
 				System.out.println("No autonomous was selected.");
@@ -156,7 +154,14 @@ public class AutonomousManager extends Subsystem {
 		updateCoordinates();
 
 		if (phase == AutonomousPhase.two) {
-			if (vision.getLiftAngle() == 0) return true;
+			if (Math.abs(vision.getLiftAngle()) <= 1) return true;
+			else return false;
+		} else return false;
+	}
+	
+	private boolean isPhaseThreeFinished() {
+		if (phase == AutonomousPhase.three) {
+			if (Robot.leddar.getDistances().get(8).getDistanceInCentimeters() <= 10) return true;
 			else return false;
 		} else return false;
 	}

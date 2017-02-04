@@ -6,7 +6,7 @@ import edu.wpi.first.wpilibj.AnalogInput;
 
 public class MaxSonar {
 	private AnalogInput analog;
-	private final static int conversionFactor = 512;
+	private final static double conversionFactor = (5 / 512) * 1000;
 
 	public MaxSonar() {
 		analog = new AnalogInput(RobotMap.MAXSONAR_PORT);
@@ -17,6 +17,10 @@ public class MaxSonar {
 	}
 	
 	public double getDistanceInMeters() {
-		return (analog.getVoltage() / conversionFactor) / 0.0254;
+		return (analog.getVoltage() / conversionFactor) * 39.3700787;
+	}
+	
+	public double getVoltage() {
+		return analog.getVoltage();
 	}
 }

@@ -65,27 +65,30 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void autonomousPeriodic() {
-		Scheduler.getInstance().run();
+		manager.run();
 	}
 
 
 
 	@Override
 	public void teleopInit() {
+		vision.startUp();
 		SmartDashboardSetup.teleOpDashboard();
 	}
 
 	@Override
 	public void teleopPeriodic() {
 		myRobot.tankDrive(leftj, rightj, leftj.getRawButton(RobotMap.REVERSE_BUTTON));
-		
-//		tarzan.setClimb(buttonj.getRawButton(RobotMap.CLIMB_SLOW_SPEED_BUTTON),
-//				buttonj.getRawButton(RobotMap.CLIMB_FAST_SPEED_BUTTON));
-		
-		tarzan.testClimb(leftj.getRawButton(11), leftj.getRawButton(12), leftj.getRawButton(7));
+		tarzan.setClimb(buttonj.getRawButton(RobotMap.CLIMB_SLOW_SPEED_BUTTON),
+				buttonj.getRawButton(RobotMap.CLIMB_FAST_SPEED_BUTTON));
+		//		skittyskittybangbang.manualShoot(, buttonOn, feederOn, addPwr, subPwr);
 
 
-		//				skittyskittybangbang.manualShoot(, buttonOn, feederOn, addPwr, subPwr);
+		//		System.out.println("voltage : " + sonar.getVoltage());
+		System.out.println("sonar distances (m): " + sonar.getDistanceInMeters());
+		//		System.out.println("sonar distances (in): " + sonar.getDistanceInInches());
+
+
 	}
 
 
@@ -93,7 +96,7 @@ public class Robot extends IterativeRobot {
 	public void testInit() {
 		SmartDashboardSetup.testDashboard();
 
-		vision.startUp();
+		//		vision.startUp();
 	}
 
 	@Override
@@ -101,18 +104,18 @@ public class Robot extends IterativeRobot {
 		tarzan.testClimb(leftj.getRawButton(11), leftj.getRawButton(12), leftj.getRawButton(7));
 		//		myRobot.tankDrive(leftj, rightj);
 
-		System.out.println(sonar.getDistanceInMeters());
+		System.out.println("sonar distances (m): " + sonar.getDistanceInMeters());
 		//		manager.testDriveCommand(dis.getDistanceInMeters());
 	}
 
 	@Override
 	public void disabledInit() {
+		Scheduler.getInstance().removeAll();
+		Scheduler.getInstance().disable();
+
 		vision.shutDown();
 		leddar.shutDown();
 
 		myRobot.stop();
-
-		Scheduler.getInstance().removeAll();
-		Scheduler.getInstance().disable();
 	}
 }

@@ -82,6 +82,7 @@ public class Robot extends IterativeRobot {
 		//				buttonj.getRawButton(RobotMap.CLIMB_FAST_SPEED_BUTTON));
 		tarzan.testClimb(leftj.getRawButton(11), leftj.getRawButton(12), leftj.getRawButton(7));
 
+		System.out.println("sonar distances (m): " + sonar.getDistanceInMeters());
 
 		//		skittyskittybangbang.manualShoot(, buttonOn, feederOn, addPwr, subPwr);
 	}

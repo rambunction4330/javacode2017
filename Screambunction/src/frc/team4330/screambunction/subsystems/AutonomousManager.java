@@ -16,25 +16,20 @@ import frc.team4330.sensors.distance.LeddarDistanceSensorData;
 
 public class AutonomousManager extends Subsystem {
 	private double xCord, yCord;
-	public static double driveDistance;
-	
+
 	public AutonomousPhase phase = AutonomousPhase.one;
 	private int position;
-	
+
 	protected AHRS gyro;
 	protected VisionSystem vision;
-	
-	public AutonomousManager() {
-		driveDistance = 0;
-	}
-	
+
 	public void init() {
 		phase = AutonomousPhase.one;
 		position = SmartDashboardSetup.getStart();
-		
+
 		gyro = Robot.gyro;
 		vision = Robot.vision;
-		
+
 		xCord = gyro.getDisplacementX();
 		yCord = gyro.getDisplacementY();
 
@@ -53,13 +48,13 @@ public class AutonomousManager extends Subsystem {
 			System.out.println("No autonomous was selected.");
 			break;
 		}
-		
+
 		Scheduler.getInstance().enable(); 
 	}
-	
+
 	public void run() {
 		updateCoordinates();
-		
+
 		if (isPhaseOneFinished()) {
 			phase = AutonomousPhase.two;
 			loadPhases();
@@ -67,11 +62,11 @@ public class AutonomousManager extends Subsystem {
 			phase = AutonomousPhase.three;
 			loadPhases();
 		} else;
-		
-		
+
+
 		Scheduler.getInstance().run();
 	}
-	
+
 	private void loadPhases() {
 		if (phase == AutonomousPhase.two) {
 			turnToAngle(vision.getLiftAngle());
@@ -79,69 +74,63 @@ public class AutonomousManager extends Subsystem {
 			driveToLift(Robot.leddar.getDistances().get(8));
 		} else;
 	}
-	
+
 	private void updateCoordinates() {
 		xCord = gyro.getDisplacementX();
 		yCord = gyro.getDisplacementY();
 	}
-	
+
 	public double getXCord() {
 		updateCoordinates();
 		return xCord;
 	}
-	
+
 	public double getYCord() {
 		updateCoordinates();
 		return yCord;
 	}
 
 	private void travelToLeftLift() {
-		driveDistance = RobotMap.DISTANCE_TO_BASELINES + RobotMap.ROBOT_WIDTH;
-
 		CommandGroup group = new CommandGroup();
-		group.addSequential(new DriveForward(driveDistance));
+		group.addSequential(new DriveForward(RobotMap.DISTANCE_TO_BASELINES + RobotMap.ROBOT_WIDTH));
 		group.addSequential(new WaitCommand(.5));
 		group.addSequential(new Turn(RobotMap.TURN_ANGLE, true));
-		
+
 		Scheduler.getInstance().add(group);
 	}
 
 	private void travelToRightLift() {
-		driveDistance = RobotMap.DISTANCE_TO_BASELINES + RobotMap.ROBOT_WIDTH;
-
 		CommandGroup group = new CommandGroup();
-		group.addSequential(new DriveForward(driveDistance));
+		group.addSequential(new DriveForward( RobotMap.DISTANCE_TO_BASELINES + RobotMap.ROBOT_WIDTH));
 		group.addSequential(new WaitCommand(.5));
 		group.addSequential(new Turn(-RobotMap.TURN_ANGLE, false)); 
-		
+
 		Scheduler.getInstance().add(group);
 	}
 
 	private void travelToCenterLift() {
-		driveDistance = RobotMap.DISTANCE_TO_BASELINES - RobotMap.ROBOT_WIDTH;
-
-		Scheduler.getInstance().add(new DriveForward(driveDistance));
+		Scheduler.getInstance().add(new DriveForward(RobotMap.DISTANCE_TO_BASELINES - RobotMap.ROBOT_WIDTH));
 	}
-	
+
 	private void turnToAngle(double angle) {
 		if (angle != 0) 
 			Scheduler.getInstance().add(new Turn(angle, false));
 	}
-	
+
 	private void driveToLift(LeddarDistanceSensorData data) {
 		if (data.getDistanceInCentimeters() != 0 || data != null) {
 			Scheduler.getInstance().add(new DriveForward(data.getDistanceInCentimeters() / 100));
 		}
 	}
-	
+
 	public void testDriveCommand(double distance) {
 		Scheduler.getInstance().add(new DriveForward(distance));
 	}
-	
+
 	private boolean isPhaseOneFinished() {
 		updateCoordinates();
 		double distance = Math.sqrt(xCord*xCord + yCord*yCord);
-		
+
 		if (phase == AutonomousPhase.one) {
 			switch(position) {
 			case 1:
@@ -162,16 +151,16 @@ public class AutonomousManager extends Subsystem {
 			}
 		} else return false;
 	}
-	
+
 	private boolean isPhaseTwoFinished() {
 		updateCoordinates();
-		
+
 		if (phase == AutonomousPhase.two) {
 			if (vision.getLiftAngle() == 0) return true;
 			else return false;
 		} else return false;
 	}
-	
+
 	@Override
 	protected void initDefaultCommand() { }
 }

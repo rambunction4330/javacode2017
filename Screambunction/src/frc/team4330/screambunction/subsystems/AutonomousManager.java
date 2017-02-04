@@ -18,19 +18,24 @@ public class AutonomousManager extends Subsystem {
 	public static double driveDistance;
 	
 	public AutonomousPhase phase = AutonomousPhase.one;
-	private int position = SmartDashboardSetup.getStart();
+	private int position;
 	
-	protected AHRS gyro = Robot.gyro;
-	protected VisionSystem vision = Robot.vision;
+	protected AHRS gyro;
+	protected VisionSystem vision;
 	
 	public AutonomousManager() {
 		driveDistance = 0;
-		xCord = gyro.getDisplacementX();
-		yCord = gyro.getDisplacementY();
 	}
 	
 	public void init() {
 		phase = AutonomousPhase.one;
+		position = SmartDashboardSetup.getStart();
+		
+		gyro = Robot.gyro;
+		vision = Robot.vision;
+		
+		xCord = gyro.getDisplacementX();
+		yCord = gyro.getDisplacementY();
 
 		// This on start up because we want it to go once.
 		switch(position) {

@@ -40,25 +40,19 @@ public class RobotDrive extends Subsystem {
 
 		lastPressed = button;
 	}
-
 	/**
 	 * For using tank drive to drive the robot with Joysticks.
 	 * 
 	 * @param left the left joystick.
 	 * @param right the right joystick.
 	 */
-	public void tankDrive(Joystick left, Joystick right, boolean button) {
+	public void tankDrive(Joystick left, Joystick right, boolean button, boolean curveSpeed) {
+		
 		reverseDrive(button);
 		if (reverse) {
-			rightMotor1.set(left.getY()* RobotMap.FAST_SPEED);
-			rightMotor2.set(left.getY() * RobotMap.FAST_SPEED);
-			leftMotor1.set(right.getY() * RobotMap.FAST_SPEED);
-			leftMotor2.set(right.getY() * RobotMap.FAST_SPEED);
+			tankAuto(right.getY()*RobotMap.FAST_SPEED, left.getY()*RobotMap.FAST_SPEED);
 		} else {
-			rightMotor1.set(-right.getY()* RobotMap.FAST_SPEED);
-			rightMotor2.set(-right.getY() * RobotMap.FAST_SPEED);
-			leftMotor1.set(-left.getY() * RobotMap.FAST_SPEED);
-			leftMotor2.set(-left.getY() * RobotMap.FAST_SPEED);
+			tankAuto(-left.getY()*RobotMap.FAST_SPEED, -right.getY()*RobotMap.FAST_SPEED);
 			// negative because joysticks
 		}
 	}

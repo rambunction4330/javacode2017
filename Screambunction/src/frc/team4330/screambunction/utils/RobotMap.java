@@ -11,7 +11,7 @@ public class RobotMap {
 	public final static int MOTOR_SHOOT_PORT = 5;
 	
 	// Relay Ports
-	public final static int RELAY_FEED_PORT = 6;
+	public final static int RELAY_FEED_PORT = 1;
 	public final static int RELAY_LED_SWITCH_PORT = 0;
 	
 	// DigitalInput Ports

@@ -45,7 +45,7 @@ public class Robot extends IterativeRobot {
 
 		//		channel = new AnalogInput(0);
 		gyro = new AHRS(SerialPort.Port.kMXP);
-		//		leddar = new LeddarDistanceSensor();
+		leddar = new LeddarDistanceSensor();
 	}
 
 	@Override
@@ -97,7 +97,7 @@ public class Robot extends IterativeRobot {
 		tarzan.testClimb(leftj.getRawButton(11), leftj.getRawButton(12), leftj.getRawButton(7));
 		//		myRobot.tankDrive(leftj, rightj);
 
-				System.out.println(sonar.getDistanceInMeters());
+		System.out.println(sonar.getDistanceInMeters());
 		//		manager.testDriveCommand(dis.getDistanceInMeters());
 	}
 

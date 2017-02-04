@@ -1,38 +1,35 @@
-package frc.team4330.screambunction.subsystems;
+package org.usfirst.frc.team4330.robot.subsystems;
 
-import com.kauailabs.navx.frc.AHRS;
+import org.usfirst.frc.team4330.robot.Robot;
+import org.usfirst.frc.team4330.robot.SmartDashboardSetup;
+import org.usfirst.frc.team4330.robot.commands.DriveForward;
+import org.usfirst.frc.team4330.robot.commands.Turn;
+import org.usfirst.frc.team4330.utils.AutonomousPhase;
+import org.usfirst.frc.team4330.utils.RobotMap;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.command.WaitCommand;
-import frc.team4330.screambunction.Robot;
-import frc.team4330.screambunction.SmartDashboardSetup;
-import frc.team4330.screambunction.commands.DriveForward;
-import frc.team4330.screambunction.commands.Turn;
-import frc.team4330.screambunction.utils.AutonomousPhase;
-import frc.team4330.screambunction.utils.RobotMap;
 
 public class AutonomousManager extends Subsystem {
 	private double xCord, yCord;
 	public static double driveDistance;
 	
 	public AutonomousPhase phase = AutonomousPhase.one;
-	private int position = SmartDashboardSetup.getStart();
-	
-	protected AHRS gyro = Robot.gyro;
-	protected VisionSystem vision = Robot.vision;
 	
 	public AutonomousManager() {
 		driveDistance = 0;
-		xCord = gyro.getDisplacementX();
-		yCord = gyro.getDisplacementY();
+//		xCord = Robot.gyro.getDisplacementX();
+//		yCord = Robot.gyro.getDisplacementY();
 	}
 	
 	public void init() {
 		phase = AutonomousPhase.one;
 
 		// This on start up because we want it to go once.
+		int position = SmartDashboardSetup.getStart();
+
 		switch(position) {
 		case 1:
 			travelToLeftLift();
@@ -54,24 +51,12 @@ public class AutonomousManager extends Subsystem {
 	public void run() {
 		updateCoordinates();
 		
-		if (isPhaseOneFinished()) phase = AutonomousPhase.two;
-		else if (iSPhaSetWofinIshEd()) phase = AutonomousPhase.three;
-		
-		loadPhases();
 		Scheduler.getInstance().run();
 	}
 	
-	private void loadPhases() {
-		if (phase == AutonomousPhase.two) {
-			
-		} else if (phase == AutonomousPhase.three) {
-			
-		} else return;
-	}
-	
 	private void updateCoordinates() {
-		xCord = gyro.getDisplacementX();
-		yCord = gyro.getDisplacementY();
+//		xCord = Robot.gyro.getDisplacementX();
+//		yCord = Robot.gyro.getDisplacementY();
 	}
 	
 	public double getXCord() {
@@ -90,7 +75,7 @@ public class AutonomousManager extends Subsystem {
 		CommandGroup group = new CommandGroup();
 		group.addSequential(new DriveForward(driveDistance));
 		group.addSequential(new WaitCommand(.5));
-		group.addSequential(new Turn(RobotMap.TURN_ANGLE, true));
+		group.addSequential(new Turn(90, true));
 		
 		Scheduler.getInstance().add(group);
 	}
@@ -101,7 +86,7 @@ public class AutonomousManager extends Subsystem {
 		CommandGroup group = new CommandGroup();
 		group.addSequential(new DriveForward(driveDistance));
 		group.addSequential(new WaitCommand(.5));
-		group.addSequential(new Turn(-RobotMap.TURN_ANGLE, false)); 
+		group.addSequential(new Turn(-90, false)); 
 		
 		Scheduler.getInstance().add(group);
 	}
@@ -126,40 +111,6 @@ public class AutonomousManager extends Subsystem {
 	
 	public void testDriveCommand(double distance) {
 		Scheduler.getInstance().add(new DriveForward(distance));
-	}
-	
-	private boolean isPhaseOneFinished() {
-		updateCoordinates();
-		double distance = Math.sqrt(xCord*xCord + yCord*yCord);
-		
-		if (phase == AutonomousPhase.one) {
-			switch(position) {
-			case 1:
-				if (gyro.getAngle() == RobotMap.TURN_ANGLE && distance == RobotMap.DISTANCE_TO_BASELINES + RobotMap.ROBOT_WIDTH)
-					return true;
-				else return false;
-			case 2:
-				if (gyro.getAngle() == 0 && distance == RobotMap.DISTANCE_TO_BASELINES - RobotMap.ROBOT_WIDTH) 
-					return true;
-				else return false;
-			case 3:
-				if (gyro.getAngle() == -RobotMap.TURN_ANGLE && distance == RobotMap.DISTANCE_TO_BASELINES + RobotMap.ROBOT_WIDTH) 
-					return true;
-				else return false;
-			default:
-				System.out.println("No autonomous was selected.");
-				return false;
-			}
-		} else return false;
-	}
-	
-	private boolean iSPhaSetWofinIshEd() {
-		updateCoordinates();
-		
-		if (phase == AutonomousPhase.two) {
-			if (vision.getLiftAngle() == 0) return true;
-			else return false;
-		} else return false;
 	}
 	
 	@Override

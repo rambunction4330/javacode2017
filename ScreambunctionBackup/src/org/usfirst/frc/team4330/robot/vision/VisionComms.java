@@ -20,7 +20,7 @@ import java.util.Map;
 public class VisionComms {
 	
 	public static final int CONNECTION_TIMEOUT_SEC = 10;
-	public static final String DEFAULT_VISION_BOARD_HOST = "?.local";
+	public static final String DEFAULT_VISION_BOARD_HOST = "tegra-ubuntu";
 	public static final int DEFAULT_VISION_BOARD_PORT = 9001;
 	
 	// TODO update after know the mDNS name of the vision processing host
@@ -119,10 +119,8 @@ public class VisionComms {
 			return new HashMap<String, String>();
 		}
 	}
-	/*
-	 * TODO ask randy about protected/public on this one
-	 */
-	static public Map<String, String> getMessages(OutputStream outputStream, InputStream inputStream) throws IOException {
+	
+	public static Map<String, String> getMessages(OutputStream outputStream, InputStream inputStream) throws IOException {
 		// send a request to server for data
 		outputStream.write(GET_DATA_COMMAND);
 		outputStream.flush();

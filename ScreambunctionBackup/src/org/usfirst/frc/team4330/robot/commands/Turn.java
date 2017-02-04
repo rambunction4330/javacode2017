@@ -1,59 +1,106 @@
 package org.usfirst.frc.team4330.robot.commands;
 
-import org.usfirst.frc.team4330.robot.abs.HeadingProvider;
+import org.usfirst.frc.team4330.robot.Robot;
+import org.usfirst.frc.team4330.robot.parts.HeadingProvider;
+import org.usfirst.frc.team4330.robot.parts.TankDrive;
+import org.usfirst.frc.team4330.utils.HeadingCalculator;
+import org.usfirst.frc.team4330.utils.RobotMap;
 
 import edu.wpi.first.wpilibj.command.Command;
 
 public class Turn extends Command {
 
-	private double curHeading;
-	private boolean finished = false;
-	private double desHeading;
+	private double curHeading, desHeading, change;
 	private HeadingProvider headingProvider;
-//	private AbsRobotDrive tankDrive;
+	private TankDrive tankDrive;
+	private boolean test;
 
-	public Turn(double desHeading, HeadingProvider headingProvider) {
-		this.desHeading = desHeading;
-		this.headingProvider = headingProvider;
-//		this.tankDrive = tankDrive;
+	/**
+	 * Turn Command for if you don't know the current or desired heading.
+	 * 
+	 * @param headingChange The change in heading. Negative means to the right.
+	 */
+	public Turn( double heading, boolean absolute ) {
+//		curHeading = Robot.gyro.getAngle();
+
+		if (absolute) this.desHeading = heading;
+		else this.desHeading = curHeading + heading;
+
+		//		change = HeadingCalculator.calculateCourseChange(curHeading, desHeading);
+
+		test = false;
+
+//		requires (Robot.myRobot);
 	}
 
 	/**
+	 * Used for testing the Turn Command (unit tests).
 	 * 
+	 * @param desHeading Desired heading.
+	 * @param headingProvider The angle provider.
+	 * @param tankDrive Abstract driver.
+	 */
+	public Turn( double desHeading, HeadingProvider headingProvider, TankDrive tankDrive ) {
+		curHeading = headingProvider.getAngle();
+		this.desHeading = desHeading;
+
+		this.headingProvider = headingProvider;
+		this.tankDrive = tankDrive;
+
+		test = true;
+	}
+
+	/**
 	 * Used to initialize the command.
 	 */
 	@Override
 	protected void initialize() {
-		curHeading = headingProvider.getAngle();
+		if (!test) curHeading = Robot.gyro.getAngle();
+		else curHeading = HeadingCalculator.normalize(headingProvider.getAngle());
+
 	}
 
 	@Override
 	public void execute() {
-		curHeading = headingProvider.getAngle();
+		if (!test) {
+			curHeading = Robot.gyro.getAngle();
+			change = HeadingCalculator.calculateCourseChange(curHeading, desHeading);
+		} else curHeading = headingProvider.getAngle();
 
-		if (Math.abs(curHeading - desHeading) <= 5) {
-			finished = true;
-		} else if (desHeading - curHeading > 0) {
-//			tankDrive.tankAuto(0.5, -0.5);
-		} else {
-//			tankDrive.tankAuto(-0.5, 0.5);
+		
+		if (change > 0) { // means we need to turn right
+			if (change < 10) {
+				Robot.myRobot.tankAuto(RobotMap.SLOW_SPEED/2, -RobotMap.SLOW_SPEED/2);
+			} else {
+				if (test) tankDrive.setSpeed(RobotMap.TEST_SPEED, -RobotMap.TEST_SPEED);
+				else Robot.myRobot.tankAuto(RobotMap.SLOW_SPEED, -RobotMap.SLOW_SPEED);
+			}
+		} else { // need to turn left
+			if (change > -10) {
+				Robot.myRobot.tankAuto(-RobotMap.SLOW_SPEED/2, RobotMap.SLOW_SPEED/2);
+			} else {
+				if (test) tankDrive.setSpeed(-RobotMap.TEST_SPEED, RobotMap.TEST_SPEED);
+				else Robot.myRobot.tankAuto(-RobotMap.SLOW_SPEED, RobotMap.SLOW_SPEED);
+			}
 		}
 	}
 
 	@Override
 	protected boolean isFinished() {
-		return finished;
+		return (Math.abs(change) <= 1);
 	}
 
 	@Override
 	protected void end() {
+		if (!test) Robot.myRobot.stop();
+		else tankDrive.setSpeed(0, 0);
 	}
 
 
 	@Override
 	protected void interrupted() {
-
+		if (!test) Robot.myRobot.stop();
+		else tankDrive.setSpeed(0, 0);
 	}
-
 
 }

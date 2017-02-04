@@ -1,4 +1,4 @@
-package frc.team4330.screambunction.utils;
+package org.usfirst.frc.team4330.utils;
 
 public class RobotMap {
 
@@ -46,8 +46,5 @@ public class RobotMap {
 
 	// Field Distances (m)
 	public final static double DISTANCE_TO_BASELINES = 2.8448 - ROBOT_WIDTH;
-	
-	// Angles
-	public final static double TURN_ANGLE = 45;
 
 }

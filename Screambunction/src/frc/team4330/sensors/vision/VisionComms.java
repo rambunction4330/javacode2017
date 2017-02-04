@@ -1,4 +1,4 @@
-package frc.team4330.screambunction.vision;
+package frc.team4330.sensors.vision;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

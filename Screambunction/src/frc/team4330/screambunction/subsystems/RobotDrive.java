@@ -23,13 +23,13 @@ public class RobotDrive extends Subsystem {
 		leftMotor1 = new Victor(RobotMap.MOTOR_ONE_PORT);
 		leftMotor2 = new Victor(RobotMap.MOTOR_TWO_PORT);
 
-		rightMotor1.setInverted(true);
-		rightMotor2.setInverted(true);
-		leftMotor1.setInverted(false);
-		leftMotor2.setInverted(false);
+		rightMotor1.setInverted(false);
+		rightMotor2.setInverted(false);
+		leftMotor1.setInverted(true);
+		leftMotor2.setInverted(true);
 	}
 
-	public void reverseDrive(boolean button) {
+	private void reverseDrive(boolean button) {
 		if (!lastPressed && button) {
 			reverse = !reverse;
 			if (reverse) {
@@ -46,12 +46,14 @@ public class RobotDrive extends Subsystem {
 	 * @param left the left joystick.
 	 * @param right the right joystick.
 	 */
-	public void tankDrive(Joystick left, Joystick right) {
+	public void tankDrive(Joystick left, Joystick right, boolean button) {
+		reverseDrive(button);
+		
 		if (reverse) {
-			rightMotor1.set(right.getY()* RobotMap.FAST_SPEED);
-			rightMotor2.set(right.getY() * RobotMap.FAST_SPEED);
-			leftMotor1.set(left.getY() * RobotMap.FAST_SPEED);
-			leftMotor2.set(left.getY() * RobotMap.FAST_SPEED);
+			rightMotor1.set(left.getY()* RobotMap.FAST_SPEED);
+			rightMotor2.set(left.getY() * RobotMap.FAST_SPEED);
+			leftMotor1.set(right.getY() * RobotMap.FAST_SPEED);
+			leftMotor2.set(right.getY() * RobotMap.FAST_SPEED);
 		} else {
 			rightMotor1.set(-right.getY()* RobotMap.FAST_SPEED);
 			rightMotor2.set(-right.getY() * RobotMap.FAST_SPEED);
@@ -82,7 +84,7 @@ public class RobotDrive extends Subsystem {
 	 * @param rightv the speed of the right wheels.
 	 */
 	public void tankAuto(double leftv, double rightv) {
-		if (leftv > 1 || rightv > 1) {
+		if (leftv > 1 || rightv > 1 || leftv < -1 || rightv < -1) {
 			System.out.println("Check speed values.");
 		} else {
 			rightMotor1.set(rightv);
@@ -103,6 +105,7 @@ public class RobotDrive extends Subsystem {
 	}
 
 	@Override
-	protected void initDefaultCommand() { }
+	protected void initDefaultCommand() {		
+	}
 
 }

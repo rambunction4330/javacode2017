@@ -1,12 +1,14 @@
-package org.usfirst.frc.team4330.robot;
+package org.usfirst.frc.team4330.utils;
 
 public class HeadingCalculator {
 
 	/**
-	 * Calculate the course changed needed to go from current heading to desired heading.  Both
-	 * the current heading and desired heading should be in degrees with 360 degrees in a revolution.
-	 * The calculation will work even if the current heading or the desired heading have 
-	 * accumulation of multiple revolutions resulting in values less than -180 or greater than 180.
+	 * Calculate the course changed needed to go from current heading to desired heading.
+	 * Both the current heading and desired heading should be in degrees with 360 degrees
+	 * in a revolution. The calculation will work even if the current heading or the
+	 * desired heading have accumulation of multiple revolutions resulting in values less
+	 * than -180 or greater than 180.
+	 * 
 	 * @param currentHeading
 	 * @param desiredHeading
 	 * @return the course change with -180 < value <= 180.  Positive value means to turn right
@@ -37,9 +39,10 @@ public class HeadingCalculator {
 	}
 
 	/**
+	 * A method to normalize the angle given.
 	 * 
-	 * @param raw
-	 * @return raw value normalized so -180 < value <= 180
+	 * @param raw The raw angle.
+	 * @return Raw value normalized so -180 < value <= 180
 	 */
 	public static double normalize(double raw) {
 

@@ -1,125 +1,116 @@
-
 package org.usfirst.frc.team4330.robot;
 
-import org.usfirst.frc.team4330.robot.subsystems.ExampleSubsystem;
+import org.usfirst.frc.team4330.robot.subsystems.AutonomousManager;
 import org.usfirst.frc.team4330.robot.subsystems.RobotDrive;
+import org.usfirst.frc.team4330.robot.subsystems.MaxSonar;
+import org.usfirst.frc.team4330.robot.subsystems.RopeClimber;
+import org.usfirst.frc.team4330.robot.subsystems.VisionSystem;
+import org.usfirst.frc.team4330.sensors.distance.LeddarDistanceSensor;
+import org.usfirst.frc.team4330.utils.RobotMap;
 
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
-import edu.wpi.first.wpilibj.SerialPort.Port;
-import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.command.Scheduler;
-import edu.wpi.first.wpilibj.livewindow.LiveWindow;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
 
 /**
- * The VM is configured to automatically run this class, and to call the
- * functions corresponding to each mode, as described in the IterativeRobot
- * documentation. If you change the name of this class or the package after
- * creating this project, you must also update the manifest file in the resource
- * directory.
+ * WIP 2017 Code.
+ *
  */
 public class Robot extends IterativeRobot {
 
-	public static final ExampleSubsystem exampleSubsystem = new ExampleSubsystem();
-	public static OI oi;
-	public static final RobotDrive draven = new RobotDrive();
+	// Subsystems
+	public final static RobotDrive myRobot = new RobotDrive();
+	public final static RopeClimber tarzan = new RopeClimber();
+	public final static VisionSystem vision = new VisionSystem();
+	public final static MaxSonar sonar = new MaxSonar();
+	public final static AutonomousManager manager = new AutonomousManager();
+	//	public final static Shooter skittyskittybangbang = new Shooter();
 
-	public static final AHRS gyro = new AHRS(Port.kMXP);
-	
-//	MaxbotixUltrasonic dis = new MaxbotixUltrasonic();o
-	
-	SmartDashboardSetup dash;
-	Command autonomousCommand;
+	// Joysticks
+	private Joystick leftj, rightj, buttonj;
 
-	/**
-	 * This function is run when the robot is first started up and should be
-	 * used for any initialization code.
-	 */
+	// Components
+	public static LeddarDistanceSensor leddar;
+	public static AHRS gyro;
+
 	@Override
 	public void robotInit() {
-		oi = new OI();
-		dash= new SmartDashboardSetup();
-	}
+		// Initializing components
+		leftj = new Joystick(RobotMap.LEFT_JOYSTICK_PORT);
+		rightj = new Joystick(RobotMap.RIGHT_JOYSTICK_PORT);
+		buttonj = new Joystick(RobotMap.SHOOT_JOYSTICK_PORT);
 
-	/**
-	 * This function is called once each time the robot enters Disabled mode.
-	 * You can use it to reset any subsystem information you want to clear when
-	 * the robot is disabled.
-	 */
-	@Override
-	public void disabledInit() {
+		//		//		channel = new AnalogInput(0);
+		gyro = new AHRS(SerialPort.Port.kMXP);
+		leddar = new LeddarDistanceSensor();
 
 	}
 
-	@Override
-	public void disabledPeriodic() {
-		Scheduler.getInstance().run();
-	}
-
-	/**
-	 * This autonomous (along with the chooser code above) shows how to select
-	 * between different autonomous modes using the dashboard. The sendable
-	 * chooser code works with the Java SmartDashboard. If you prefer the
-	 * LabVIEW Dashboard, remove all of the chooser code and uncomment the
-	 * getString code to get the auto name from the text box below the Gyro
-	 *
-	 * You can add additional auto modes by adding additional commands to the
-	 * chooser code above (like the commented example) or additional comparisons
-	 * to the switch structure below with additional strings & commands.
-	 */
 	@Override
 	public void autonomousInit() {
+		SmartDashboardSetup.autonomousDashboard();
 
-		/*
-		 * String autoSelected = SmartDashboard.getString("Auto Selector",
-		 * "Default"); switch(autoSelected) { case "My Auto": autonomousCommand
-		 * = new MyAutoCommand(); break; case "Default Auto": default:
-		 * autonomousCommand = new ExampleCommand(); break; }
-		 */
+		Scheduler.getInstance().removeAll();
 
-		// schedule the autonomous command (example)
-		if (autonomousCommand != null)
-			autonomousCommand.start();
+		gyro.reset();
+		gyro.resetDisplacement();
+		vision.startUp();
+		leddar.startUp();
+
+		manager.init();
+
 	}
 
-	/**
-	 * This function is called periodically during autonomous
-	 */
 	@Override
 	public void autonomousPeriodic() {
 		Scheduler.getInstance().run();
 	}
 
+
 	@Override
 	public void teleopInit() {
-		
-		Scheduler.getInstance().removeAll();
-		Scheduler.getInstance().disable();
-		
-		// This makes sure that the autonomous stops running when
-		// teleop starts running. If you want the autonomous to
-		// continue until interrupted by another command, remove
-		// this line or comment it out.
-		if (autonomousCommand != null)
-			autonomousCommand.cancel();
+		SmartDashboardSetup.teleOpDashboard();
 	}
 
-	/**
-	 * This function is called periodically during operator control
-	 */
 	@Override
 	public void teleopPeriodic() {
-		Scheduler.getInstance().run();
+		myRobot.tankDrive(leftj, rightj, leftj.getRawButton(RobotMap.REVERSE_BUTTON));
+		//		tarzan.setClimb(buttonj.getRawButton(RobotMap.CLIMB_SLOW_SPEED_BUTTON),
+		//				buttonj.getRawButton(RobotMap.CLIMB_FAST_SPEED_BUTTON));
+		tarzan.testClimb(leftj.getRawButton(11), leftj.getRawButton(12), leftj.getRawButton(7));
+
+
+		//		skittyskittybangbang.manualShoot(, buttonOn, feederOn, addPwr, subPwr);
 	}
 
-	/**
-	 * This function is called periodically during test mode
-	 */
+
+	@Override
+	public void testInit() {
+		SmartDashboardSetup.testDashboard();
+
+//		vision.startUp();
+	}
+
 	@Override
 	public void testPeriodic() {
-		LiveWindow.run();
+		tarzan.testClimb(leftj.getRawButton(11), leftj.getRawButton(12), leftj.getRawButton(7));
+		myRobot.tankDrive(leftj, rightj, leftj.getRawButton(RobotMap.REVERSE_BUTTON));
+
+		//		System.out.println(dis.getDistanceInMeters());
+		//		manager.testDriveCommand(dis.getDistanceInMeters());
+	}
+
+	@Override
+	public void disabledInit() {
+		vision.shutDown();
+		leddar.shutDown();
+
+		myRobot.stop();
+
+		Scheduler.getInstance().removeAll();
+		Scheduler.getInstance().disable();
 	}
 }

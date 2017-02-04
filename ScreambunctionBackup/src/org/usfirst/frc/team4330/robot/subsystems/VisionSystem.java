@@ -1,13 +1,14 @@
-package frc.team4330.screambunction.subsystems;
+package org.usfirst.frc.team4330.robot.subsystems;
 
 import java.util.Map;
+
+import org.usfirst.frc.team4330.robot.vision.VisionComms;
+import org.usfirst.frc.team4330.utils.RobotMap;
 
 import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.Relay.Direction;
 import edu.wpi.first.wpilibj.Relay.Value;
 import edu.wpi.first.wpilibj.command.Subsystem;
-import frc.team4330.screambunction.utils.RobotMap;
-import frc.team4330.sensors.vision.VisionComms;
 
 public class VisionSystem extends Subsystem {
 

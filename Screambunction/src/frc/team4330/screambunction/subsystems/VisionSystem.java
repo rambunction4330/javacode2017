@@ -47,11 +47,14 @@ public class VisionSystem extends Subsystem {
 	}
 
 	public double getBoilerAngle() {
-		return Integer.parseInt(visBoiler.retrieveData().get("rb"));
-	}
+		if (visBoiler.retrieveData().get("rb") != null) {
+			return Integer.parseInt(visBoiler.retrieveData().get("rb"));
+		} else return 0;	}
 	
 	public double getLiftAngle() {
-		return Integer.parseInt(visLift.retrieveData().get("rb"));
+		if (visLift.retrieveData().get("rb") != null) {
+			return Integer.parseInt(visLift.retrieveData().get("rb"));
+		} else return 0;
 	}
 	
 	public Map<String, String> getBoilerData() {

@@ -12,6 +12,5 @@
 	<classpathentry kind="lib" path="testlibs/mockito-core-1.10.19.jar"/>
 	<classpathentry kind="lib" path="testlibs/objenesis-2.2.jar"/>
 	<classpathentry kind="lib" path="libs/navx_frc.jar"/>
-	<classpathentry kind="var" path="USERLIBS_DIR/navx_frc.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

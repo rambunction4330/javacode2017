@@ -45,22 +45,37 @@ public class RobotDrive extends Subsystem {
 	 * 
 	 * @param left the left joystick.
 	 * @param right the right joystick.
+	 * @param button button for reversing the drive directrion.
 	 */
 	public void tankDrive(Joystick left, Joystick right, boolean button) {
 		reverseDrive(button);
 		
 		if (reverse) {
-			rightMotor1.set(left.getY()* RobotMap.FAST_SPEED);
-			rightMotor2.set(left.getY() * RobotMap.FAST_SPEED);
-			leftMotor1.set(right.getY() * RobotMap.FAST_SPEED);
-			leftMotor2.set(right.getY() * RobotMap.FAST_SPEED);
+			tankAuto(right.getY() * RobotMap.FAST_SPEED, left.getY() * RobotMap.FAST_SPEED);
 		} else {
-			rightMotor1.set(-right.getY()* RobotMap.FAST_SPEED);
-			rightMotor2.set(-right.getY() * RobotMap.FAST_SPEED);
-			leftMotor1.set(-left.getY() * RobotMap.FAST_SPEED);
-			leftMotor2.set(-left.getY() * RobotMap.FAST_SPEED);
+			tankAuto(-left.getY() * RobotMap.FAST_SPEED, -right.getY() * RobotMap.FAST_SPEED);
 			// negative because joysticks
 		}
+	}
+	
+	double leftval = 0;
+	double rightval = 0;
+	final double inc = .05;
+	
+	public void curveDrive(Joystick left, Joystick right) {
+		if (leftMotor1.get() < -left.getY() && leftMotor1.get() > 0)
+			leftval = leftMotor1.get() + inc;
+		else if (leftMotor1.get() > -left.getY() && leftMotor1.get() < 0)
+			leftval = leftMotor1.get() - inc;
+		else leftval = left.getY();
+		
+		if (rightMotor1.get() < -right.getY() && rightMotor1.get() > 0)
+			rightval = rightMotor1.get() + inc;
+		else if (rightMotor1.get() > -right.getY() && rightMotor1.get() < 0)
+			rightval = rightMotor1.get() - inc;
+		else rightval = right.getY();
+		
+		tankAuto(leftval, rightval);
 	}
 
 	// TODO Uncomment for testing only.

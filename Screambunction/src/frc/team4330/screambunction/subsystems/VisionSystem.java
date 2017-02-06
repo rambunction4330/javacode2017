@@ -6,7 +6,6 @@ import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.Relay.Direction;
 import edu.wpi.first.wpilibj.Relay.Value;
 import edu.wpi.first.wpilibj.command.Subsystem;
-import frc.team4330.screambunction.utils.RobotMap;
 import frc.team4330.sensors.vision.VisionComms;
 
 public class VisionSystem extends Subsystem {
@@ -18,15 +17,15 @@ public class VisionSystem extends Subsystem {
 		visLift = new VisionComms("tegra-ubuntu", 9001);
 		visBoiler = new VisionComms("tegra-ubuntu", 9002);
 
-		ledSwitch = new Relay(RobotMap.RELAY_LED_SWITCH_PORT);
-		ledSwitch.setDirection(Direction.kForward);
+		ledSwitch = new Relay(3, Direction.kForward);
+		ledSwitch.set(Value.kForward);
 	}
 
 	public void startUp() {
 		try {
 			visBoiler.startUp();
 			visLift.startUp();
-			ledSwitch.set(Value.kOn);
+			ledSwitch.set(Value.kForward);
 		} catch(Exception e) {
 			System.out.println("********* Error Message *********" + "\n" + e.getMessage());
 
@@ -41,6 +40,10 @@ public class VisionSystem extends Subsystem {
 		} catch (Exception e) {
 			System.out.println("********* Error Message *********" + "\n" + e.getMessage());
 		}
+	}
+	
+	public void ledOn() {
+		ledSwitch.set(Value.kForward);
 	}
 
 	public double getBoilerAngle() {

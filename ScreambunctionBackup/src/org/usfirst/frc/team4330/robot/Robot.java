@@ -12,6 +12,7 @@ import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.command.Scheduler;
 
@@ -27,8 +28,10 @@ public class Robot extends IterativeRobot {
 	public final static VisionSystem vision = new VisionSystem();
 	public final static MaxSonar sonar = new MaxSonar();
 	public final static AutonomousManager manager = new AutonomousManager();
+	public Relay ledSwitch = new Relay(RobotMap.RELAY_LED_SWITCH_PORT);
 	//	public final static Shooter skittyskittybangbang = new Shooter();
-
+	
+	
 	// Joysticks
 	private Joystick leftj, rightj, buttonj;
 
@@ -46,7 +49,7 @@ public class Robot extends IterativeRobot {
 		//		//		channel = new AnalogInput(0);
 		gyro = new AHRS(SerialPort.Port.kMXP);
 		leddar = new LeddarDistanceSensor();
-
+		
 	}
 
 	@Override

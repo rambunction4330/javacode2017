@@ -141,7 +141,7 @@ public class AutonomousManager extends Subsystem {
 				if (Math.abs(gyro.getAngle()) <= 2) return true;
 				else return false;
 			case 3:
-				if (Math.abs(gyro.getAngle() - RobotMap.TURN_ANGLE) <= 3) return true;
+				if (Math.abs(gyro.getAngle() + RobotMap.TURN_ANGLE) <= 3) return true;
 				else return false;
 			default:
 				System.out.println("No autonomous was selected.");

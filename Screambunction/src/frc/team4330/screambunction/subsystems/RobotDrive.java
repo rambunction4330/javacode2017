@@ -23,10 +23,10 @@ public class RobotDrive extends Subsystem {
 		leftMotor1 = new Victor(RobotMap.MOTOR_ONE_PORT);
 		leftMotor2 = new Victor(RobotMap.MOTOR_TWO_PORT);
 
-		rightMotor1.setInverted(false);
-		rightMotor2.setInverted(false);
-		leftMotor1.setInverted(true);
-		leftMotor2.setInverted(true);
+		rightMotor1.setInverted(true);
+		rightMotor2.setInverted(true);
+		leftMotor1.setInverted(false);
+		leftMotor2.setInverted(false);
 	}
 
 	private void reverseDrive(boolean button) {
@@ -54,26 +54,26 @@ public class RobotDrive extends Subsystem {
 			tankAuto(right.getY() * RobotMap.FAST_SPEED, left.getY() * RobotMap.FAST_SPEED);
 		} else {
 			tankAuto(-left.getY() * RobotMap.FAST_SPEED, -right.getY() * RobotMap.FAST_SPEED);
-			// negative because joysticks
+			// negative because joysticks.
 		}
 	}
 	
 	double leftval = 0;
 	double rightval = 0;
-	final double inc = .05;
+	final double inc = .02;
 	
 	public void curveDrive(Joystick left, Joystick right) {
-		if (leftMotor1.get() < -left.getY() && leftMotor1.get() > 0)
-			leftval = leftMotor1.get() + inc;
-		else if (leftMotor1.get() > -left.getY() && leftMotor1.get() < 0)
-			leftval = leftMotor1.get() - inc;
+		if (leftMotor2.get() < -left.getY() && left.getY() < 0)
+			leftval += inc;
+		else if (leftMotor2.get() > -left.getY() && left.getY() > 0)
+			leftval -= inc;
 		else leftval = left.getY();
 		
-		if (rightMotor1.get() < -right.getY() && rightMotor1.get() > 0)
-			rightval = rightMotor1.get() + inc;
-		else if (rightMotor1.get() > -right.getY() && rightMotor1.get() < 0)
-			rightval = rightMotor1.get() - inc;
-		else rightval = right.getY();
+		if (rightMotor2.get() < -right.getY() && right.getY() < 0)
+			rightval += inc;
+		else if (rightMotor2.get() > -right.getY() && right.getY() > 0)
+			rightval -= inc;
+		else rightval = 0;
 		
 		tankAuto(leftval, rightval);
 	}

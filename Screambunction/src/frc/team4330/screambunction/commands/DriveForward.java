@@ -48,13 +48,14 @@ public class DriveForward extends Command {
 	@Override
 	protected void initialize() {
 		pastHeading = HeadingCalculator.normalize(Robot.gyro.getAngle());
-		startX = Robot.gyro.getDisplacementX();
-		startY = Robot.gyro.getDisplacementY();
+		startX = -Robot.gyro.getDisplacementX();
+		startY = -Robot.gyro.getDisplacementY();
 	}
 
 
 	@Override
 	public void execute() {
+		System.out.println("x dis = " + -Robot.gyro.getDisplacementX());
 		if (!test) curHeading = HeadingCalculator.normalize(Robot.gyro.getAngle());
 		else curHeading = HeadingCalculator.normalize(headingProvider.getAngle());
 
@@ -62,8 +63,8 @@ public class DriveForward extends Command {
 		double leftval = 0;
 
 		if (!test) {
-			deltaX = Robot.gyro.getDisplacementX() - startX;
-			deltaY = Robot.gyro.getDisplacementY() - startY;
+			deltaX = -Robot.gyro.getDisplacementX() - startX;
+			deltaY = -Robot.gyro.getDisplacementY() - startY;
 			deltaDis = Math.sqrt(deltaX*deltaX + deltaY*deltaY);
 			distanceLeftToDrive = desDistance - deltaDis;
 		} else distanceLeftToDrive = Math.abs(headingProvider.getAngle() - desDistance);
@@ -95,7 +96,7 @@ public class DriveForward extends Command {
 
 	@Override
 	protected boolean isFinished() {
-		return distanceLeftToDrive <= .05;
+		return distanceLeftToDrive <= .005;
 	}
 
 	@Override

@@ -14,6 +14,7 @@ import frc.team4330.screambunction.utils.AutonomousPhase;
 import frc.team4330.screambunction.utils.RobotMap;
 import frc.team4330.sensors.distance.LeddarDistanceSensorData;
 
+@SuppressWarnings("unused")
 public class AutonomousManager extends Subsystem {
 	private double xCord, yCord;
 
@@ -56,12 +57,15 @@ public class AutonomousManager extends Subsystem {
 		updateCoordinates();
 
 		if (isPhaseOneFinished()) {
+			System.out.println("Phase one finished.");
 			phase = AutonomousPhase.two;
 			loadPhases();
 		} else if (isPhaseTwoFinished()) {
+			System.out.println("Phase two finished.");
 			phase = AutonomousPhase.three;
 			loadPhases();
 		} else if (isPhaseThreeFinished()) {
+			System.out.println("Phase three finished.");
 			phase = AutonomousPhase.done;
 		} else;
 
@@ -71,8 +75,10 @@ public class AutonomousManager extends Subsystem {
 	private void loadPhases() {
 		if (phase == AutonomousPhase.two) {
 			turnToAngle(vision.getLiftAngle());
+			System.out.println("Phase two loaded.");
 		} else if (phase == AutonomousPhase.three) {
-			driveToLift(Robot.leddar.getDistances().get(8));
+			System.out.println("Phase 3 would run if you had an leddar.");
+//			driveToLift(Robot.leddar.getDistances().get(8));
 		} else;
 	}
 

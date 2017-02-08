@@ -1,15 +1,16 @@
 package frc.team4330.screambunction;
-import java.io.*;
-import java.net.*;
 
-import frc.team4330.sensors.distance.LeddarDistanceSensor;
-public class serverTest {
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.net.ServerSocket;
+import java.net.Socket;
 
-	public static void main(String[] args) throws IOException {
+public class ServerTest {
+
+	public ServerTest() throws IOException {
 		start();
-		// TODO Auto-generated method stub
-
 	}
+
 	public static void start() throws IOException
 	{
 		//LeddarDistanceSensor leddar = new LeddarDistanceSensor();
@@ -21,12 +22,16 @@ public class serverTest {
 			{
 				Socket socket=listener.accept();
 				try {
-				PrintWriter out=new PrintWriter(socket.getOutputStream(), true);
-				out.println("hi");
+					PrintWriter out=new PrintWriter(socket.getOutputStream(), true);
+					out.println("RIO socket success.");
 				}
-				finally {socket.close();}
+				finally {
+					socket.close();
+				}
 			}
 		}
-		finally {listener.close();}
+		finally {
+			listener.close();
+		}
 	}
 }

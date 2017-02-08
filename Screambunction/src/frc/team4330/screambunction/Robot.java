@@ -10,6 +10,7 @@ import frc.team4330.screambunction.subsystems.AutonomousManager;
 import frc.team4330.screambunction.subsystems.MaxSonar;
 import frc.team4330.screambunction.subsystems.RobotDrive;
 import frc.team4330.screambunction.subsystems.RopeClimber;
+import frc.team4330.screambunction.subsystems.Shooter;
 import frc.team4330.screambunction.subsystems.VisionSystem;
 import frc.team4330.screambunction.utils.RobotMap;
 import frc.team4330.sensors.distance.LeddarDistanceSensor;
@@ -18,6 +19,7 @@ import frc.team4330.sensors.distance.LeddarDistanceSensor;
  * WIP 2017 Code.
  *
  */
+@SuppressWarnings("unused")
 public class Robot extends IterativeRobot {
 
 	// Subsystems
@@ -25,7 +27,7 @@ public class Robot extends IterativeRobot {
 	public final static MaxSonar sonar = new MaxSonar();
 	public final static RobotDrive myRobot = new RobotDrive();
 	public final static RopeClimber tarzan = new RopeClimber();
-	//	public final static Shooter skittyskittybangbang = new Shooter();
+	public final static Shooter skittyskittybangbang = new Shooter();
 	public final static VisionSystem vision = new VisionSystem();
 
 	// Joysticks
@@ -51,6 +53,13 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void autonomousInit() {
+		
+//		try {
+//			ServerTest server = new ServerTest();
+//		} catch (Exception e){
+//			
+//		}
+		
 		SmartDashboardSetup.autonomousDashboard();
 
 		Scheduler.getInstance().removeAll();
@@ -75,27 +84,25 @@ public class Robot extends IterativeRobot {
 	public void teleopInit() {
 		vision.startUp();
 
-		//		vision.ledOn();
-
 		SmartDashboardSetup.teleOpDashboard();
 	}
 
 	@Override
 	public void teleopPeriodic() {
-
+//		myRobot.curveDrive(leftj, rightj);
 		myRobot.tankDrive(leftj, rightj, leftj.getRawButton(RobotMap.REVERSE_BUTTON));
-		tarzan.setClimb(buttonj.getRawButton(RobotMap.CLIMB_SLOW_SPEED_BUTTON),
-				buttonj.getRawButton(RobotMap.CLIMB_FAST_SPEED_BUTTON));
-		//		skittyskittybangbang.manualShoot(, buttonOn, feederOn, addPwr, subPwr);
+		
+//		tarzan.setClimb(buttonj.getRawButton(RobotMap.CLIMB_SLOW_SPEED_BUTTON),
+//				buttonj.getRawButton(RobotMap.CLIMB_FAST_SPEED_BUTTON));
+		tarzan.testClimb(leftj.getRawButton(11), leftj.getRawButton(12), leftj.getRawButton(7));
+		
+		skittyskittybangbang.manualShoot(rightj.getRawButton(5), rightj.getRawButton(3), rightj.getRawButton(4), rightj.getRawButton(6), rightj.getRawButton(6));
 
 	}
 
 
 	@Override
 	public void testInit() {
-		//		vision.ledOn();
-
-		vision.startUp();
 	}
 
 	@Override

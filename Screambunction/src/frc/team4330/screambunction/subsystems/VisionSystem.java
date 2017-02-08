@@ -41,26 +41,23 @@ public class VisionSystem extends Subsystem {
 			System.out.println("********* Error Message *********" + "\n" + e.getMessage());
 		}
 	}
-	
+
 	public void ledOn() {
 		ledSwitch.set(Value.kForward);
 	}
 
 	public double getBoilerAngle() {
-		if (visBoiler.retrieveData().get("rb") != null) {
-			return Integer.parseInt(visBoiler.retrieveData().get("rb"));
-		} else return 0;	}
-	
-	public double getLiftAngle() {
-		if (visLift.retrieveData().get("rb") != null) {
-			return Integer.parseInt(visLift.retrieveData().get("rb"));
-		} else return 0;
+		return Double.parseDouble(visBoiler.retrieveData().get("rb"));
 	}
-	
+
+	public double getLiftAngle() {
+		return Double.parseDouble(visLift.retrieveData().get("rb"));
+	}
+
 	public Map<String, String> getBoilerData() {
 		return visBoiler.retrieveData();
 	}
-	
+
 	public Map<String, String> getLiftData() {
 		return visLift.retrieveData();
 	}

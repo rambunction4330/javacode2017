@@ -74,8 +74,10 @@ public class AutonomousManager extends Subsystem {
 
 	private void loadPhases() {
 		if (phase == AutonomousPhase.two) {
-			turnToAngle(vision.getLiftAngle());
-			System.out.println("Phase two loaded.");
+			if (vision.getLiftAngle() != null) {
+				turnToAngle(vision.getLiftAngle());
+				System.out.println("Phase two loaded.");
+			} else;
 		} else if (phase == AutonomousPhase.three) {
 			System.out.println("Phase 3 would run if you had an leddar.");
 //			driveToLift(Robot.leddar.getDistances().get(8));
@@ -160,7 +162,7 @@ public class AutonomousManager extends Subsystem {
 		updateCoordinates();
 
 		if (phase == AutonomousPhase.two) {
-			if (Math.abs(vision.getLiftAngle()) <= 1) return true;
+			if (vision.getLiftAngle() != null && Math.abs(vision.getLiftAngle()) <= 1) return true;
 			else return false;
 		} else return false;
 	}

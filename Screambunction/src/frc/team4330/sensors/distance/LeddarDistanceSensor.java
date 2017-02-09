@@ -59,7 +59,7 @@ public class LeddarDistanceSensor extends CanDevice {
 	public void startUp() {
 		
 		if ( active ) {
-			// already started, so noop
+			// already started, so noope
 			return;
 		}
 	

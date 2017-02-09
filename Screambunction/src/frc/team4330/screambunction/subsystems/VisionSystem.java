@@ -46,11 +46,11 @@ public class VisionSystem extends Subsystem {
 		ledSwitch.set(Value.kForward);
 	}
 
-	public double getBoilerAngle() {
+	public Double getBoilerAngle() {
 		return Double.parseDouble(visBoiler.retrieveData().get("rb"));
 	}
 
-	public double getLiftAngle() {
+	public Double getLiftAngle() {
 		return Double.parseDouble(visLift.retrieveData().get("rb"));
 	}
 

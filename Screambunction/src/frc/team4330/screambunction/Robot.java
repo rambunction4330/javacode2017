@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.command.Scheduler;
+import frc.team4330.screambunction.server.ServerTest;
 import frc.team4330.screambunction.subsystems.AutonomousManager;
 import frc.team4330.screambunction.subsystems.MaxSonar;
 import frc.team4330.screambunction.subsystems.RobotDrive;
@@ -53,9 +54,9 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void autonomousInit() {
-		
+//		ServerTest server = new ServerTest();
 //		try {
-//			ServerTest server = new ServerTest();
+//			server.start();
 //		} catch (Exception e){
 //			
 //		}
@@ -63,9 +64,10 @@ public class Robot extends IterativeRobot {
 		SmartDashboardSetup.autonomousDashboard();
 
 		Scheduler.getInstance().removeAll();
-
-		gyro.reset();
+		
 		gyro.resetDisplacement();
+		gyro.reset();
+		
 		vision.startUp();
 		leddar.startUp();
 
@@ -75,6 +77,11 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void autonomousPeriodic() {
+//		if (leddar.getDistances().size() != 0) 
+//			System.out.println("leddar: " + leddar.getDistances().get(0).getDistanceInCentimeters());
+//		else System.out.println("No leddar.");
+
+		System.out.println("x val: " + gyro.getDisplacementX() + "; y val: " + gyro.getDisplacementY());
 		steveBannon.run();
 	}
 
@@ -83,12 +90,14 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void teleopInit() {
 		vision.startUp();
-
+		leddar.startUp();
+		
 		SmartDashboardSetup.teleOpDashboard();
 	}
 
 	@Override
 	public void teleopPeriodic() {
+		
 //		myRobot.curveDrive(leftj, rightj);
 		myRobot.tankDrive(leftj, rightj, leftj.getRawButton(RobotMap.REVERSE_BUTTON));
 		
@@ -96,7 +105,7 @@ public class Robot extends IterativeRobot {
 //				buttonj.getRawButton(RobotMap.CLIMB_FAST_SPEED_BUTTON));
 		tarzan.testClimb(leftj.getRawButton(11), leftj.getRawButton(12), leftj.getRawButton(7));
 		
-		skittyskittybangbang.manualShoot(rightj.getRawButton(5), rightj.getRawButton(3), rightj.getRawButton(4), rightj.getRawButton(6), rightj.getRawButton(6));
+		skittyskittybangbang.manualShoot(rightj.getRawButton(5), rightj.getRawButton(3), rightj.getRawButton(4), rightj.getRawButton(6), rightj.getRawButton(7));
 
 	}
 

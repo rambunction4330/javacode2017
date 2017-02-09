@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.Talon;
+import edu.wpi.first.wpilibj.Victor;
 
 public class Registrar {
 	
@@ -18,6 +19,14 @@ public class Registrar {
 			map.put(key, new Talon(port));
 		}
 		return (Talon) map.get(key);
+	}
+	
+	public static Victor victor(int port) {
+		String key = "victor:" + port;
+		if ( map.get(key) == null ) {
+			map.put(key, new Victor(port));
+		}
+		return (Victor) map.get(key);
 	}
 	
 	public static Relay relay(int port) {

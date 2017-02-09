@@ -2,8 +2,8 @@ package frc.team4330.screambunction.subsystems;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.SpeedController;
-import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import frc.team4330.screambunction.utils.Registrar;
 import frc.team4330.screambunction.utils.RobotMap;
 
 /**
@@ -15,13 +15,13 @@ import frc.team4330.screambunction.utils.RobotMap;
 public class RobotDrive extends Subsystem {
 	private SpeedController rightMotor1, rightMotor2, leftMotor1, leftMotor2;
 	private boolean reverse = false;
-	boolean lastPressed = false;
+	private boolean lastPressed = false;
 
 	public RobotDrive() {
-		rightMotor1 = new Victor(RobotMap.MOTOR_THREE_PORT);
-		rightMotor2 = new Victor(RobotMap.MOTOR_FOUR_PORT);
-		leftMotor1 = new Victor(RobotMap.MOTOR_ONE_PORT);
-		leftMotor2 = new Victor(RobotMap.MOTOR_TWO_PORT);
+		rightMotor1 = Registrar.victor(RobotMap.MOTOR_THREE_PORT);
+		rightMotor2 = Registrar.victor(RobotMap.MOTOR_FOUR_PORT);
+		leftMotor1 = Registrar.victor(RobotMap.MOTOR_ONE_PORT);
+		leftMotor2 = Registrar.victor(RobotMap.MOTOR_TWO_PORT);
 
 		rightMotor1.setInverted(true);
 		rightMotor2.setInverted(true);

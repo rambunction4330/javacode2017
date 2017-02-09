@@ -4,8 +4,8 @@ import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.Relay.Direction;
 import edu.wpi.first.wpilibj.Relay.Value;
 import edu.wpi.first.wpilibj.SpeedController;
-import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import frc.team4330.screambunction.utils.Registrar;
 import frc.team4330.screambunction.utils.RobotMap;
 
 public class Shooter extends Subsystem {
@@ -18,9 +18,9 @@ public class Shooter extends Subsystem {
 	private double motorVal = 0;
 
 	public Shooter() {
-		motor = new Victor(RobotMap.MOTOR_SHOOT_PORT);
+		motor = Registrar.victor(RobotMap.MOTOR_SHOOT_PORT);
 
-		feeder = new Relay(RobotMap.RELAY_FEED_PORT);
+		feeder = Registrar.relay(RobotMap.RELAY_FEED_PORT);
 		feeder.setDirection(Direction.kForward);
 
 		feederVal = Value.kOff;

@@ -1,5 +1,7 @@
 package frc.team4330.screambunction.commands;
 
+import com.kauailabs.navx.frc.AHRS;
+
 import edu.wpi.first.wpilibj.command.Command;
 import frc.team4330.screambunction.Robot;
 import frc.team4330.screambunction.parts.HeadingProvider;
@@ -16,6 +18,7 @@ public class DriveForward extends Command {
 	private double desDistance, curHeading, pastHeading, startX, startY, 
 		deltaX, deltaY, deltaDis;
 	private boolean test;
+	private AHRS gyro;
 
 	private HeadingProvider headingProvider;
 	private TankDrive tankDrive;
@@ -47,24 +50,25 @@ public class DriveForward extends Command {
 
 	@Override
 	protected void initialize() {
+		this.gyro = Robot.gyro;
 		pastHeading = HeadingCalculator.normalize(Robot.gyro.getAngle());
-		startX = -Robot.gyro.getDisplacementX();
-		startY = -Robot.gyro.getDisplacementY();
+		startX = gyro.getDisplacementX();
+		startY = gyro.getDisplacementY();
 	}
 
 
 	@Override
 	public void execute() {
-		System.out.println("x dis = " + -Robot.gyro.getDisplacementX());
-		if (!test) curHeading = HeadingCalculator.normalize(Robot.gyro.getAngle());
+		System.out.println("" + distanceLeftToDrive);
+		if (!test) curHeading = HeadingCalculator.normalize(gyro.getAngle());
 		else curHeading = HeadingCalculator.normalize(headingProvider.getAngle());
 
 		double rightval = 0;
 		double leftval = 0;
 
 		if (!test) {
-			deltaX = -Robot.gyro.getDisplacementX() - startX;
-			deltaY = -Robot.gyro.getDisplacementY() - startY;
+			deltaX = gyro.getDisplacementX() - startX;
+			deltaY = gyro.getDisplacementY() - startY;
 			deltaDis = Math.sqrt(deltaX*deltaX + deltaY*deltaY);
 			distanceLeftToDrive = desDistance - deltaDis;
 		} else distanceLeftToDrive = Math.abs(headingProvider.getAngle() - desDistance);

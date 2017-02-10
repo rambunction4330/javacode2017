@@ -59,7 +59,7 @@ public class DriveForward extends Command {
 
 	@Override
 	public void execute() {
-		System.out.println("" + distanceLeftToDrive);
+		//System.out.println("" + distanceLeftToDrive);
 		if (!test) curHeading = HeadingCalculator.normalize(gyro.getAngle());
 		else curHeading = HeadingCalculator.normalize(headingProvider.getAngle());
 

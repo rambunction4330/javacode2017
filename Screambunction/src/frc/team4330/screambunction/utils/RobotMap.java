@@ -48,6 +48,6 @@ public class RobotMap {
 	public final static double DISTANCE_TO_BASELINES = 2.8448 - ROBOT_WIDTH;
 	
 	// Angles
-	public final static double TURN_ANGLE = 45;
+	public final static double TURN_ANGLE = 60;
 
 }

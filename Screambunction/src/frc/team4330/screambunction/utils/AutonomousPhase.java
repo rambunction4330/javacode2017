@@ -1,5 +1,5 @@
 package frc.team4330.screambunction.utils;
 
 public enum AutonomousPhase {
-	one, two, three, done;
+	one, oneComplete, two, twoComplete, three, threeComplete, done;
 }

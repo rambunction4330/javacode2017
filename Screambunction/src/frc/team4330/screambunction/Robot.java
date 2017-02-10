@@ -81,7 +81,7 @@ public class Robot extends IterativeRobot {
 //			System.out.println("leddar: " + leddar.getDistances().get(0).getDistanceInCentimeters());
 //		else System.out.println("No leddar.");
 
-		System.out.println("x val: " + gyro.getDisplacementX() + "; y val: " + gyro.getDisplacementY());
+		//System.out.println("x val: " + gyro.getDisplacementX() + "; y val: " + gyro.getDisplacementY());
 		steveBannon.run();
 	}
 

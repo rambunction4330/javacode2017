@@ -51,7 +51,11 @@ public class VisionSystem extends Subsystem {
 	}
 
 	public Double getLiftAngle() {
-		return Double.parseDouble(visLift.retrieveData().get("rb"));
+		Map<String,String> values = visLift.retrieveData();
+		if ( values.containsKey("rb")) {
+			return Double.parseDouble(values.get("rb"));
+		}
+		return null;
 	}
 
 	public Map<String, String> getBoilerData() {

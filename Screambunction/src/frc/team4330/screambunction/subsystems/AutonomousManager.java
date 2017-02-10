@@ -1,5 +1,7 @@
 package frc.team4330.screambunction.subsystems;
 
+import java.util.List;
+
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
@@ -9,6 +11,7 @@ import edu.wpi.first.wpilibj.command.WaitCommand;
 import frc.team4330.screambunction.Robot;
 import frc.team4330.screambunction.SmartDashboardSetup;
 import frc.team4330.screambunction.commands.DriveForward;
+import frc.team4330.screambunction.commands.PhaseCompleteCommand;
 import frc.team4330.screambunction.commands.Turn;
 import frc.team4330.screambunction.utils.AutonomousPhase;
 import frc.team4330.screambunction.utils.RobotMap;
@@ -54,7 +57,9 @@ public class AutonomousManager extends Subsystem {
 	}
 
 	public void run() {
-		updateCoordinates();
+		if ( phase != AutonomousPhase.done) {
+			updateCoordinates();
+		}
 
 		if (isPhaseOneFinished()) {
 			System.out.println("Phase one finished.");
@@ -67,6 +72,7 @@ public class AutonomousManager extends Subsystem {
 		} else if (isPhaseThreeFinished()) {
 			System.out.println("Phase three finished.");
 			phase = AutonomousPhase.done;
+			System.out.println("Autonomous is done");
 		} else;
 
 		Scheduler.getInstance().run();
@@ -75,13 +81,38 @@ public class AutonomousManager extends Subsystem {
 	private void loadPhases() {
 		if (phase == AutonomousPhase.two) {
 			if (vision.getLiftAngle() != null) {
-				turnToAngle(vision.getLiftAngle());
+				double visionTargetAngle = vision.getLiftAngle();
+				System.out.println("Vision reporting angle " + visionTargetAngle);
+				turnToAngle(visionTargetAngle);
 				System.out.println("Phase two loaded.");
-			} else;
+			} else {
+				System.out.println("Vision has no idea where target is");
+				turnToAngle(0);
+			}
 		} else if (phase == AutonomousPhase.three) {
-			System.out.println("Phase 3 would run if you had an leddar.");
-//			driveToLift(Robot.leddar.getDistances().get(8));
+			System.out.println("Phase three loaded");
+			Double distance = getDistanceToWall();
+			if ( distance == null ) {
+				System.out.println("Leddar doesn't know distance");
+				driveToLift(0.5);
+			} else {
+				System.out.println("Leddar says distance is " + distance);
+				driveToLift(distance);
+			}
 		} else;
+	}
+	
+	private Double getDistanceToWall ( ) {
+		List<LeddarDistanceSensorData> distances = Robot.leddar.getDistances();
+		if ( distances.isEmpty() ) {
+			return null;
+		}
+		for ( LeddarDistanceSensorData distance: distances ) {
+			if ( distance.getSegmentNumber() == 8 ) {
+				return distance.getDistanceInCentimeters() / 100.0;
+			}
+		}
+		return null;
 	}
 
 	private void updateCoordinates() {
@@ -102,8 +133,10 @@ public class AutonomousManager extends Subsystem {
 	private void travelToLeftLift() {
 		CommandGroup group = new CommandGroup();
 		group.addSequential(new DriveForward(RobotMap.DISTANCE_TO_BASELINES + RobotMap.ROBOT_WIDTH));
-		group.addSequential(new WaitCommand(.5));
+		group.addSequential(new WaitCommand(0.5));
 		group.addSequential(new Turn(RobotMap.TURN_ANGLE, true));
+		group.addSequential(new WaitCommand(0.5));
+		group.addSequential(new PhaseCompleteCommand(AutonomousPhase.oneComplete));
 
 		Scheduler.getInstance().add(group);
 	}
@@ -111,25 +144,41 @@ public class AutonomousManager extends Subsystem {
 	private void travelToRightLift() {
 		CommandGroup group = new CommandGroup();
 		group.addSequential(new DriveForward( RobotMap.DISTANCE_TO_BASELINES + RobotMap.ROBOT_WIDTH));
-		group.addSequential(new WaitCommand(.5));
+		group.addSequential(new WaitCommand(0.5));
 		group.addSequential(new Turn(-RobotMap.TURN_ANGLE, false)); 
+		group.addSequential(new WaitCommand(0.5));
+		group.addSequential(new PhaseCompleteCommand(AutonomousPhase.oneComplete));
 
 		Scheduler.getInstance().add(group);
 	}
 
 	private void travelToCenterLift() {
-		Scheduler.getInstance().add(new DriveForward(RobotMap.DISTANCE_TO_BASELINES - RobotMap.ROBOT_WIDTH));
+		CommandGroup group = new CommandGroup();
+		group.addSequential(new 
+				DriveForward(RobotMap.DISTANCE_TO_BASELINES - RobotMap.ROBOT_WIDTH));
+		group.addSequential(new WaitCommand(0.5));
+		group.addSequential(new PhaseCompleteCommand(AutonomousPhase.oneComplete));
+		Scheduler.getInstance().add(group);
 	}
 
 	private void turnToAngle(double angle) {
-		if (angle != 0) 
-			Scheduler.getInstance().add(new Turn(angle, false));
+		if (angle == 0) {
+			Scheduler.getInstance().add(new PhaseCompleteCommand(AutonomousPhase.twoComplete));
+		} else {
+			CommandGroup group = new CommandGroup();
+			group.addSequential(new Turn(angle, false));
+			group.addSequential(new WaitCommand(0.5));
+			group.addSequential(new PhaseCompleteCommand(AutonomousPhase.twoComplete));
+			Scheduler.getInstance().add(group);
+		}
 	}
 
-	private void driveToLift(LeddarDistanceSensorData data) {
-		if (data.getDistanceInCentimeters() != 0 || data != null) {
-			Scheduler.getInstance().add(new DriveForward(data.getDistanceInCentimeters() / 100));
-		}
+	private void driveToLift(Double distance) {
+		CommandGroup group = new CommandGroup();
+		group.addSequential(new DriveForward(distance));
+		group.addSequential(new WaitCommand(0.5));
+		group.addSequential(new PhaseCompleteCommand(AutonomousPhase.threeComplete));
+		Scheduler.getInstance().add(group);
 	}
 
 	public void testDriveCommand(double distance) {
@@ -140,38 +189,17 @@ public class AutonomousManager extends Subsystem {
 		updateCoordinates();
 //		double distance = Math.sqrt(xCord*xCord + yCord*yCord);
 
-		if (phase == AutonomousPhase.one) {
-			switch(position) {
-			case 1:
-				if (Math.abs(gyro.getAngle() - RobotMap.TURN_ANGLE) <= 3) return true;
-				else return false;
-			case 2:
-				if (Math.abs(gyro.getAngle()) <= 2) return true;
-				else return false;
-			case 3:
-				if (Math.abs(gyro.getAngle() + RobotMap.TURN_ANGLE) <= 3) return true;
-				else return false;
-			default:
-				System.out.println("No autonomous was selected.");
-				return false;
-			}
-		} else return false;
+		return Robot.steveBannon.phase == AutonomousPhase.oneComplete;
 	}
 
 	private boolean isPhaseTwoFinished() {
 		updateCoordinates();
 
-		if (phase == AutonomousPhase.two) {
-			if (vision.getLiftAngle() != null && Math.abs(vision.getLiftAngle()) <= 1) return true;
-			else return false;
-		} else return false;
+		return Robot.steveBannon.phase == AutonomousPhase.twoComplete;
 	}
 	
 	private boolean isPhaseThreeFinished() {
-		if (phase == AutonomousPhase.three) {
-			if (Robot.leddar.getDistances().get(8).getDistanceInCentimeters() <= 10) return true;
-			else return false;
-		} else return false;
+		return Robot.steveBannon.phase == AutonomousPhase.threeComplete;
 	}
 
 	@Override

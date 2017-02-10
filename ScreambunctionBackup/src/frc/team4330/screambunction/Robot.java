@@ -19,9 +19,6 @@ import frc.team4330.sensors.distance.LeddarDistanceSensor;
 /**
  * WIP 2017 Code.
  *
- * TODO Test encoders/drive command
- * TODO Work on servers w/ Jeffrey
- * TODO Vision works?
  */
 @SuppressWarnings("unused")
 public class Robot extends IterativeRobot {
@@ -49,6 +46,7 @@ public class Robot extends IterativeRobot {
 		buttonj = new Joystick(RobotMap.SHOOT_JOYSTICK_PORT);
 
 		// Initializing Components
+		//			channel = new AnalogInput(0);
 		gyro = new AHRS(SerialPort.Port.kMXP);
 		leddar = new LeddarDistanceSensor();
 
@@ -67,15 +65,14 @@ public class Robot extends IterativeRobot {
 
 		Scheduler.getInstance().removeAll();
 		
-		gyro.reset();
 		gyro.resetDisplacement();
 		
 		vision.startUp();
 		leddar.startUp();
 
-		steveBannon.init();
-//		steveBannon.testDriveCommand(1);
-//		Scheduler.getInstance().enable();
+//		steveBannon.init();
+		steveBannon.testDriveCommand(1);
+		Scheduler.getInstance().enable();
 	}
 
 	@Override
@@ -85,8 +82,8 @@ public class Robot extends IterativeRobot {
 //		else System.out.println("No leddar.");
 
 //		System.out.println("x val: " + gyro.getDisplacementX() + "; y val: " + gyro.getDisplacementY());
-		steveBannon.run();
-//		Scheduler.getInstance().run();
+//		steveBannon.run();
+		Scheduler.getInstance().run();
 	}
 
 
@@ -109,11 +106,11 @@ public class Robot extends IterativeRobot {
 		
 //		tarzan.setClimb(buttonj.getRawButton(RobotMap.CLIMB_SLOW_SPEED_BUTTON),
 //				buttonj.getRawButton(RobotMap.CLIMB_FAST_SPEED_BUTTON));
-		tarzan.testClimb(leftj.getRawButton(11), leftj.getRawButton(12), leftj.getRawButton(7));
+//		tarzan.testClimb(leftj.getRawButton(11), leftj.getRawButton(12), leftj.getRawButton(7));
 		
-		bambam.manualShoot(rightj.getRawButton(RobotMap.SHOOT_POWER_ON_BUTTON),
-				rightj.getRawButton(RobotMap.SHOOT_POWER_OFF_BUTTON),
-				rightj.getRawButton(RobotMap.FEED_POWER_BUTTON));
+//		bambam.manualShoot(rightj.getRawButton(RobotMap.SHOOT_POWER_ON_BUTTON),
+//				rightj.getRawButton(RobotMap.SHOOT_POWER_OFF_BUTTON),
+//				rightj.getRawButton(RobotMap.FEED_POWER_BUTTON));
 //		
 //		if (rightj.getRawButton(3)) bambam.testWheel();
 //		else if (rightj.getRawButton(2)) bambam.testFeeder();

@@ -4,8 +4,6 @@ import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.command.Subsystem;
-import frc.team4330.screambunction.Robot;
-import frc.team4330.screambunction.utils.HeadingCalculator;
 import frc.team4330.screambunction.utils.Registrar;
 import frc.team4330.screambunction.utils.RobotMap;
 
@@ -17,7 +15,6 @@ import frc.team4330.screambunction.utils.RobotMap;
  */
 public class RobotDrive extends Subsystem {
 	private SpeedController rightMotor1, rightMotor2, leftMotor1, leftMotor2;
-	private double yDis, xDis;
 	private Encoder left, right;
 	private boolean reverse = false;
 	private boolean lastPressed = false;
@@ -35,14 +32,6 @@ public class RobotDrive extends Subsystem {
 		
 		left = new Encoder(RobotMap.ENCODER_LEFT_ONE_PORT, RobotMap.ENCODER_LEFT_TWO_PORT);
 		right = new Encoder(RobotMap.ENCODER_RIGHT_ONE_PORT, RobotMap.ENCODER_RIGHT_TWO_PORT);
-		left.setDistancePerPulse(RobotMap.DISTANCE_PER_PULSE);
-		right.setDistancePerPulse(RobotMap.DISTANCE_PER_PULSE);
-
-		left.reset();
-		right.reset();
-		
-		yDis = 0;
-		xDis = 0;
 	}
 
 	private void reverseDrive(boolean button) {
@@ -115,7 +104,6 @@ public class RobotDrive extends Subsystem {
 	 * @param rightv the speed of the right wheels.
 	 */
 	public void tankAuto(double leftv, double rightv) {
-		double angle = HeadingCalculator.normalize(Robot.gyro.getAngle());
 		if (leftv > 1 || rightv > 1 || leftv < -1 || rightv < -1) {
 			System.out.println("Check speed values.");
 		} else {
@@ -124,16 +112,16 @@ public class RobotDrive extends Subsystem {
 			leftMotor1.set(leftv);
 			leftMotor2.set(leftv);
 		}
-		
-		yDis = totalDistance()*Math.cos(angle);
-		xDis = totalDistance()*Math.sin(angle);
 	}
 
 	/**
 	 * Stops the wheels.
 	 */
 	public void stop() {
-		tankAuto(0, 0);
+		rightMotor1.set(0);
+		leftMotor2.set(0);
+		rightMotor2.set(0);
+		leftMotor1.set(0);
 	}
 	
 	public void resetEncoders() {
@@ -141,17 +129,12 @@ public class RobotDrive extends Subsystem {
 		right.reset();
 	}
 	
-	public double totalDistance() {
-		return (right.getDistance() + left.getDistance()) / 2;
+	public double leftDistance() {
+		return left.getDistance();
 	}
 	
-	
-	public double yDist() {
-		return yDis;
-	}
-	
-	public double xDist() {
-		return xDis;
+	public double rightDistance() {
+		return right.getDistance();
 	}
 
 	@Override

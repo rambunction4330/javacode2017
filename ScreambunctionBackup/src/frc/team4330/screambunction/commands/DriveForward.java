@@ -15,10 +15,8 @@ import frc.team4330.screambunction.utils.HeadingCalculator;
  * @author Amanda
  */
 public class DriveForward extends Command {
-	private double desDistance, curHeading, pastHeading;
-	private double startX, startY;
-	private double deltaX, deltaY, deltaDis;
-	private double pastY, pastX;
+	private double desDistance, curHeading, pastHeading, startX, startY, 
+	deltaX, deltaY, deltaDis;
 	
 	private AHRS gyro;
 	private RobotDrive robot;
@@ -33,9 +31,6 @@ public class DriveForward extends Command {
 	public DriveForward(double desDistance) {
 		this.desDistance = desDistance;
 		distanceLeftToDrive = desDistance;
-		
-		pastX = 0;
-		pastY = 0;
 
 		requires(Robot.myRobot);
 	}
@@ -66,9 +61,11 @@ public class DriveForward extends Command {
 		double rightval = 0;
 		double leftval = 0;
 
+
 		deltaX = gyro.getDisplacementX() - startX;
 		deltaY = gyro.getDisplacementY() - startY;
 		deltaDis = Math.sqrt(deltaX*deltaX + deltaY*deltaY);
+		System.out.println("dis: " + deltaDis + "; x: " + gyro.getDisplacementX() + "; y: " + gyro.getDisplacementY() + "; z: " + gyro.getDisplacementZ());
 		distanceLeftToDrive = desDistance - deltaDis;
 
 		if (distanceLeftToDrive <= .5) {
@@ -93,18 +90,16 @@ public class DriveForward extends Command {
 
 
 		robot.tankAuto(leftval, rightval);
-		pastX = gyro.getDisplacementX();
-		pastY = gyro.getDisplacementY();
 	}
 
 	@Override
 	protected boolean isFinished() {
-		return (distanceLeftToDrive <= .005) || (gyro.getDisplacementX() - pastX) < 0 || (gyro.getDisplacementY() - pastY) < 0;
+		return distanceLeftToDrive <= .005;
 	}
 
 	@Override
 	public void end() {
-		System.out.print("gyro finished value: " + robot.totalDistance()); 
+		System.out.print("gyro finished value: " + gyro.getDisplacementY()); 
 		robot.stop();
 	}
 

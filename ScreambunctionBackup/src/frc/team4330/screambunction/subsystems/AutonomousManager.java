@@ -94,7 +94,7 @@ public class AutonomousManager extends Subsystem {
 				loadPhases();
 			}
 		} else if (phase == AutonomousPhase.three) {
-			System.out.println("Phase three loaded.");
+			System.out.println("Phase three loaded");
 			Double distance = getDistanceToWall();
 			if ( distance == null ) {
 				System.out.println("Leddar doesn't know distance");
@@ -191,17 +191,17 @@ public class AutonomousManager extends Subsystem {
 		updateCoordinates();
 //		double distance = Math.sqrt(xCord*xCord + yCord*yCord);
 
-		return phase == AutonomousPhase.oneComplete;
+		return Robot.steveBannon.phase == AutonomousPhase.oneComplete;
 	}
 
 	private boolean isPhaseTwoFinished() {
 		updateCoordinates();
 
-		return phase == AutonomousPhase.twoComplete;
+		return Robot.steveBannon.phase == AutonomousPhase.twoComplete;
 	}
 	
 	private boolean isPhaseThreeFinished() {
-		return phase == AutonomousPhase.threeComplete;
+		return Robot.steveBannon.phase == AutonomousPhase.threeComplete;
 	}
 
 	@Override

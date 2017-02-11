@@ -1,5 +1,7 @@
 package frc.team4330.screambunction;
 
+import java.util.List;
+
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
@@ -15,6 +17,7 @@ import frc.team4330.screambunction.subsystems.Shooter;
 import frc.team4330.screambunction.subsystems.VisionSystem;
 import frc.team4330.screambunction.utils.RobotMap;
 import frc.team4330.sensors.distance.LeddarDistanceSensor;
+import frc.team4330.sensors.distance.LeddarDistanceSensorData;
 
 /**
  * WIP 2017 Code.
@@ -80,9 +83,7 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void autonomousPeriodic() {
-//		if (leddar.getDistances().size() != 0) 
-//			System.out.println("leddar: " + leddar.getDistances().get(0).getDistanceInCentimeters());
-//		else System.out.println("No leddar.");
+		System.out.println("leddar: " + getDistance(8));
 
 //		System.out.println("x val: " + gyro.getDisplacementX() + "; y val: " + gyro.getDisplacementY());
 		steveBannon.run();
@@ -140,5 +141,24 @@ public class Robot extends IterativeRobot {
 		bambam.stop();
 		tarzan.stop();
 		myRobot.stop();
+	}
+	
+	/**
+	 * Returns the segment distance from the LEDDAR in segment 0-15. (or null).
+	 * 
+	 * @param segment
+	 * @return distance for that segment or null (in meters.)
+	 */
+	public Double getDistance(int segment) {
+		List<LeddarDistanceSensorData> distances = leddar.getDistances();
+		if ( distances.isEmpty() ) {
+			return null;
+		}
+		for ( LeddarDistanceSensorData distance: distances ) {
+			if ( distance.getSegmentNumber() == segment ) {
+				return distance.getDistanceInCentimeters() / 100.0;
+			}
+		}
+		return null;
 	}
 }

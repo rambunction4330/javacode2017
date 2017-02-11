@@ -1,7 +1,5 @@
 package frc.team4330.screambunction.subsystems;
 
-import edu.wpi.first.wpilibj.Relay;
-import edu.wpi.first.wpilibj.Relay.Value;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.team4330.screambunction.utils.Registrar;
@@ -10,19 +8,15 @@ import frc.team4330.screambunction.utils.RobotMap;
 public class Shooter extends Subsystem {
 
 	private SpeedController motor;
-	private Relay relay;
-
-	private Value feederVal;
+	private SpeedController motor2;
 
 	private double motorVal = 0;
+	private double motor2Val = 0;
 
 	public Shooter() {
 		motor = Registrar.victor(RobotMap.MOTOR_SHOOT_PORT);
 
-		relay = Registrar.relay(RobotMap.RELAY_FEED_PORT);
-//		feeder.setDirection(Direction.kForward);
-
-		feederVal = Value.kOff;
+		motor2 = Registrar.victor(RobotMap.MOTOR_FEED_PORT);
 	}
 
 	/**
@@ -39,20 +33,21 @@ public class Shooter extends Subsystem {
 		else if (buttonOn) motorVal = RobotMap.SHOOTING_SPEED;
 
 		if (feederOn && motor.get() >= RobotMap.SHOOTING_SPEED - .05) {
-			this.feederVal = Value.kOn;
+			this.motor2Val = RobotMap.FEEDING_SPEED;
 		} else if (feederOn && motor.get() <= RobotMap.SHOOTING_SPEED - .05) {
 			System.out.println("Turning motor on. Let motor power up.");
 			motorVal = RobotMap.SHOOTING_SPEED;
 		}
 
 		motor.set(motorVal);
-		relay.set(this.feederVal);
+		motor2.set(motor2Val);
 	}
 
 	public void autoShoot(boolean shooter, boolean feeder) {
 		if (shooter) motor.set(RobotMap.SHOOTING_SPEED);
 
-		if (feeder && motor.get() >= RobotMap.SHOOTING_SPEED - .05) relay.set(Value.kOn);
+		if (feeder && motor.get() >= RobotMap.SHOOTING_SPEED - .05)
+			motor2.set(RobotMap.FEEDING_SPEED);
 	}
 
 	public void stop() {
@@ -61,8 +56,8 @@ public class Shooter extends Subsystem {
 	}
 
 	private void stopFeed() {
-		feederVal = Value.kOff;
-		relay.set(feederVal);
+		motor2Val = 0;
+		motor2.set(motor2Val);
 	}
 
 	private void stopMotor() {
@@ -71,8 +66,8 @@ public class Shooter extends Subsystem {
 	}
 	
 	public void testFeeder() {
-		feederVal = Value.kForward;
-		relay.set(feederVal);
+		motor2Val = .5;
+		motor2.set(motor2Val);
 	}
 	
 	public void testWheel() {

@@ -9,21 +9,18 @@ public class RobotMap {
 	public final static int MOTOR_FOUR_PORT = 3;
 	public final static int MOTOR_CLIMB_PORT = 4;
 	public final static int MOTOR_SHOOT_PORT = 5;
+	public final static int MOTOR_FEED_PORT = 6;
 	
 	// DIO Ports
 	public final static int ENCODER_LEFT_ONE_PORT = 0;
 	public final static int ENCODER_LEFT_TWO_PORT = 1;
 	public final static int ENCODER_RIGHT_ONE_PORT = 2;
 	public final static int ENCODER_RIGHT_TWO_PORT = 3;
-
-	
-	// Relay Ports
-	public final static int RELAY_FEED_PORT = 2;
-	public final static int RELAY_LED_SWITCH_PORT = 3;
-	
-	// DigitalInput Ports
 	public final static int MAXSONAR_PORT = 0;
 	
+	// Relay Ports
+	public final static int RELAY_LED_SWITCH_PORT = 3;
+		
 	// Joystick Ports
 	public final static int LEFT_JOYSTICK_PORT = 0;
 	public final static int RIGHT_JOYSTICK_PORT = 1;
@@ -48,6 +45,7 @@ public class RobotMap {
 	public final static double REEL_SPEED = .3;
 	public final static double CLIMB_SPEED = .9;
 	public final static double SHOOTING_SPEED = .99;
+	public final static double FEEDING_SPEED = .5;
 	
 	// Robot Measurements (m)
 	public final static double ROBOT_WIDTH = 0.9017;
@@ -56,6 +54,8 @@ public class RobotMap {
 	// Field Distances (m)
 	public final static double WALL_TO_BASELINE = 2.8448;
 	public final static double ESTIMATE_DIST_TO_LIFT = .5;
+	
+	
 	
 	// Angles
 	public final static double TURN_ANGLE = 60;

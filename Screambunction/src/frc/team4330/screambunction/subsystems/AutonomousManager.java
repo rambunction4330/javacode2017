@@ -13,12 +13,12 @@ import frc.team4330.screambunction.SmartDashboardSetup;
 import frc.team4330.screambunction.commands.DriveForward;
 import frc.team4330.screambunction.commands.PhaseCompleteCommand;
 import frc.team4330.screambunction.commands.Turn;
+import frc.team4330.screambunction.commands.ZeroPhaseCommand;
 import frc.team4330.screambunction.utils.AutonomousPhase;
 import frc.team4330.screambunction.utils.RobotMap;
 import frc.team4330.sensors.distance.LeddarDistanceSensor;
 import frc.team4330.sensors.distance.LeddarDistanceSensorData;
 
-@SuppressWarnings("unused")
 public class AutonomousManager extends Subsystem {
 	private double xCord, yCord;
 
@@ -39,8 +39,9 @@ public class AutonomousManager extends Subsystem {
 
 		xCord = gyro.getDisplacementX();
 		yCord = gyro.getDisplacementY();
-
+		
 		// This on start up because we want it to go once.
+		Scheduler.getInstance().add(new ZeroPhaseCommand());
 		switch(position) {
 		case 1:
 			travelToLeftLift();
@@ -95,7 +96,7 @@ public class AutonomousManager extends Subsystem {
 			}
 		} else if (phase == AutonomousPhase.three) {
 			System.out.println("Phase three loaded.");
-			Double distance = getDistanceToWall();
+			Double distance = getDistance(7);
 			if ( distance == null ) {
 				System.out.println("Leddar doesn't know distance");
 				driveToLift(0.5);
@@ -106,13 +107,19 @@ public class AutonomousManager extends Subsystem {
 		} else;
 	}
 	
-	private Double getDistanceToWall ( ) {
-		List<LeddarDistanceSensorData> distances = Robot.leddar.getDistances();
+	/**
+	 * Returns the segment distance from the LEDDAR in segment 0-15. (or null).
+	 * 
+	 * @param segment
+	 * @return distance for that segment or null (in meters.)
+	 */
+	public Double getDistance(int segment) {
+		List<LeddarDistanceSensorData> distances = leddar.getDistances();
 		if ( distances.isEmpty() ) {
 			return null;
 		}
 		for ( LeddarDistanceSensorData distance: distances ) {
-			if ( distance.getSegmentNumber() == 8 ) {
+			if ( distance.getSegmentNumber() == segment ) {
 				return distance.getDistanceInCentimeters() / 100.0;
 			}
 		}

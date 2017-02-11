@@ -20,6 +20,7 @@ import java.util.Map;
 public class VisionComms {
 	
 	public static final int CONNECTION_TIMEOUT_SEC = 10;
+	// TODO maybe needs .local ?
 	public static final String DEFAULT_VISION_BOARD_HOST = "tegra-ubuntu";
 	public static final int DEFAULT_VISION_BOARD_PORT = 9001;
 	

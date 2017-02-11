@@ -1,7 +1,5 @@
 package frc.team4330.screambunction.subsystems;
 
-import java.util.List;
-
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
@@ -16,8 +14,6 @@ import frc.team4330.screambunction.commands.Turn;
 import frc.team4330.screambunction.commands.ZeroPhaseCommand;
 import frc.team4330.screambunction.utils.AutonomousPhase;
 import frc.team4330.screambunction.utils.RobotMap;
-import frc.team4330.sensors.distance.LeddarDistanceSensor;
-import frc.team4330.sensors.distance.LeddarDistanceSensorData;
 
 public class AutonomousManager extends Subsystem {
 	private double xCord, yCord;
@@ -27,7 +23,6 @@ public class AutonomousManager extends Subsystem {
 
 	private AHRS gyro;
 	private VisionSystem vision;
-	private LeddarDistanceSensor leddar;
 
 	public void init() {
 		phase = AutonomousPhase.one;
@@ -35,7 +30,6 @@ public class AutonomousManager extends Subsystem {
 
 		gyro = Robot.gyro;
 		vision = Robot.vision;
-		leddar = Robot.leddar;
 
 		xCord = gyro.getDisplacementX();
 		yCord = gyro.getDisplacementY();
@@ -96,7 +90,7 @@ public class AutonomousManager extends Subsystem {
 			}
 		} else if (phase == AutonomousPhase.three) {
 			System.out.println("Phase three loaded.");
-			Double distance = getDistance(7);
+			Double distance = Robot.getDistance(7);
 			if ( distance == null ) {
 				System.out.println("Leddar doesn't know distance");
 				driveToLift(0.5);
@@ -107,24 +101,6 @@ public class AutonomousManager extends Subsystem {
 		} else;
 	}
 	
-	/**
-	 * Returns the segment distance from the LEDDAR in segment 0-15. (or null).
-	 * 
-	 * @param segment
-	 * @return distance for that segment or null (in meters.)
-	 */
-	public Double getDistance(int segment) {
-		List<LeddarDistanceSensorData> distances = leddar.getDistances();
-		if ( distances.isEmpty() ) {
-			return null;
-		}
-		for ( LeddarDistanceSensorData distance: distances ) {
-			if ( distance.getSegmentNumber() == segment ) {
-				return distance.getDistanceInCentimeters() / 100.0;
-			}
-		}
-		return null;
-	}
 
 	private void updateCoordinates() {
 		xCord = gyro.getDisplacementX();

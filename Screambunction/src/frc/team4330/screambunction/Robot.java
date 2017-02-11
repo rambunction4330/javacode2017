@@ -22,9 +22,8 @@ import frc.team4330.sensors.distance.LeddarDistanceSensorData;
 /**
  * WIP 2017 Code.
  *
- * TODO Test encoders/drive command
- * TODO Work on servers w/ Jeffrey
- * TODO Vision works?
+ * TODO Test encoders/drive command TODO Work on servers w/ Jeffrey TODO Vision
+ * works?
  */
 @SuppressWarnings("unused")
 public class Robot extends IterativeRobot {
@@ -46,6 +45,8 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void robotInit() {
+		SmartDashboardSetup.allDashboards();
+		
 		// Initializing Joysticks
 		leftj = new Joystick(RobotMap.LEFT_JOYSTICK_PORT);
 		rightj = new Joystick(RobotMap.RIGHT_JOYSTICK_PORT);
@@ -59,68 +60,70 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void autonomousInit() {
-//		ServerTest server = new ServerTest();
-//		try {
-//			server.start();
-//		} catch (Exception e){
-//			
-//		}
-		
+		// ServerTest server = new ServerTest();
+		// try {
+		// server.start();
+		// } catch (Exception e){
+		//
+		// }
+
 		SmartDashboardSetup.autonomousDashboard();
 
 		Scheduler.getInstance().removeAll();
-		
+
 		gyro.reset();
 		gyro.resetDisplacement();
-		
+
 		vision.startUp();
 		leddar.startUp();
 
 		steveBannon.init();
-//		steveBannon.testDriveCommand(1);
-//		Scheduler.getInstance().enable();
+		// steveBannon.testDriveCommand(1);
+		// Scheduler.getInstance().enable();
 	}
 
 	@Override
 	public void autonomousPeriodic() {
-		System.out.println("leddar: " + getDistance(8));
+		// System.out.println("leddar: " + getDistance(8));
 
-//		System.out.println("x val: " + gyro.getDisplacementX() + "; y val: " + gyro.getDisplacementY());
+		// System.out.println("x val: " + gyro.getDisplacementX() + "; y val: "
+		// + gyro.getDisplacementY());
 		steveBannon.run();
-//		Scheduler.getInstance().run();
+		// Scheduler.getInstance().run();
 	}
-
-
 
 	@Override
 	public void teleopInit() {
 		vision.startUp();
 		leddar.startUp();
-		
+
 		SmartDashboardSetup.teleOpDashboard();
 	}
 
 	@Override
 	public void teleopPeriodic() {
-		
-//		steveBannon.testDriveCommand(1);
-		
-//		myRobot.curveDrive(leftj, rightj);
-		myRobot.tankDrive(leftj, rightj, leftj.getRawButton(RobotMap.REVERSE_BUTTON));
-		
-//		tarzan.setClimb(buttonj.getRawButton(RobotMap.CLIMB_SLOW_SPEED_BUTTON),
-//				buttonj.getRawButton(RobotMap.CLIMB_FAST_SPEED_BUTTON));
-		tarzan.testClimb(leftj.getRawButton(11), leftj.getRawButton(12), leftj.getRawButton(7));
-		
+
+		// steveBannon.testDriveCommand(1);
+
+		// myRobot.curveDrive(leftj, rightj);
+		myRobot.tankDrive(leftj, rightj,
+				leftj.getRawButton(RobotMap.REVERSE_BUTTON));
+
+		// tarzan.setClimb(buttonj.getRawButton(RobotMap.CLIMB_SLOW_SPEED_BUTTON),
+		// buttonj.getRawButton(RobotMap.CLIMB_FAST_SPEED_BUTTON));
+		tarzan.testClimb(leftj.getRawButton(11), leftj.getRawButton(12),
+				leftj.getRawButton(7));
+
 		bambam.manualShoot(rightj.getRawButton(RobotMap.SHOOT_POWER_ON_BUTTON),
 				rightj.getRawButton(RobotMap.SHOOT_POWER_OFF_BUTTON),
 				rightj.getRawButton(RobotMap.FEED_POWER_BUTTON));
-//		
-//		if (rightj.getRawButton(3)) bambam.testWheel();
-//		else if (rightj.getRawButton(2)) bambam.testFeeder();
-//		else if (rightj.getRawButton(5)) bambam.stop();
-	}
+		
 
+//		bambam.testWheel();
+//		
+//		if (leftj.getRawButton(4)) bambam.testFeeder();
+//		else bambam.stopFeed();
+	}
 
 	@Override
 	public void testInit() {
@@ -142,20 +145,20 @@ public class Robot extends IterativeRobot {
 		tarzan.stop();
 		myRobot.stop();
 	}
-	
+
 	/**
 	 * Returns the segment distance from the LEDDAR in segment 0-15. (or null).
 	 * 
 	 * @param segment
 	 * @return distance for that segment or null (in meters.)
 	 */
-	public Double getDistance(int segment) {
+	public final static Double getDistance(int segment) {
 		List<LeddarDistanceSensorData> distances = leddar.getDistances();
-		if ( distances.isEmpty() ) {
+		if (distances.isEmpty()) {
 			return null;
 		}
-		for ( LeddarDistanceSensorData distance: distances ) {
-			if ( distance.getSegmentNumber() == segment ) {
+		for (LeddarDistanceSensorData distance : distances) {
+			if (distance.getSegmentNumber() == segment) {
 				return distance.getDistanceInCentimeters() / 100.0;
 			}
 		}

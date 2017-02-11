@@ -55,7 +55,7 @@ public class Shooter extends Subsystem {
 		stopMotor();
 	}
 
-	private void stopFeed() {
+	public void stopFeed() {
 		motor2Val = 0;
 		motor2.set(motor2Val);
 	}
@@ -66,12 +66,12 @@ public class Shooter extends Subsystem {
 	}
 	
 	public void testFeeder() {
-		motor2Val = .5;
+		motor2Val = .8;
 		motor2.set(motor2Val);
 	}
 	
 	public void testWheel() {
-		motorVal = .99;
+		motorVal = .7;
 		motor.set(motorVal);
 	}
 

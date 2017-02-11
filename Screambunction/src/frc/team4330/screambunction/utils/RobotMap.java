@@ -45,7 +45,7 @@ public class RobotMap {
 	public final static double REEL_SPEED = .3;
 	public final static double CLIMB_SPEED = .9;
 	public final static double SHOOTING_SPEED = .99;
-	public final static double FEEDING_SPEED = .5;
+	public final static double FEEDING_SPEED = .8;
 	
 	// Robot Measurements (m)
 	public final static double ROBOT_WIDTH = 0.9017;

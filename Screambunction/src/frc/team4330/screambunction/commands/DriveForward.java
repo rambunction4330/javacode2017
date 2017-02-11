@@ -51,7 +51,7 @@ public class DriveForward extends Command {
 		this.gyro = Robot.gyro;
 		robot = Robot.myRobot;
 
-		System.out.print("gyro start value: " + gyro.getDisplacementY()); 
+	//	System.out.print("gyro start value: " + gyro.getDisplacementY()); 
 		pastHeading = HeadingCalculator.normalize(Robot.gyro.getAngle());
 		startX = gyro.getDisplacementX();
 		startY = gyro.getDisplacementY();
@@ -104,7 +104,7 @@ public class DriveForward extends Command {
 
 	@Override
 	public void end() {
-		System.out.print("gyro finished value: " + robot.totalDistance()); 
+		//System.out.print("gyro finished value: " + robot.totalDistance()); 
 		robot.stop();
 	}
 

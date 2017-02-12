@@ -3,7 +3,9 @@ package frc.team4330.sensors.distance;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import edu.wpi.first.wpilibj.can.CANMessageNotFoundException;
@@ -72,12 +74,21 @@ public class LeddarDistanceSensor extends CanDevice {
 			return;
 		}
 		
-		String fileName = "/home/lvuser/can_record.txt";
+		SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd_HHmmss");
+		String fileName = "/home/lvuser/can_record_" + df.format(new Date()) + ".txt";
 		try {
 			recorder = new PrintStream(new FileOutputStream( new File(fileName)));
 		} catch ( Exception e ) {
 			System.out.println("Could not open file " + fileName);
 		}
+		
+		if ( recorder != null ) {
+			recorder.println(System.currentTimeMillis() + " Starting up");
+		}
+		
+		// purge messages in order to let the CAN system know the message ids which are of interest
+		// and to ensure we have no messages queued from previous sessions
+		purgeReceivedMessages();
 	
 		// initialize - it is important that the initializedReceivedState method is called
 		// prior to the update thread being started
@@ -106,8 +117,6 @@ public class LeddarDistanceSensor extends CanDevice {
 		updateThread.setDaemon(true);
 		updateThread.start();
 		
-		// purge messages in order to let the CAN system know the message ids which are of interest
-		purgeReceivedMessages();
 		
 		// tell sensor to start sending messages continuously
 		CANMessage startMessage = new CANMessage(transmitBaseMessageId, COMMAND_START_SENDING_DETECTIONS);
@@ -124,6 +133,10 @@ public class LeddarDistanceSensor extends CanDevice {
 			return;
 		}
 		
+		if ( recorder != null ) {
+			recorder.println(System.currentTimeMillis() + " Shutting down");
+		}
+		
 		// tell sensor to stop sending messages
 		CANMessage stopMessage = new CANMessage(transmitBaseMessageId, COMMAND_STOP_SENDING_DETECTIONS);
 		if ( recorder != null ) {
@@ -136,10 +149,6 @@ public class LeddarDistanceSensor extends CanDevice {
 		
 		if ( updateThread != null ) {
 			updateThread.interrupt();
-		}
-		
-		if ( recorder != null ) {
-			recorder.println(System.currentTimeMillis() + " Starting purge"); 
 		}
 		
 		// dump any queued received messages since we no longer care about them and
@@ -178,9 +187,8 @@ public class LeddarDistanceSensor extends CanDevice {
 				try {
 					CANMessage message = receiveData(messageIds[i]);
 					if ( recorder != null ) {
-						recorder.println(System.currentTimeMillis() + " Receiving: " + message);
+						recorder.println(System.currentTimeMillis() + " Purged: " + message);
 					}
-					System.out.println("Purged " + message);
 					wasMessageReceived = true;
 				} catch ( CANMessageNotFoundException e ) {
 					// do nothing since we want to possibly move on to the next messageId

@@ -29,6 +29,8 @@ public abstract class CanDevice {
 	    ByteBuffer timeStamp = ByteBuffer.allocateDirect(4);
 
 	    // Get the data using full 29 bits for CAN message id mask
+	    // Expected that this call will throw a CANMessageNotFoundException if no messages of that
+	    // id are available
 	    ByteBuffer dataBuffer = CANJNI.FRCNetCommCANSessionMuxReceiveMessage(
 	    	targetedMessageID.asIntBuffer(), CANJNI.CAN_IS_FRAME_REMOTE, timeStamp);
 

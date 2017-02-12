@@ -1,6 +1,10 @@
 package frc.team4330.sensors.distance;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import edu.wpi.first.wpilibj.can.CANMessageNotFoundException;
@@ -9,8 +13,11 @@ import frc.team4330.sensors.canbus.CanDevice;
 
 public class LeddarDistanceSensor extends CanDevice {
 	
-	public static final int LEDDAR_RX_BASE_ID_DEFAULT = 1856;
-	public static final int LEDDAR_TX_BASE_ID_DEFAULT = 1872;
+	/**
+	 * Transmit and receive is from the standpoint of the client, not the sensor
+	 */
+	public static final int LEDDAR_RX_BASE_ID_DEFAULT = 1872;
+	public static final int LEDDAR_TX_BASE_ID_DEFAULT = 1856;
 	
 	public static final byte[] COMMAND_START_SENDING_DETECTIONS = new byte[] {2};
 	public static final byte[] COMMAND_STOP_SENDING_DETECTIONS = new byte[] {3};
@@ -30,18 +37,21 @@ public class LeddarDistanceSensor extends CanDevice {
 	// boolean values are safe to read/modify from multiple threads, so no worry about thread safety
 	private boolean active = false;
 	private Thread updateThread;
+	private PrintStream recorder;
 	
 	/**
 	 * Construct using default values
 	 */
 	public LeddarDistanceSensor() {
 		
+		
+		
 	}
 	
 	/**
 	 * 
-	 * @param receiveBaseMessageId message id the sensor uses to receive commands
-	 * @param transmitBaseMessageId message id the sensor uses to transmit distance info
+	 * @param receiveBaseMessageId message id the client uses to receive distance info
+	 * @param transmitBaseMessageId message id the client uses to transmit commands
 	 */
 	public LeddarDistanceSensor(int receiveBaseMessageId, int transmitBaseMessageId) {
 		this.receiveBaseMessageId = receiveBaseMessageId;
@@ -49,11 +59,11 @@ public class LeddarDistanceSensor extends CanDevice {
 	}
 	
 	public int getSizeMessageId() {
-		return transmitBaseMessageId + 1;
+		return receiveBaseMessageId + 1;
 	}
 	
 	public int getDistanceMessageId() {
-		return transmitBaseMessageId;
+		return receiveBaseMessageId;
 	}
 	
 	public void startUp() {
@@ -61,6 +71,13 @@ public class LeddarDistanceSensor extends CanDevice {
 		if ( active ) {
 			// already started, so noope
 			return;
+		}
+		
+		String fileName = "/home/lvuser/can_record.txt";
+		try {
+			recorder = new PrintStream(new FileOutputStream( new File(fileName)));
+		} catch ( Exception e ) {
+			System.out.println("Could not open file " + fileName);
 		}
 	
 		// initialize - it is important that the initializedReceivedState method is called
@@ -94,7 +111,11 @@ public class LeddarDistanceSensor extends CanDevice {
 		purgeReceivedMessages();
 		
 		// tell sensor to start sending messages continuously
-		sendData(new CANMessage(receiveBaseMessageId, COMMAND_START_SENDING_DETECTIONS));
+		CANMessage startMessage = new CANMessage(transmitBaseMessageId, COMMAND_START_SENDING_DETECTIONS);
+		if ( recorder != null ) {
+			recorder.println(new Date() + " Sending: " + startMessage);
+		}
+		sendData(startMessage);
 	}
 	
 	public void shutDown() {
@@ -105,7 +126,11 @@ public class LeddarDistanceSensor extends CanDevice {
 		}
 		
 		// tell sensor to stop sending messages
-		sendData(new CANMessage(receiveBaseMessageId, COMMAND_STOP_SENDING_DETECTIONS));
+		CANMessage stopMessage = new CANMessage(transmitBaseMessageId, COMMAND_STOP_SENDING_DETECTIONS);
+		if ( recorder != null ) {
+			recorder.println(new Date() + " Sending: " + stopMessage);
+		}
+		sendData(stopMessage);
 		
 		// set to inactive and shut down the update thread
 		active = false;
@@ -114,9 +139,18 @@ public class LeddarDistanceSensor extends CanDevice {
 			updateThread.interrupt();
 		}
 		
+		if ( recorder != null ) {
+			recorder.println(new Date() + " Starting purge"); 
+		}
+		
 		// dump any queued received messages since we no longer care about them and
 		// don't want to read stale messages if we restart later
 		purgeReceivedMessages();
+		
+		if ( recorder != null ) {
+			recorder.close();
+		}
+		
 	}
 	
 	public synchronized List<LeddarDistanceSensorData> getDistances() {
@@ -144,10 +178,16 @@ public class LeddarDistanceSensor extends CanDevice {
 			for ( int i = 0; i < messageIds.length; i++ ) {
 				try {
 					CANMessage message = receiveData(messageIds[i]);
+					if ( recorder != null ) {
+						recorder.println(new Date() + " Receiving: " + message);
+					}
 					System.out.println("Purged " + message);
 					wasMessageReceived = true;
 				} catch ( CANMessageNotFoundException e ) {
 					// do nothing since we want to possibly move on to the next messageId
+					if ( recorder != null ) {
+						recorder.println(new Date() + " CANMessageNotFoundException");
+					}
 				}
 			}
 			if ( !wasMessageReceived ) {
@@ -166,6 +206,7 @@ public class LeddarDistanceSensor extends CanDevice {
 			// by looping until the CANMessageNotFoundException occurs
 			while(true) {
 				CANMessage message = pullNextSensorMessage();
+				
 				int messageId = message.getMessageId();
 				byte[] data = message.getData();
 				if ( messageId == getSizeMessageId() ) {
@@ -180,6 +221,9 @@ public class LeddarDistanceSensor extends CanDevice {
 			}
 		} catch (CANMessageNotFoundException e) {
 			// no problem since just means ran out of messages to process
+			if ( recorder != null ) {
+				recorder.println(new Date() + " CANMessageNotFoundException");
+			}
 		}
 	}
 	
@@ -192,6 +236,10 @@ public class LeddarDistanceSensor extends CanDevice {
 		} else {
 			// we have a size message, so only ask for distance messages
 			message = receiveData(getDistanceMessageId());
+		}
+		
+		if ( recorder != null ) {
+			recorder.println(new Date() + " Receiving: " + message);
 		}
 		
 		return message;

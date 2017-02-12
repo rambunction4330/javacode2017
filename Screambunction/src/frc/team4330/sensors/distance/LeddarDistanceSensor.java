@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import edu.wpi.first.wpilibj.can.CANMessageNotFoundException;
@@ -113,7 +112,7 @@ public class LeddarDistanceSensor extends CanDevice {
 		// tell sensor to start sending messages continuously
 		CANMessage startMessage = new CANMessage(transmitBaseMessageId, COMMAND_START_SENDING_DETECTIONS);
 		if ( recorder != null ) {
-			recorder.println(new Date() + " Sending: " + startMessage);
+			recorder.println(System.currentTimeMillis() + " Sending: " + startMessage);
 		}
 		sendData(startMessage);
 	}
@@ -128,7 +127,7 @@ public class LeddarDistanceSensor extends CanDevice {
 		// tell sensor to stop sending messages
 		CANMessage stopMessage = new CANMessage(transmitBaseMessageId, COMMAND_STOP_SENDING_DETECTIONS);
 		if ( recorder != null ) {
-			recorder.println(new Date() + " Sending: " + stopMessage);
+			recorder.println(System.currentTimeMillis() + " Sending: " + stopMessage);
 		}
 		sendData(stopMessage);
 		
@@ -140,7 +139,7 @@ public class LeddarDistanceSensor extends CanDevice {
 		}
 		
 		if ( recorder != null ) {
-			recorder.println(new Date() + " Starting purge"); 
+			recorder.println(System.currentTimeMillis() + " Starting purge"); 
 		}
 		
 		// dump any queued received messages since we no longer care about them and
@@ -179,14 +178,14 @@ public class LeddarDistanceSensor extends CanDevice {
 				try {
 					CANMessage message = receiveData(messageIds[i]);
 					if ( recorder != null ) {
-						recorder.println(new Date() + " Receiving: " + message);
+						recorder.println(System.currentTimeMillis() + " Receiving: " + message);
 					}
 					System.out.println("Purged " + message);
 					wasMessageReceived = true;
 				} catch ( CANMessageNotFoundException e ) {
 					// do nothing since we want to possibly move on to the next messageId
 					if ( recorder != null ) {
-						recorder.println(new Date() + " CANMessageNotFoundException");
+						recorder.println(System.currentTimeMillis() + " CANMessageNotFoundException");
 					}
 				}
 			}
@@ -222,7 +221,7 @@ public class LeddarDistanceSensor extends CanDevice {
 		} catch (CANMessageNotFoundException e) {
 			// no problem since just means ran out of messages to process
 			if ( recorder != null ) {
-				recorder.println(new Date() + " CANMessageNotFoundException");
+				recorder.println(System.currentTimeMillis() + " CANMessageNotFoundException");
 			}
 		}
 	}
@@ -239,7 +238,7 @@ public class LeddarDistanceSensor extends CanDevice {
 		}
 		
 		if ( recorder != null ) {
-			recorder.println(new Date() + " Receiving: " + message);
+			recorder.println(System.currentTimeMillis() + " Receiving: " + message);
 		}
 		
 		return message;

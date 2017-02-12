@@ -159,7 +159,7 @@ public class LeddarDistanceSensor extends CanDevice {
 		// set to inactive and shut down the update thread
 		active = false;
 		// clear out any received distances
-		initializeReceivedState();
+		clearDistances();
 		
 		if ( updateThread != null ) {
 			updateThread.interrupt();
@@ -182,6 +182,13 @@ public class LeddarDistanceSensor extends CanDevice {
 	private synchronized void updateClientData() {
 		for ( int i = 0; i < NUMBER_SECTORS; i++ ) {
 			distances.set(i, receivedDistances.get(i).getData());
+		}
+	}
+	
+	private synchronized void clearDistances() {
+		distances.clear();
+		for ( int i = 0; i < NUMBER_SECTORS; i++ ) {
+			distances.add(null);
 		}
 	}
 	
@@ -209,7 +216,7 @@ public class LeddarDistanceSensor extends CanDevice {
 				} catch ( CANMessageNotFoundException e ) {
 					// do nothing since we want to possibly move on to the next messageId
 					if ( recorder != null ) {
-						recorder.println(System.currentTimeMillis() + " CANMessageNotFoundException");
+						recorder.println(System.currentTimeMillis() + " CANMessageNotFoundException while purging message id " + messageIds[i]);
 					}
 				}
 			}
@@ -241,30 +248,46 @@ public class LeddarDistanceSensor extends CanDevice {
 			}
 		} catch (CANMessageNotFoundException e) {
 			// no problem since just means ran out of messages to process
-			if ( recorder != null ) {
-				recorder.println(System.currentTimeMillis() + " CANMessageNotFoundException");
-			}
 		}
 	}
 	
+	/**
+	 * Try to get a distance message, if successful, then return the distance message.
+	 * If can't get a distance message, try to get a size message and record the if we got one, but
+	 * still throw a CANMessageNotFoundException exception since we don't have any distance messages
+	 * @return the CANMessage for distance
+	 * @throws CANMessageNotFoundException thrown if no distance CANMessages are available
+	 */
 	private CANMessage pullNextDistanceMessage() throws CANMessageNotFoundException {
 		
 		try {
-			CANMessage sizeMessage = receiveData(getSizeMessageId());
-			// we don't care about size messages, but go ahead and record them if received
+			CANMessage distanceMessage = receiveData(getDistanceMessageId());;		
 			if ( recorder != null ) {
-				recorder.println(System.currentTimeMillis() + " Received: " + sizeMessage);
+				recorder.println(System.currentTimeMillis() + " Received: " + distanceMessage);
 			}
+			return distanceMessage;
 		} catch ( CANMessageNotFoundException e ) {
-			// do nothing since we don't care about size messages, we are just removing them from the queue
+			
+			// we didn't get any distance messages, so try to get a size message
+			try {
+				CANMessage sizeMessage = receiveData(getSizeMessageId());
+				// we don't care about size messages, but go ahead and record them if received
+				if ( recorder != null ) {
+					recorder.println(System.currentTimeMillis() + " Received: " + sizeMessage);
+				}
+			
+			} catch ( CANMessageNotFoundException e2 ) {
+				// we didn't get any distance or size messages, so record that and let caller know 
+				// that there are no distance messages
+				if ( recorder != null ) {
+					recorder.println(System.currentTimeMillis() + " CANMessageNotFoundException");
+				}
+			} finally {
+				// throw the CANMessageNotFoundException since we don't have distance messages
+				throw e;
+			}
 		}
 		
-		CANMessage distanceMessage = receiveData(getDistanceMessageId());;		
-		if ( recorder != null ) {
-			recorder.println(System.currentTimeMillis() + " Received: " + distanceMessage);
-		}
-		
-		return distanceMessage;
 	}
 	
 	private void handleDistanceMessage(byte[] sectorRawData) {

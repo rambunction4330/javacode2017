@@ -87,12 +87,19 @@ public class LeddarDistanceSensorTest {
 		
 		// on initial startup there should be no distance measurements available
 		List<LeddarDistanceSensorData> list = testObject.getDistances();
-		Assert.assertEquals(true, list.isEmpty());
+		Assert.assertEquals(16, list.size());
+		for ( int i = 0; i < 16; i++) {
+			Assert.assertNull(list.get(i));
+		}
 		
 		// simulate the device sending a size message
 		addToReceiveBuffer(testObject.getSizeMessageId(), new byte[] {0x03});
 		
-		Assert.assertEquals(true, testObject.getDistances().isEmpty());
+		list = testObject.getDistances();
+		Assert.assertEquals(16, list.size());
+		for ( int i = 0; i < 16; i++) {
+			Assert.assertNull(list.get(i));
+		}
 		
 		// simulate the device sending the first distance message
 		// distance 30,000 stored little endian in bytes 0 and 1
@@ -107,7 +114,26 @@ public class LeddarDistanceSensorTest {
 		// second binary: 00001110 11111110 11111010 11111111
 		addToReceiveBuffer(testObject.getDistanceMessageId(), new byte[] {48, 117, -35, 55, 14, -2, -6, -1});
 		
-		Assert.assertEquals(true, testObject.getDistances().isEmpty());
+		Thread.sleep(100);
+		double measurementError = 0.1;
+		
+		list = testObject.getDistances();
+		Assert.assertEquals(16, list.size());
+		for ( int i = 0; i < 16; i++) {
+			if ( i == 3 ) {
+				LeddarDistanceSensorData measurement = list.get(3);
+				Assert.assertEquals(30000, measurement.getDistanceInCentimeters());
+				Assert.assertEquals(3, measurement.getSegmentNumber());
+				Assert.assertEquals(true, Math.abs(503.25 - measurement.getAmplitude()) < measurementError);
+			} else if ( i == 15 ) {
+				LeddarDistanceSensorData measurement = list.get(15);
+				Assert.assertEquals(65038, measurement.getDistanceInCentimeters());
+				Assert.assertEquals(15, measurement.getSegmentNumber());
+				Assert.assertEquals(true, Math.abs(1022.5 - measurement.getAmplitude()) < measurementError);
+			} else {
+				Assert.assertNull(list.get(i));
+			}
+		}
 		
 		// distance 1
 		// amplitude 1.25
@@ -117,24 +143,71 @@ public class LeddarDistanceSensorTest {
 		addToReceiveBuffer(testObject.getDistanceMessageId(), new byte[] {1, 0, 5, 16, 0, 0, 0, 0});
 		Thread.sleep(100);
 		
-		double measurementError = 0.1;
-		
 		list = testObject.getDistances();
-		Assert.assertEquals(3, list.size());
-		LeddarDistanceSensorData measurement = list.get(0);
-		Assert.assertEquals(30000, measurement.getDistanceInCentimeters());
-		Assert.assertEquals(3, measurement.getSegmentNumber());
-		Assert.assertEquals(true, Math.abs(503.25 - measurement.getAmplitude()) < measurementError);
+		Assert.assertEquals(16, list.size());
+		for ( int i = 0; i < 16; i++) {
+			if ( i == 1 ) {
+				LeddarDistanceSensorData measurement = list.get(1);
+				Assert.assertEquals(1, measurement.getDistanceInCentimeters());
+				Assert.assertEquals(1, measurement.getSegmentNumber());
+				Assert.assertEquals(true, Math.abs(1.25 - measurement.getAmplitude()) < measurementError);
+			} else if ( i == 3 ) {
+				LeddarDistanceSensorData measurement = list.get(3);
+				Assert.assertEquals(30000, measurement.getDistanceInCentimeters());
+				Assert.assertEquals(3, measurement.getSegmentNumber());
+				Assert.assertEquals(true, Math.abs(503.25 - measurement.getAmplitude()) < measurementError);
+			} else if ( i == 15 ) {
+				LeddarDistanceSensorData measurement = list.get(15);
+				Assert.assertEquals(65038, measurement.getDistanceInCentimeters());
+				Assert.assertEquals(15, measurement.getSegmentNumber());
+				Assert.assertEquals(true, Math.abs(1022.5 - measurement.getAmplitude()) < measurementError);
+			} else {
+				Assert.assertNull(list.get(i));
+			}
+		}
 		
-		measurement = list.get(1);
-		Assert.assertEquals(65038, measurement.getDistanceInCentimeters());
-		Assert.assertEquals(15, measurement.getSegmentNumber());
-		Assert.assertEquals(true, Math.abs(1022.5 - measurement.getAmplitude()) < measurementError);
+		// sleep for 100 msec to give enough time for sector 7 to expire ( should have been 300 msec )
+		Thread.sleep(100);
 		
-		measurement = list.get(2);
-		Assert.assertEquals(1, measurement.getDistanceInCentimeters());
-		Assert.assertEquals(1, measurement.getSegmentNumber());
-		Assert.assertEquals(true, Math.abs(1.25 - measurement.getAmplitude()) < measurementError);
+		// simulate updating sector 3 and adding sector 7
+		// distance 500 stored little endian in bytes 0 and 1
+		// amplitude 480.00 stored little endian in byte 2 (all) and byte 3 ( 4 LSB )
+		// with the number being stored with 10 bits representing whole number and 2 bits
+		// representing the fractional part
+		// sector 3 stored in 4 MSB of byte 3
+		// first binary: 11110100 00000001 10000000 00110111
+		// distance 32
+		// amplitude 983.75
+		// sector 7
+		// second binary: 00100000 00000000 01011111 01111111
+		addToReceiveBuffer(testObject.getDistanceMessageId(), new byte[] {-12, 1, -128, 55, 32, 0, 95, 127});
+		
+		// sleep to allow time for update thread to process messages
+		Thread.sleep(100);
+		
+		// since sector 15 didn't get updated within 250 msec, it should have been removed
+		// and sector 3 should have been updated, sector 1 unchanged, and sector 7 added
+		Assert.assertEquals(16, list.size());
+		for ( int i = 0; i < 16; i++) {
+			if ( i == 1 ) {
+				LeddarDistanceSensorData measurement = list.get(1);
+				Assert.assertEquals(1, measurement.getDistanceInCentimeters());
+				Assert.assertEquals(1, measurement.getSegmentNumber());
+				Assert.assertEquals(true, Math.abs(1.25 - measurement.getAmplitude()) < measurementError);
+			} else if ( i == 3 ) {
+				LeddarDistanceSensorData measurement = list.get(3);
+				Assert.assertEquals(500, measurement.getDistanceInCentimeters());
+				Assert.assertEquals(3, measurement.getSegmentNumber());
+				Assert.assertEquals(true, Math.abs(480.00 - measurement.getAmplitude()) < measurementError);
+			} else if ( i == 7 ) {
+				LeddarDistanceSensorData measurement = list.get(7);
+				Assert.assertEquals(32, measurement.getDistanceInCentimeters());
+				Assert.assertEquals(7, measurement.getSegmentNumber());
+				Assert.assertEquals(true, Math.abs(983.75 - measurement.getAmplitude()) < measurementError);
+			} else {
+				Assert.assertNull(list.get(i));
+			}
+		}
 		
 		testObject.shutDown();
 		Thread.sleep(100);

@@ -43,7 +43,7 @@ public final class LeddarDistanceSensorData implements Comparable<LeddarDistance
 	}
 	
 	public String toString() {
-		return ("Seg: " + segmentNumber + ";" + "Dist: " + distanceInCentimeters + ";" + "amp: " + amplitude);
+		return ("{Seg=" + segmentNumber + " Dist=" + distanceInCentimeters + " Amp=" + amplitude + "}");
 	}
 
 }

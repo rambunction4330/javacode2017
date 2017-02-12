@@ -7,6 +7,7 @@ public class LeddarDistanceSensorFullTest {
 	public static void main ( String[] args ) {
 		try {
 			LeddarDistanceSensor sensor = new LeddarDistanceSensor();
+			sensor.setRecording(true);
 			sensor.startUp();
 			
 			for ( int i = 0; i < 100; i++ ) {

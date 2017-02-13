@@ -180,6 +180,12 @@ public class LeddarDistanceSensor extends CanDevice {
 	}
 	
 	private synchronized void updateClientData() {
+		// purge any stale values
+		for ( int i = 0; i < NUMBER_SECTORS; i++ ) {
+			if ( receivedDistances.get(i).isStale() ) {
+				receivedDistances.set(i, new ReceivedInfo(null));
+			}
+		}
 		for ( int i = 0; i < NUMBER_SECTORS; i++ ) {
 			distances.set(i, receivedDistances.get(i).getData());
 		}
@@ -248,6 +254,9 @@ public class LeddarDistanceSensor extends CanDevice {
 			}
 		} catch (CANMessageNotFoundException e) {
 			// no problem since just means ran out of messages to process
+			
+			// do this to purge any stale data if we haven't received any messages in a while
+			updateClientData();
 		}
 	}
 	
@@ -324,13 +333,6 @@ public class LeddarDistanceSensor extends CanDevice {
 		receivedDistances.set(d1.getSegmentNumber(), new ReceivedInfo(d1));
 		if ( d2 != null ) {
 			receivedDistances.set(d2.getSegmentNumber(), new ReceivedInfo(d2));
-		}
-		
-		// purge any stale values
-		for ( int i = 0; i < NUMBER_SECTORS; i++ ) {
-			if ( receivedDistances.get(i).isStale() ) {
-				receivedDistances.set(i, new ReceivedInfo(null));
-			}
 		}
 		
 		// update data for the client thread to read

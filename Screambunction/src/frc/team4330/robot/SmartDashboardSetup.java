@@ -1,6 +1,5 @@
 package frc.team4330.robot;
 
-import edu.wpi.cscore.MjpegServer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team4330.robot.utils.RobotMap;
@@ -13,14 +12,6 @@ public class SmartDashboardSetup {
 	public static final int one = 1;
 	public static final int two = 2;
 	public static final int three = 3;
-	
-	
-	static SendableChooser<Integer> chooser;
-	
-	// Cameras
-//	CameraServerJNI cam = new CameraServerJNI();
-	MjpegServer cam1 = new MjpegServer("axis-back", "10.43.30.11", 80);
-	MjpegServer cam2 = new MjpegServer("axis-front", "10.43.30.12", 80);
 
 
 	public static void testDashboard() {
@@ -74,10 +65,6 @@ public class SmartDashboardSetup {
 	}
 
 	public static void allDashboards() {
-		chooser = new SendableChooser<Integer>();
-		chooser.addDefault("tesT", 2);
-		SmartDashboard.putData("test", chooser);
-		
 		positionChooser = new SendableChooser<Integer>();
 		positionChooser.addDefault("Left", one);
 		positionChooser.addObject("Middle", two);

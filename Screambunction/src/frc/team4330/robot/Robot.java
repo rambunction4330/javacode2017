@@ -153,25 +153,9 @@ public class Robot extends IterativeRobot {
 	 * @return distance for that segment or null (in meters.)
 	 */
 	public final static Double getDistance(int segment) {
-		Double total = 0.0;
-		int amount = 0;
 		List<LeddarDistanceSensorData> distances = leddar.getDistances();
-		if (distances.isEmpty()) {
-			return null;
-		}
-		for (LeddarDistanceSensorData distance : distances) {
-			if (distance.getSegmentNumber() == segment) {
-				amount++;
-				total += distance.getDistanceInCentimeters() / 100.0;
-			} else if (distance.getSegmentNumber() == segment-1) {
-				amount++;
-				total += distance.getDistanceInCentimeters() / 100.0;
-			} else if (distance.getSegmentNumber() == segment+1) {
-				amount++;
-				total += distance.getDistanceInCentimeters() / 100.0;
-			}
-		}
-		if (total != 0) return total / amount;
+		
+		if (distances.get(8) != null) return distances.get(8).getDistanceInCentimeters() / 100.0;
 		else return null;
 	}
 }

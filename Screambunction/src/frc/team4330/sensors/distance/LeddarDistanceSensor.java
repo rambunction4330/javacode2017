@@ -59,11 +59,11 @@ public class LeddarDistanceSensor extends CanDevice {
 	}
 	
 	public int getSizeMessageId() {
-		return receiveBaseMessageId + 1;
+		return receiveBaseMessageId;
 	}
 	
 	public int getDistanceMessageId() {
-		return receiveBaseMessageId;
+		return receiveBaseMessageId + 1;
 	}
 	
 	public boolean isRecording() {

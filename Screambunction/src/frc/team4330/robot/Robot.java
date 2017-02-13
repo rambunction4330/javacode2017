@@ -1,11 +1,13 @@
 package frc.team4330.robot;
 
+import java.nio.ByteBuffer;
 import java.util.List;
 
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.SerialPort.Port;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import frc.team4330.robot.subsystems.AutonomousManager;
@@ -27,7 +29,7 @@ import frc.team4330.sensors.distance.LeddarDistanceSensorData;
  */
 @SuppressWarnings("unused")
 public class Robot extends IterativeRobot {
-
+	SPI test = new SPI(edu.wpi.first.wpilibj.SPI.Port.kMXP);
 	// Subsystems
 	public final static AutonomousManager steveBannon = new AutonomousManager();
 	public final static MaxSonar sonar = new MaxSonar();
@@ -75,7 +77,7 @@ public class Robot extends IterativeRobot {
 
 		gyro.reset();
 		gyro.resetDisplacement();
-
+		
 		vision.startUp();
 		leddar.startUp();
 		leddar.setRecording(RobotMap.RECORDING_LEDDAR_VALS);
@@ -89,6 +91,8 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void autonomousPeriodic() {
 		System.out.println("leddar: " + getDistance(8));
+//		ByteBuffer test2=new ByteBuffer();
+//		System.out.println("lidar" + test.read(false, , size))
 		// System.out.println("x val: " + gyro.getDisplacementX() + "; y val: "
 		// + gyro.getDisplacementY());
 		//		steveBannon.run();

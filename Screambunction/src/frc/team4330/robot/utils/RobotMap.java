@@ -51,7 +51,7 @@ public class RobotMap {
 	
 	// Robot Measurements (m)
 	public final static double ROBOT_WIDTH = 0.9017;
-	public final static double DISTANCE_PER_PULSE = 0.00033248522;
+	public final static double DISTANCE_PER_PULSE = 0.00132994;
 
 	// Field Distances (m)
 	public final static double WALL_TO_BASELINE = 2.8448;

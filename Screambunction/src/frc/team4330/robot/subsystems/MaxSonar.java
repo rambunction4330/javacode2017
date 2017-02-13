@@ -1,7 +1,7 @@
-package frc.team4330.screambunction.subsystems;
+package frc.team4330.robot.subsystems;
 
 import edu.wpi.first.wpilibj.AnalogInput;
-import frc.team4330.screambunction.utils.RobotMap;
+import frc.team4330.robot.utils.RobotMap;
 
 public class MaxSonar {
 	private AnalogInput analog;

@@ -1,6 +1,6 @@
-package frc.team4330.screambunction.server;
+package frc.team4330.robot.server;
 
-import frc.team4330.screambunction.Robot;
+import frc.team4330.robot.Robot;
 import frc.team4330.sensors.distance.LeddarDistanceSensor;
 
 public class LeddarDataProtocol {

@@ -215,6 +215,7 @@ public class LeddarDistanceSensor extends CanDevice {
 			for ( int i = 0; i < messageIds.length; i++ ) {
 				try {
 					CANMessage message = receiveData(messageIds[i]);
+
 					if ( recorder != null ) {
 						recorder.println(System.currentTimeMillis() + " Purged: " + message);
 					}

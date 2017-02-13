@@ -18,7 +18,7 @@ public class VisionCommsTest {
 			VisionComms comms = new VisionComms("10.10.61.20", 9001);
 			comms.startUp();
 			while ( true ) {
-				Map<String,String> messages = comms.retrieveData();
+				Map<String,Double> messages = comms.retrieveData();
 				if ( messages.size() > 0 ) {
 					System.out.println(new Date() + " - x=" + messages.get("rb"));
 				} else {
@@ -37,7 +37,7 @@ public class VisionCommsTest {
 		String traffic = "\n";
 		ByteArrayOutputStream os = new ByteArrayOutputStream();
 		ByteArrayInputStream is = new ByteArrayInputStream(traffic.getBytes());
-		Map<String,String> messages = VisionComms.getMessages(os, is);
+		Map<String,Double> messages = VisionComms.getMessages(os, is);
 		assertEquals(0, messages.size());
 		assertEquals("DATA\n", os.toString());
 	}
@@ -48,7 +48,7 @@ public class VisionCommsTest {
 		String traffic = "rb=8.89\n\n";
 		ByteArrayOutputStream os = new ByteArrayOutputStream();
 		ByteArrayInputStream is = new ByteArrayInputStream(traffic.getBytes());
-		Map<String,String> messages = VisionComms.getMessages(os, is);
+		Map<String,Double> messages = VisionComms.getMessages(os, is);
 		assertEquals(1, messages.size());
 		assertEquals("8.89", messages.get("rb"));
 		assertEquals("DATA\n", os.toString());
@@ -60,7 +60,7 @@ public class VisionCommsTest {
 		String traffic = "rb=8.89\nry=1.53\n\n";
 		ByteArrayOutputStream os = new ByteArrayOutputStream();
 		ByteArrayInputStream is = new ByteArrayInputStream(traffic.getBytes());
-		Map<String,String> messages = VisionComms.getMessages(os, is);
+		Map<String,Double> messages = VisionComms.getMessages(os, is);
 		assertEquals(2, messages.size());
 		assertEquals("8.89", messages.get("rb"));
 		assertEquals("1.53", messages.get("ry"));
@@ -73,7 +73,7 @@ public class VisionCommsTest {
 		String traffic = "rb=8.89\n\nrb=10.58\n\n";
 		ByteArrayOutputStream os = new ByteArrayOutputStream();
 		ByteArrayInputStream is = new ByteArrayInputStream(traffic.getBytes());
-		Map<String,String> messages = VisionComms.getMessages(os, is);
+		Map<String,Double> messages = VisionComms.getMessages(os, is);
 		assertEquals(1, messages.size());
 		assertEquals("8.89", messages.get("rb"));
 		assertEquals("DATA\n", os.toString());
@@ -91,7 +91,7 @@ public class VisionCommsTest {
 		ByteArrayOutputStream os = new ByteArrayOutputStream();
 		ByteArrayInputStream is = new ByteArrayInputStream(traffic.getBytes());
 		
-		Map<String,String> messages = VisionComms.getMessages(os, is);
+		Map<String,Double> messages = VisionComms.getMessages(os, is);
 		assertEquals(0, messages.size());
 		assertEquals("DATA\n", os.toString());
 		os.reset();
@@ -125,7 +125,7 @@ public class VisionCommsTest {
 		ByteArrayOutputStream os = new ByteArrayOutputStream();
 		ByteArrayInputStream is = new ByteArrayInputStream(traffic.getBytes());
 		
-		Map<String,String> messages = VisionComms.getMessages(os, is);
+		Map<String,Double> messages = VisionComms.getMessages(os, is);
 		assertEquals(0, messages.size());
 		assertEquals("DATA\n", os.toString());
 		os.reset();
@@ -153,7 +153,7 @@ public class VisionCommsTest {
 		ByteArrayOutputStream os = new ByteArrayOutputStream();
 		ByteArrayInputStream is = new ByteArrayInputStream(traffic.getBytes());
 		
-		Map<String,String> messages = VisionComms.getMessages(os, is);
+		Map<String,Double> messages = VisionComms.getMessages(os, is);
 		assertEquals(1, messages.size());
 		assertEquals("10.00", messages.get("rb"));
 		assertEquals("DATA\n", os.toString());
@@ -181,7 +181,7 @@ public class VisionCommsTest {
 		ByteArrayOutputStream os = new ByteArrayOutputStream();
 		ByteArrayInputStream is = new ByteArrayInputStream(traffic.getBytes());
 		
-		Map<String,String> messages = VisionComms.getMessages(os, is);
+		Map<String,Double> messages = VisionComms.getMessages(os, is);
 		assertEquals(2, messages.size());
 		assertEquals("10.00", messages.get("rb"));
 		assertEquals("14.5", messages.get("ry"));

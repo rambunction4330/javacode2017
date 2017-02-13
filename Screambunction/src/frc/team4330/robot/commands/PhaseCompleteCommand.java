@@ -1,8 +1,8 @@
-package frc.team4330.screambunction.commands;
+package frc.team4330.robot.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
-import frc.team4330.screambunction.Robot;
-import frc.team4330.screambunction.utils.AutonomousPhase;
+import frc.team4330.robot.Robot;
+import frc.team4330.robot.utils.AutonomousPhase;
 
 public class PhaseCompleteCommand extends Command {
 	

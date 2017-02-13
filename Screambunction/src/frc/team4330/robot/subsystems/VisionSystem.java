@@ -1,4 +1,4 @@
-package frc.team4330.screambunction.subsystems;
+package frc.team4330.robot.subsystems;
 
 import java.util.Map;
 
@@ -15,7 +15,7 @@ public class VisionSystem extends Subsystem {
 
 	public VisionSystem() {
 		visLift = new VisionComms("tegra-ubuntu", 9001);
-		visBoiler = new VisionComms("tegra-ubuntu", 9002);
+//		visBoiler = new VisionComms("tegra-ubuntu", 9002);
 
 		ledSwitch = new Relay(3, Direction.kForward);
 		ledSwitch.set(Value.kForward);
@@ -23,7 +23,7 @@ public class VisionSystem extends Subsystem {
 
 	public void startUp() {
 		try {
-			visBoiler.startUp();
+//			visBoiler.startUp();
 			visLift.startUp();
 			ledSwitch.set(Value.kForward);
 		} catch(Exception e) {
@@ -35,7 +35,7 @@ public class VisionSystem extends Subsystem {
 	public void shutDown() {
 		try {
 			visLift.shutDown();
-			visBoiler.shutDown();
+//			visBoiler.shutDown();
 			ledSwitch.set(Value.kOff);
 		} catch (Exception e) {
 			System.out.println("********* Error Message *********" + "\n" + e.getMessage());
@@ -47,22 +47,22 @@ public class VisionSystem extends Subsystem {
 	}
 
 	public Double getBoilerAngle() {
-		return Double.parseDouble(visBoiler.retrieveData().get("rb"));
+		return visBoiler.retrieveData().get("rb");
 	}
 
 	public Double getLiftAngle() {
-		Map<String,String> values = visLift.retrieveData();
+		Map<String,Double> values = visLift.retrieveData();
 		if ( values.containsKey("rb")) {
-			return Double.parseDouble(values.get("rb"));
+			return values.get("rb");
 		}
 		return null;
 	}
 
-	public Map<String, String> getBoilerData() {
+	public Map<String, Double> getBoilerData() {
 		return visBoiler.retrieveData();
 	}
 
-	public Map<String, String> getLiftData() {
+	public Map<String, Double> getLiftData() {
 		return visLift.retrieveData();
 	}
 

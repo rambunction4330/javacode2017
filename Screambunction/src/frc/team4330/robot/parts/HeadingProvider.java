@@ -1,4 +1,4 @@
-package frc.team4330.screambunction.parts;
+package frc.team4330.robot.parts;
 
 public interface HeadingProvider {
 	double getAngle();

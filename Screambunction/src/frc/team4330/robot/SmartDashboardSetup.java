@@ -1,8 +1,9 @@
-package frc.team4330.screambunction;
+package frc.team4330.robot;
 
+import edu.wpi.cscore.MjpegServer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.team4330.screambunction.utils.RobotMap;
+import frc.team4330.robot.utils.RobotMap;
 
 
 public class SmartDashboardSetup {
@@ -18,8 +19,8 @@ public class SmartDashboardSetup {
 	
 	// Cameras
 //	CameraServerJNI cam = new CameraServerJNI();
-//	MjpegServer cam1 = new MjpegServer("axis-back", "10.43.30.11", 80);
-//	MjpegServer cam2 = new MjpegServer("cam0", 80);
+	MjpegServer cam1 = new MjpegServer("axis-back", "10.43.30.11", 80);
+	MjpegServer cam2 = new MjpegServer("axis-front", "10.43.30.12", 80);
 
 
 	public static void testDashboard() {

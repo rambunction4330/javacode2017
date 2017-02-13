@@ -1,4 +1,4 @@
-package frc.team4330.screambunction;
+package frc.team4330.robot;
 
 import java.util.List;
 
@@ -6,24 +6,24 @@ import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.SerialPort;
+import edu.wpi.first.wpilibj.SerialPort.Port;
 import edu.wpi.first.wpilibj.command.Scheduler;
-import frc.team4330.screambunction.server.ServerTest;
-import frc.team4330.screambunction.subsystems.AutonomousManager;
-import frc.team4330.screambunction.subsystems.MaxSonar;
-import frc.team4330.screambunction.subsystems.RobotDrive;
-import frc.team4330.screambunction.subsystems.RopeClimber;
-import frc.team4330.screambunction.subsystems.Shooter;
-import frc.team4330.screambunction.subsystems.VisionSystem;
-import frc.team4330.screambunction.utils.RobotMap;
+import frc.team4330.robot.subsystems.AutonomousManager;
+import frc.team4330.robot.subsystems.MaxSonar;
+import frc.team4330.robot.subsystems.RobotDrive;
+import frc.team4330.robot.subsystems.RopeClimber;
+import frc.team4330.robot.subsystems.Shooter;
+import frc.team4330.robot.subsystems.VisionSystem;
+import frc.team4330.robot.utils.RobotMap;
 import frc.team4330.sensors.distance.LeddarDistanceSensor;
 import frc.team4330.sensors.distance.LeddarDistanceSensorData;
 
 /**
  * WIP 2017 Code.
  *
- * TODO Test encoders/drive command TODO Work on servers w/ Jeffrey TODO Vision
- * works?
+ * TODO Test encoders/drive command 
+ * TODO Work on servers w/ Jeffrey 
+ * TODO Vision works?
  */
 @SuppressWarnings("unused")
 public class Robot extends IterativeRobot {
@@ -45,21 +45,24 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void robotInit() {
+		RobotMap.updateVals();
 		SmartDashboardSetup.allDashboards();
-		
+
 		// Initializing Joysticks
 		leftj = new Joystick(RobotMap.LEFT_JOYSTICK_PORT);
 		rightj = new Joystick(RobotMap.RIGHT_JOYSTICK_PORT);
 		buttonj = new Joystick(RobotMap.SHOOT_JOYSTICK_PORT);
 
 		// Initializing Components
-		gyro = new AHRS(SerialPort.Port.kMXP);
+		gyro = new AHRS(Port.kMXP);
 		leddar = new LeddarDistanceSensor();
-
 	}
 
 	@Override
 	public void autonomousInit() {
+		RobotMap.updateVals();
+		SmartDashboardSetup.autonomousDashboard();
+
 		// ServerTest server = new ServerTest();
 		// try {
 		// server.start();
@@ -67,7 +70,6 @@ public class Robot extends IterativeRobot {
 		//
 		// }
 
-		SmartDashboardSetup.autonomousDashboard();
 
 		Scheduler.getInstance().removeAll();
 
@@ -76,33 +78,36 @@ public class Robot extends IterativeRobot {
 
 		vision.startUp();
 		leddar.startUp();
+		leddar.setRecording(RobotMap.RECORDING_LEDDAR_VALS);
 
-		steveBannon.init();
+		//		Scheduler.getInstance().enable();
+		//		steveBannon.init();
 		// steveBannon.testDriveCommand(1);
-		// Scheduler.getInstance().enable();
 	}
+
 
 	@Override
 	public void autonomousPeriodic() {
-		// System.out.println("leddar: " + getDistance(8));
-
+		System.out.println("leddar: " + getDistance(8));
 		// System.out.println("x val: " + gyro.getDisplacementX() + "; y val: "
 		// + gyro.getDisplacementY());
-		steveBannon.run();
-		// Scheduler.getInstance().run();
+		//		steveBannon.run();
+		//		 Scheduler.getInstance().run();
 	}
 
 	@Override
 	public void teleopInit() {
+		RobotMap.updateVals();
+		SmartDashboardSetup.teleOpDashboard();
+
 		vision.startUp();
 		leddar.startUp();
-
-		SmartDashboardSetup.teleOpDashboard();
 	}
 
 	@Override
 	public void teleopPeriodic() {
-
+//		System.out.println("leddar: " + leddar.getDistances().toString());
+		System.out.println("test: " + RobotMap.SLOW_SPEED);
 		// steveBannon.testDriveCommand(1);
 
 		// myRobot.curveDrive(leftj, rightj);
@@ -114,15 +119,9 @@ public class Robot extends IterativeRobot {
 		tarzan.testClimb(leftj.getRawButton(11), leftj.getRawButton(12),
 				leftj.getRawButton(7));
 
-		bambam.manualShoot(rightj.getRawButton(RobotMap.SHOOT_POWER_ON_BUTTON),
-				rightj.getRawButton(RobotMap.SHOOT_POWER_OFF_BUTTON),
+		bambam.manualShoot(rightj.getRawButton(RobotMap.SHOOT_POWER_OFF_BUTTON),
+				rightj.getRawButton(RobotMap.SHOOT_POWER_ON_BUTTON),
 				rightj.getRawButton(RobotMap.FEED_POWER_BUTTON));
-		
-
-//		bambam.testWheel();
-//		
-//		if (leftj.getRawButton(4)) bambam.testFeeder();
-//		else bambam.stopFeed();
 	}
 
 	@Override
@@ -135,6 +134,7 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void disabledInit() {
+		RobotMap.updateVals();
 		Scheduler.getInstance().removeAll();
 		Scheduler.getInstance().disable();
 
@@ -153,15 +153,25 @@ public class Robot extends IterativeRobot {
 	 * @return distance for that segment or null (in meters.)
 	 */
 	public final static Double getDistance(int segment) {
+		Double total = 0.0;
+		int amount = 0;
 		List<LeddarDistanceSensorData> distances = leddar.getDistances();
 		if (distances.isEmpty()) {
 			return null;
 		}
 		for (LeddarDistanceSensorData distance : distances) {
 			if (distance.getSegmentNumber() == segment) {
-				return distance.getDistanceInCentimeters() / 100.0;
+				amount++;
+				total += distance.getDistanceInCentimeters() / 100.0;
+			} else if (distance.getSegmentNumber() == segment-1) {
+				amount++;
+				total += distance.getDistanceInCentimeters() / 100.0;
+			} else if (distance.getSegmentNumber() == segment+1) {
+				amount++;
+				total += distance.getDistanceInCentimeters() / 100.0;
 			}
 		}
-		return null;
+		if (total != 0) return total / amount;
+		else return null;
 	}
 }

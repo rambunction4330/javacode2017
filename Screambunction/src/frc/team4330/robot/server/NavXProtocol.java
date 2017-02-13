@@ -1,9 +1,9 @@
-package frc.team4330.screambunction.server;
+package frc.team4330.robot.server;
 
 import com.kauailabs.navx.frc.AHRS;
 
-import frc.team4330.screambunction.Robot;
-import frc.team4330.screambunction.utils.HeadingCalculator;
+import frc.team4330.robot.Robot;
+import frc.team4330.robot.utils.HeadingCalculator;
 
 public class NavXProtocol {
 	private AHRS gyro;

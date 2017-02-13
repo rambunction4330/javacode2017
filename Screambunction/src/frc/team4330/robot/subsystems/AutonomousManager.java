@@ -1,38 +1,31 @@
-package frc.team4330.screambunction.subsystems;
-
-import com.kauailabs.navx.frc.AHRS;
+package frc.team4330.robot.subsystems;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.command.WaitCommand;
-import frc.team4330.screambunction.Robot;
-import frc.team4330.screambunction.SmartDashboardSetup;
-import frc.team4330.screambunction.commands.DriveForward;
-import frc.team4330.screambunction.commands.PhaseCompleteCommand;
-import frc.team4330.screambunction.commands.Turn;
-import frc.team4330.screambunction.commands.ZeroPhaseCommand;
-import frc.team4330.screambunction.utils.AutonomousPhase;
-import frc.team4330.screambunction.utils.RobotMap;
+import frc.team4330.robot.Robot;
+import frc.team4330.robot.SmartDashboardSetup;
+import frc.team4330.robot.commands.DriveForward;
+import frc.team4330.robot.commands.DriveForwardEncoders;
+import frc.team4330.robot.commands.PhaseCompleteCommand;
+import frc.team4330.robot.commands.Turn;
+import frc.team4330.robot.commands.ZeroPhaseCommand;
+import frc.team4330.robot.utils.AutonomousPhase;
+import frc.team4330.robot.utils.RobotMap;
 
 public class AutonomousManager extends Subsystem {
-	private double xCord, yCord;
 
 	public AutonomousPhase phase = AutonomousPhase.one;
 	private int position;
 
-	private AHRS gyro;
 	private VisionSystem vision;
 
 	public void init() {
 		phase = AutonomousPhase.one;
 		position = SmartDashboardSetup.getStart();
 
-		gyro = Robot.gyro;
 		vision = Robot.vision;
-
-		xCord = gyro.getDisplacementX();
-		yCord = gyro.getDisplacementY();
 		
 		// This on start up because we want it to go once.
 		Scheduler.getInstance().add(new ZeroPhaseCommand());
@@ -55,10 +48,6 @@ public class AutonomousManager extends Subsystem {
 	}
 
 	public void run() {
-		if ( phase != AutonomousPhase.done) {
-			updateCoordinates();
-		}
-
 		if (isPhaseOneFinished()) {
 			System.out.println("Phase one finished.");
 			phase = AutonomousPhase.two;
@@ -100,26 +89,10 @@ public class AutonomousManager extends Subsystem {
 			}
 		} else;
 	}
-	
-
-	private void updateCoordinates() {
-		xCord = gyro.getDisplacementX();
-		yCord = gyro.getDisplacementY();
-	}
-
-	public double getXCord() {
-		updateCoordinates();
-		return xCord;
-	}
-
-	public double getYCord() {
-		updateCoordinates();
-		return yCord;
-	}
 
 	private void travelToLeftLift() {
 		CommandGroup group = new CommandGroup();
-		group.addSequential(new DriveForward(RobotMap.WALL_TO_BASELINE));
+		group.addSequential(new DriveForwardEncoders(RobotMap.WALL_TO_BASELINE));
 		group.addSequential(new WaitCommand(.5));
 		group.addSequential(new Turn(RobotMap.TURN_ANGLE, true));
 		group.addSequential(new PhaseCompleteCommand(AutonomousPhase.oneComplete));
@@ -129,7 +102,7 @@ public class AutonomousManager extends Subsystem {
 
 	private void travelToRightLift() {
 		CommandGroup group = new CommandGroup();
-		group.addSequential(new DriveForward( RobotMap.WALL_TO_BASELINE));
+		group.addSequential(new DriveForwardEncoders( RobotMap.WALL_TO_BASELINE));
 		group.addSequential(new WaitCommand(.5));
 		group.addSequential(new Turn(-RobotMap.TURN_ANGLE, false)); 
 		group.addSequential(new PhaseCompleteCommand(AutonomousPhase.oneComplete));
@@ -139,8 +112,8 @@ public class AutonomousManager extends Subsystem {
 
 	private void travelToCenterLift() {
 		CommandGroup group = new CommandGroup();
-		group.addSequential(new 
-				DriveForward(RobotMap.WALL_TO_BASELINE - RobotMap.ROBOT_WIDTH));
+		group.addSequential(new DriveForwardEncoders(RobotMap.WALL_TO_BASELINE 
+				- RobotMap.ROBOT_WIDTH));
 		group.addSequential(new WaitCommand(0.5));
 		group.addSequential(new PhaseCompleteCommand(AutonomousPhase.oneComplete));
 		Scheduler.getInstance().add(group);
@@ -171,15 +144,10 @@ public class AutonomousManager extends Subsystem {
 	}
 
 	private boolean isPhaseOneFinished() {
-		updateCoordinates();
-//		double distance = Math.sqrt(xCord*xCord + yCord*yCord);
-
 		return phase == AutonomousPhase.oneComplete;
 	}
 
 	private boolean isPhaseTwoFinished() {
-		updateCoordinates();
-
 		return phase == AutonomousPhase.twoComplete;
 	}
 	

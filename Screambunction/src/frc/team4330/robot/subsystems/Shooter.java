@@ -1,9 +1,9 @@
-package frc.team4330.screambunction.subsystems;
+package frc.team4330.robot.subsystems;
 
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.command.Subsystem;
-import frc.team4330.screambunction.utils.Registrar;
-import frc.team4330.screambunction.utils.RobotMap;
+import frc.team4330.robot.utils.Registrar;
+import frc.team4330.robot.utils.RobotMap;
 
 public class Shooter extends Subsystem {
 
@@ -66,7 +66,7 @@ public class Shooter extends Subsystem {
 	}
 	
 	public void testFeeder() {
-		motor2Val = .8;
+		motor2Val = -.99;
 		motor2.set(motor2Val);
 	}
 	

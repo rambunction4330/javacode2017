@@ -32,7 +32,7 @@ public class VisionComms {
 	private InputStream is;
 	private OutputStream os;
 	private boolean active = false;
-	private static final byte[] GET_DATA_COMMAND = "DATA\n".getBytes();
+	private static final byte[] GET_DATA_COMMAND = "MOTORS\n".getBytes();
 	private static final byte[] STOP_COMMAND = "STOP\n".getBytes();
 	
 	public static final String KEY_RELATIVE_BEARING = "rb";
@@ -57,7 +57,7 @@ public class VisionComms {
 	
 	public synchronized void startUp() throws IOException {
 		
-		System.out.println("Opening connection to vision board on " + host + ":" + port + 
+		System.out.println("Opening connection to Jetson on " + host + ":" + port + 
 				" with " + CONNECTION_TIMEOUT_SEC + " second timeout");
 		
 		socket = new Socket();
@@ -76,9 +76,9 @@ public class VisionComms {
 					is = socket.getInputStream();
 					os = socket.getOutputStream();
 					active = true;
-					System.out.println("Successfully connected to vision board");
+					System.out.println("Successfully connected to Jetson");
 				} catch ( Exception e ) {
-					System.err.println("Error connecting to vision board on startup. " + e.getMessage());
+					System.err.println("Error connecting to Jetson on startup. " + e.getMessage());
 				}
 			}
 			
@@ -90,7 +90,7 @@ public class VisionComms {
 	}
 	
 	public synchronized void shutDown() throws IOException {
-		System.out.println("Disconnecting from vision board");
+		System.out.println("Disconnecting from Jetson.");
 		active = false;
 		
 		if ( os != null ) {
@@ -105,23 +105,23 @@ public class VisionComms {
 			socket.close();
 			socket = null;
 		}
-		System.out.println("Successfully disconnected from vision board");
+		System.out.println("Successfully disconnected from Jetson.");
 	}
 
-	public synchronized Map<String, String> retrieveData() {
+	public synchronized Map<String, Double> retrieveData() {
 		if ( !active ) {
 			// the client may still be trying to connect
-			return new HashMap<String,String>();
+			return new HashMap<String,Double>();
 		}
 		try {
 			return getMessages(os, is);
 		} catch ( Exception e ) {
-			System.err.println("Error getting messages from the vision board. " + e.getMessage());
-			return new HashMap<String, String>();
+			System.err.println("Error getting messages from the Jetson. " + e.getMessage());
+			return new HashMap<String, Double>();
 		}
 	}
 	
-	static protected Map<String, String> getMessages(OutputStream outputStream, InputStream inputStream) throws IOException {
+	static protected Map<String, Double> getMessages(OutputStream outputStream, InputStream inputStream) throws IOException {
 		// send a request to server for data
 		outputStream.write(GET_DATA_COMMAND);
 		outputStream.flush();
@@ -141,12 +141,12 @@ public class VisionComms {
 
 		// had no data
 		if ( binaryData.size() == 0 ) {
-			return new HashMap<String,String>();
+			return new HashMap<String,Double>();
 		}
 		
 		// get the data as a string
 		String data = binaryData.toString();
-		Map<String, String> map = new HashMap<String, String>();
+		Map<String, Double> map = new HashMap<String, Double>();
 
 		// parse the data into map
 		LineNumberReader reader = new LineNumberReader(new StringReader(data));
@@ -157,7 +157,7 @@ public class VisionComms {
 				continue;
 			}
 			String key = line.substring(0, index);
-			String value = line.substring(index + 1);
+			Double value = Double.parseDouble(line.substring(index + 1));
 			map.put(key, value);
 		}
 

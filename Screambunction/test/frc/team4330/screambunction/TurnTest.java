@@ -6,11 +6,11 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import frc.team4330.screambunction.commands.Turn;
-import frc.team4330.screambunction.parts.HeadingProvider;
-import frc.team4330.screambunction.parts.TankDrive;
+import frc.team4330.robot.commands.Turn;
+import frc.team4330.robot.parts.HeadingProvider;
+import frc.team4330.robot.parts.TankDrive;
+import frc.team4330.robot.utils.RobotMap;
 import frc.team4330.screambunction.testingUtils.TestTankDrive;
-import frc.team4330.screambunction.utils.RobotMap;
 
 public class TurnTest {
     private Turn testObject;

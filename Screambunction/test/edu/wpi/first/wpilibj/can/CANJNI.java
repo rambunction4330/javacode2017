@@ -27,6 +27,7 @@ public class CANJNI {
 	private static long lastUpdateMSec;
 	private static List<Integer> segmentsToReturn = new ArrayList<Integer>();
 	private static boolean started = false;
+	private static ByteBuffer outputBuffer = ByteBuffer.allocate(1000);
 
 	public static synchronized void FRCNetCommCANSessionMuxSendMessage(
 			int messageID, ByteBuffer data, int periodMs) {
@@ -70,7 +71,14 @@ public class CANJNI {
 				lastUpdateMSec = currentTime;
 				// respond that there is data available
 				System.out.println("Fake CANJNI returning size message of " + segmentsToReturn.size());
-				return ByteBuffer.wrap(new byte[] { (byte) (segmentsToReturn.size() & 0xff) });
+				if ( outputBuffer.remaining() == 0 ) {
+					outputBuffer.clear();
+				}
+				outputBuffer.mark();
+				outputBuffer.put((byte) (segmentsToReturn.size() & 0xff));
+				outputBuffer.limit(outputBuffer.position());
+				outputBuffer.reset();
+				return outputBuffer;
 			}
 			
 		} else if ( msgId == LeddarDistanceSensor.LEDDAR_RX_BASE_ID_DEFAULT) {
@@ -118,7 +126,16 @@ public class CANJNI {
 				}
 				
 				System.out.println("Fake CANJNI returning distance message");
-				return ByteBuffer.wrap(bytes);
+				if ( outputBuffer.remaining() < 8 ) {
+					outputBuffer.clear();
+				}
+				outputBuffer.mark();
+				outputBuffer.put(bytes);
+				outputBuffer.limit(outputBuffer.position());
+				outputBuffer.reset();
+				System.out.println("outputBuffer pos=" + outputBuffer.position() + " limit=" + outputBuffer.limit() +
+						" remaining");
+				return outputBuffer;
 			}
 		} else {
 			// unrecognized message id

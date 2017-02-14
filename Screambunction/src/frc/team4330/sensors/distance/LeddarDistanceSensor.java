@@ -39,7 +39,7 @@ public class LeddarDistanceSensor extends CanDevice {
 	// boolean values are safe to read/modify from multiple threads, so no worry about thread safety
 	private boolean active = false;
 	
-	private Thread updateThread;
+	private UpdateThread updateThread;
 	private PrintStream recorder;
 	private boolean recording = false;
 	
@@ -83,7 +83,7 @@ public class LeddarDistanceSensor extends CanDevice {
 		
 		if ( recording ) {
 			SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd_HHmmss");
-			String fileName = "/home/lvuser/can_record_" 
+			String fileName = "/Users/rltiel/can_record_"//"/home/lvuser/can_record_" 
 					+ df.format(new Date()) + ".txt";
 			try {
 				recorder = new PrintStream(new FileOutputStream( new File(fileName)));
@@ -108,35 +108,10 @@ public class LeddarDistanceSensor extends CanDevice {
 		active = true;
 		
 		// start up thread to periodically check for received messages
-		updateThread = new Thread() {
-
-			@Override
-			public void run() {
-				while(active) {
-					checkForMessages();
-					try {
-						long sleepTime = 5;
-						if ( sleepTime < 1 ) sleepTime = 1;
-						Thread.sleep(sleepTime);
-						if ( recorder != null ) {
-							recorder.println(System.currentTimeMillis() + " update thread is alive");
-						}
-					} catch ( InterruptedException e ) {
-						break;
-					} catch ( Throwable e ) {
-						if ( recorder != null ) {
-							recorder.println(System.currentTimeMillis() + " caught throwable");
-							e.printStackTrace(recorder);
-						}
-					}
-				}
-			}
-			
-		};
+		updateThread = new UpdateThread();
 		updateThread.setName("LeddarDistanceSensorReader");
 		updateThread.setDaemon(true);
 		updateThread.start();
-		
 		
 		// tell sensor to start sending messages continuously
 		CANMessage startMessage = new CANMessage(transmitBaseMessageId, COMMAND_START_SENDING_DETECTIONS);
@@ -170,7 +145,7 @@ public class LeddarDistanceSensor extends CanDevice {
 		clearDistances();
 		
 		if ( updateThread != null ) {
-			updateThread.interrupt();
+			updateThread.shutdown();
 		}
 		
 		// dump any queued received messages since we no longer care about them and
@@ -368,6 +343,41 @@ public class LeddarDistanceSensor extends CanDevice {
 		public boolean isStale () {
 			return System.currentTimeMillis() - time > 250;
 		}
+	}
+	
+	private class UpdateThread extends Thread {
+		
+		private boolean shutdown = false;
+
+		@Override
+		public void run() {
+			System.out.println("Leddar update thread is running");
+			while(!shutdown) {
+				try {
+					checkForMessages();
+					long sleepTime = 5;
+					if ( sleepTime < 1 ) sleepTime = 1;
+					Thread.sleep(sleepTime);
+				} catch ( InterruptedException e ) {
+					break;
+				} catch ( Throwable e ) {
+					if ( recorder != null ) {
+						recorder.println(System.currentTimeMillis() + " caught throwable");
+						e.printStackTrace(recorder);
+					}
+				}
+			}
+			if ( recorder != null ) {
+				recorder.println(System.currentTimeMillis() + " update thread has shutdown");
+			}
+			System.out.println("Leddar update thread has shutdown");
+		}
+		
+		public void shutdown ( ) {
+			this.shutdown = true;
+			this.interrupt();
+		}
+		
 	}
 
 }

@@ -61,12 +61,9 @@ public class Robot extends IterativeRobot {
 		gyro = new AHRS(Port.kMXP);
 		leddar = new LeddarDistanceSensor();
 	}
-	
-	AccumulatorResult 		result = new AccumulatorResult();
 
 	@Override
 	public void autonomousInit() {
-		test.resetAccumulator();
 		
 		SmartDashboardSetup.autonomousDashboard();
 		RobotMap.updateVals();
@@ -96,9 +93,7 @@ public class Robot extends IterativeRobot {
 	
 	@Override
 	public void autonomousPeriodic() {
-		test.getAccumulatorOutput(result);
 		
-		System.out.println(result.value/result.count);
 //		System.out.println("leddar: " + leddar.getDistances());
 //		ByteBuffer test2=new ByteBuffer();
 //		System.out.println("lidar" + test.read(false, , size))

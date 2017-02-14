@@ -1,10 +1,10 @@
 package frc.team4330.robot;
 
-import java.nio.ByteBuffer;
 import java.util.List;
 
 import com.kauailabs.navx.frc.AHRS;
 
+import edu.wpi.first.wpilibj.AccumulatorResult;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.SPI;
@@ -29,7 +29,9 @@ import frc.team4330.sensors.distance.LeddarDistanceSensorData;
  */
 @SuppressWarnings("unused")
 public class Robot extends IterativeRobot {
-	SPI test = new SPI(edu.wpi.first.wpilibj.SPI.Port.kMXP);
+	SPI test = new SPI(SPI.Port.kMXP);
+	
+	
 	// Subsystems
 	public final static AutonomousManager steveBannon = new AutonomousManager();
 	public final static MaxSonar sonar = new MaxSonar();
@@ -47,8 +49,8 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void robotInit() {
-		RobotMap.updateVals();
 		SmartDashboardSetup.allDashboards();
+		RobotMap.updateVals();
 
 		// Initializing Joysticks
 		leftj = new Joystick(RobotMap.LEFT_JOYSTICK_PORT);
@@ -59,11 +61,15 @@ public class Robot extends IterativeRobot {
 		gyro = new AHRS(Port.kMXP);
 		leddar = new LeddarDistanceSensor();
 	}
+	
+	AccumulatorResult 		result = new AccumulatorResult();
 
 	@Override
 	public void autonomousInit() {
-		RobotMap.updateVals();
+		test.resetAccumulator();
+		
 		SmartDashboardSetup.autonomousDashboard();
+		RobotMap.updateVals();
 
 		// ServerTest server = new ServerTest();
 		// try {
@@ -87,10 +93,13 @@ public class Robot extends IterativeRobot {
 		// steveBannon.testDriveCommand(1);
 	}
 
-
+	
 	@Override
 	public void autonomousPeriodic() {
-		System.out.println("leddar: " + getDistance(8));
+		test.getAccumulatorOutput(result);
+		
+		System.out.println(result.value/result.count);
+//		System.out.println("leddar: " + leddar.getDistances());
 //		ByteBuffer test2=new ByteBuffer();
 //		System.out.println("lidar" + test.read(false, , size))
 		// System.out.println("x val: " + gyro.getDisplacementX() + "; y val: "
@@ -101,8 +110,8 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void teleopInit() {
-		RobotMap.updateVals();
 		SmartDashboardSetup.teleOpDashboard();
+		RobotMap.updateVals();
 
 		vision.startUp();
 		leddar.startUp();
@@ -111,17 +120,14 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void teleopPeriodic() {
 //		System.out.println("leddar: " + leddar.getDistances().toString());
-		System.out.println("test: " + RobotMap.SLOW_SPEED);
-		// steveBannon.testDriveCommand(1);
 
 		// myRobot.curveDrive(leftj, rightj);
 		myRobot.tankDrive(leftj, rightj,
 				leftj.getRawButton(RobotMap.REVERSE_BUTTON));
 
-		// tarzan.setClimb(buttonj.getRawButton(RobotMap.CLIMB_SLOW_SPEED_BUTTON),
-		// buttonj.getRawButton(RobotMap.CLIMB_FAST_SPEED_BUTTON));
-		tarzan.testClimb(leftj.getRawButton(11), leftj.getRawButton(12),
-				leftj.getRawButton(7));
+		tarzan.testClimb(leftj.getRawButton(RobotMap.CLIMB_SLOW_SPEED_BUTTON), 
+				leftj.getRawButton(RobotMap.CLIMB_FAST_SPEED_BUTTON),
+				leftj.getRawButton(RobotMap.CLIMB_REVERSE_BUTTON));
 
 		bambam.manualShoot(rightj.getRawButton(RobotMap.SHOOT_POWER_OFF_BUTTON),
 				rightj.getRawButton(RobotMap.SHOOT_POWER_ON_BUTTON),

@@ -29,10 +29,9 @@ public abstract class CanDevice {
 		
 		messageIdBuffer.clear();
 		messageIdBuffer.put(messageId);
-		messageIdBuffer.rewind();
+		messageIdBuffer.flip();
 		
 		timeStampBuffer.clear();
-		timeStampBuffer.rewind();
 
 	    // Get the data using full 29 bits for CAN message id mask
 	    // Expected that this call will throw a CANMessageNotFoundException if no messages of that
@@ -69,8 +68,8 @@ public abstract class CanDevice {
 						data.length + " but CAN protocol only support max of 8 bytes of data");
 			}
 			sendDataBuffer.put(data);
-			sendDataBuffer.rewind();
 		}
+		sendDataBuffer.flip();
 
 		CANJNI.FRCNetCommCANSessionMuxSendMessage(canMessage.messageId, sendDataBuffer, CANJNI.CAN_SEND_PERIOD_NO_REPEAT);
 	}

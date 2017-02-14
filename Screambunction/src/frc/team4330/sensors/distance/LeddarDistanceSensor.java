@@ -227,14 +227,9 @@ public class LeddarDistanceSensor extends CanDevice {
 			while(true) {
 				CANMessage message = pullNextDistanceMessage();
 				
-				int messageId = message.getMessageId();
 				byte[] data = message.getData();
-				if ( messageId == getDistanceMessageId() ) {
-					// a distance message has 8 bytes of data
-					handleDistanceMessage(data);
-				} else {
-					System.out.println("Received unexpected CAN messageId: " + messageId);
-				}
+				// a distance message has 8 bytes of data
+				handleDistanceMessage(data);
 			}
 		} catch (CANMessageNotFoundException e) {
 			// no problem since just means ran out of messages to process
@@ -268,6 +263,8 @@ public class LeddarDistanceSensor extends CanDevice {
 				if ( recorder != null ) {
 					recorder.println(System.currentTimeMillis() + " Received: " + sizeMessage);
 				}
+				
+				return sizeMessage;
 			
 			} catch ( CANMessageNotFoundException e2 ) {
 				// we didn't get any distance or size messages, so record that and let caller know 
@@ -284,9 +281,13 @@ public class LeddarDistanceSensor extends CanDevice {
 	}
 	
 	private void handleDistanceMessage(byte[] sectorRawData) {
-		if ( sectorRawData.length != 8 ) {
-			System.out.println("Distance message should contain 8 bytes of data, but message was " +
-				ByteHelper.bytesToHex(sectorRawData));
+		if ( sectorRawData.length != 8 || (sectorRawData[0] == 0x00 && sectorRawData[1] == 0x00 
+				&& sectorRawData[2] == 0x00 && sectorRawData[3] == 0x00 )) {
+			if ( recorder != null ) {
+				recorder.println(System.currentTimeMillis() + " Distance message was weird, data=" +
+						ByteHelper.bytesToHex(sectorRawData));
+			}
+			return;
 		}
 		
 		// we got a distance data packet, the format of which is 8 bytes with following pattern repeated twice

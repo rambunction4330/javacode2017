@@ -71,13 +71,15 @@ public class CANJNI {
 				lastUpdateMSec = currentTime;
 				// respond that there is data available
 				System.out.println("Fake CANJNI returning size message of " + segmentsToReturn.size());
-				if ( outputBuffer.remaining() == 0 ) {
+				if ( outputBuffer.capacity() - outputBuffer.position() == 0 ) {
 					outputBuffer.clear();
 				}
 				outputBuffer.mark();
+				outputBuffer.limit(outputBuffer.position() + 1);
 				outputBuffer.put((byte) (segmentsToReturn.size() & 0xff));
-				outputBuffer.limit(outputBuffer.position());
 				outputBuffer.reset();
+				System.out.println("outputBuffer pos=" + outputBuffer.position() + " limit=" + outputBuffer.limit() +
+						" remaining=" + outputBuffer.remaining());
 				return outputBuffer;
 			}
 			
@@ -126,15 +128,15 @@ public class CANJNI {
 				}
 				
 				System.out.println("Fake CANJNI returning distance message");
-				if ( outputBuffer.remaining() < 8 ) {
+				if ( outputBuffer.capacity() - outputBuffer.position() < 8 ) {
 					outputBuffer.clear();
 				}
 				outputBuffer.mark();
+				outputBuffer.limit(outputBuffer.position() + 8);
 				outputBuffer.put(bytes);
-				outputBuffer.limit(outputBuffer.position());
 				outputBuffer.reset();
 				System.out.println("outputBuffer pos=" + outputBuffer.position() + " limit=" + outputBuffer.limit() +
-						" remaining");
+						" remaining=" + outputBuffer.remaining());
 				return outputBuffer;
 			}
 		} else {

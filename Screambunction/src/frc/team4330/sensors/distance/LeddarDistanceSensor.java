@@ -83,7 +83,7 @@ public class LeddarDistanceSensor extends CanDevice {
 		
 		if ( recording ) {
 			SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd_HHmmss");
-			String fileName = "/Users/rltiel/can_record_"//"/home/lvuser/can_record_" 
+			String fileName = "/home/lvuser/can_record_" 
 					+ df.format(new Date()) + ".txt";
 			try {
 				recorder = new PrintStream(new FileOutputStream( new File(fileName)));

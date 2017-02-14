@@ -29,8 +29,9 @@ public class RobotMap {
 	public final static int SHOOT_JOYSTICK_PORT = 2;
 	
 	// Button Joystick Buttons
-	public static int CLIMB_SLOW_SPEED_BUTTON = Preferences.getInstance().getInt("Reel-In-Button", 4);
-	public static int CLIMB_FAST_SPEED_BUTTON = Preferences.getInstance().getInt("Climb-Up-Button", 6);
+	public static int CLIMB_SLOW_SPEED_BUTTON = Preferences.getInstance().getInt("Reel-In-Button", 11);
+	public static int CLIMB_FAST_SPEED_BUTTON = Preferences.getInstance().getInt("Climb-Up-Button", 12);
+	public static int CLIMB_REVERSE_BUTTON = Preferences.getInstance().getInt("Reverse-Climb-Button", 7);
 	
 	// Left Joystick Buttons
 	public static int REVERSE_BUTTON = Preferences.getInstance().getInt("Reverse-Button", 3);
@@ -66,8 +67,9 @@ public class RobotMap {
 
 	public static void updateVals() {
 		// Button Joystick Buttons
-		CLIMB_SLOW_SPEED_BUTTON = Preferences.getInstance().getInt("Reel-In-Button", 4);
-		CLIMB_FAST_SPEED_BUTTON = Preferences.getInstance().getInt("Climb-Up-Button", 6);
+		CLIMB_SLOW_SPEED_BUTTON = Preferences.getInstance().getInt("Reel-In-Button", 11);
+		CLIMB_FAST_SPEED_BUTTON = Preferences.getInstance().getInt("Climb-Up-Button", 12);
+		CLIMB_REVERSE_BUTTON = Preferences.getInstance().getInt("Reverse-Climb-Button", 7);
 		
 		// Left Joystick Buttons
 		REVERSE_BUTTON = Preferences.getInstance().getInt("Reverse-Button", 3);

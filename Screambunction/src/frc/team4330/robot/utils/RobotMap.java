@@ -37,6 +37,7 @@ public class RobotMap {
 	
 	// Right Joystick Buttons
 	public static int FEED_POWER_BUTTON = Preferences.getInstance().getInt("Feeder-On-Button", 4);
+	public static int FEED_POWER_OFF_BUTTON = Preferences.getInstance().getInt("Feeder-On-Button", 6);
 	public static int SHOOT_POWER_OFF_BUTTON = Preferences.getInstance().getInt("Shooter-Off-Button", 5);
 	public static int SHOOT_POWER_ON_BUTTON = Preferences.getInstance().getInt("Shooter-On-Button", 3);
 
@@ -73,6 +74,7 @@ public class RobotMap {
 		
 		// Right Joystick Buttons
 		FEED_POWER_BUTTON = Preferences.getInstance().getInt("Feeder-On-Button", 4);
+		FEED_POWER_OFF_BUTTON = Preferences.getInstance().getInt("Feeder-On-Button", 6);
 		SHOOT_POWER_OFF_BUTTON = Preferences.getInstance().getInt("Shooter-Off-Button", 5);
 		SHOOT_POWER_ON_BUTTON = Preferences.getInstance().getInt("Shooter-On-Button", 3);
 		

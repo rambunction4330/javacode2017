@@ -6,7 +6,12 @@ import java.nio.IntBuffer;
 import edu.wpi.first.wpilibj.can.CANJNI;
 import edu.wpi.first.wpilibj.can.CANMessageNotFoundException;
 
-public abstract class CanDevice {	
+public abstract class CanDevice {
+	
+	private IntBuffer messageIdBuffer = ByteBuffer.allocateDirect(4).asIntBuffer();
+	private ByteBuffer timeStampBuffer = ByteBuffer.allocateDirect(4);
+	private ByteBuffer sendDataBuffer = ByteBuffer.allocateDirect(8);
+	
 	
 	/**
 	 * 
@@ -21,15 +26,19 @@ public abstract class CanDevice {
 		if ( messageId < 0 ) {
 			throw new RuntimeException("canMessage cannot have a negative integer for the messageId");
 		}
+		
+		messageIdBuffer.clear();
+		messageIdBuffer.put(messageId);
+		messageIdBuffer.flip();
+		
+		timeStampBuffer.clear();
 
 	    // Get the data using full 29 bits for CAN message id mask
 	    // Expected that this call will throw a CANMessageNotFoundException if no messages of that
 	    // id are available
 	    // TODO try CANJNI.CAN_IS_FRAME_11BIT
-		
 	    ByteBuffer dataBuffer = CANJNI.FRCNetCommCANSessionMuxReceiveMessage(
-	    		ByteBuffer.allocateDirect(4).asIntBuffer().wrap(new int[] {messageId}), 
-	    		CANJNI.CAN_IS_FRAME_REMOTE, ByteBuffer.allocateDirect(4));
+	    	messageIdBuffer, CANJNI.CAN_IS_FRAME_REMOTE, timeStampBuffer);
 
 	    // make a copy of the data from buffer since not sure if it will be changed later on
 	    int size = dataBuffer.remaining();
@@ -50,8 +59,7 @@ public abstract class CanDevice {
 		if ( canMessage.messageId < 0 ) {
 			throw new RuntimeException("canMessage cannot have a negative integer for the messageId");
 		}
-		ByteBuffer sendDataBuffer = null;
-		
+		sendDataBuffer.clear();
 		byte[] data = canMessage.data;
 		if (data != null) {
 			int dataSize = data.length;
@@ -59,10 +67,9 @@ public abstract class CanDevice {
 				throw new RuntimeException("sendData bad parameters(data too long): arrayLength=" +
 						data.length + " but CAN protocol only support max of 8 bytes of data");
 			}
-			sendDataBuffer = ByteBuffer.allocateDirect(data.length).wrap(data);
-		} else {
-			sendDataBuffer = ByteBuffer.allocateDirect(0);
+			sendDataBuffer.put(data);
 		}
+		sendDataBuffer.flip();
 
 		CANJNI.FRCNetCommCANSessionMuxSendMessage(canMessage.messageId, sendDataBuffer, CANJNI.CAN_SEND_PERIOD_NO_REPEAT);
 	}

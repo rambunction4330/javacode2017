@@ -41,7 +41,7 @@ public abstract class CanDevice {
 	    	messageIdBuffer, CANJNI.CAN_IS_FRAME_REMOTE, timeStampBuffer);
 
 	    // make a copy of the data from buffer since not sure if it will be changed later on
-	    int size = dataBuffer.limit() - dataBuffer.position();
+	    int size = dataBuffer.remaining();
 	    byte[] data = new byte[size];
 	    for ( int i = 0; i < size; i++ ) {
 	    	data[i] = dataBuffer.get();

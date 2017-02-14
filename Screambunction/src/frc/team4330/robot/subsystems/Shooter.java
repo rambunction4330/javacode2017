@@ -15,7 +15,6 @@ public class Shooter extends Subsystem {
 
 	public Shooter() {
 		motor = Registrar.victor(RobotMap.MOTOR_SHOOT_PORT);
-
 		motor2 = Registrar.victor(RobotMap.MOTOR_FEED_PORT);
 	}
 
@@ -28,7 +27,7 @@ public class Shooter extends Subsystem {
 	 * @param addPwr
 	 * @param subPwr
 	 */
-	public void manualShoot(boolean buttonOff, boolean buttonOn, boolean feederOn) {
+	public void manualShoot(boolean buttonOff, boolean buttonOn, boolean feederOn, boolean feederOff) {
 		if (buttonOff) stop();
 		else if (buttonOn) motorVal = RobotMap.SHOOTING_SPEED;
 
@@ -37,7 +36,7 @@ public class Shooter extends Subsystem {
 		} else if (feederOn && motor.get() <= RobotMap.SHOOTING_SPEED - .05) {
 			System.out.println("Turning motor on. Let motor power up.");
 			motorVal = RobotMap.SHOOTING_SPEED;
-		}
+		} else if (feederOff) stopFeed();
 
 		motor.set(motorVal);
 		motor2.set(motor2Val);

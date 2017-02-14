@@ -125,7 +125,8 @@ public class Robot extends IterativeRobot {
 
 		bambam.manualShoot(rightj.getRawButton(RobotMap.SHOOT_POWER_OFF_BUTTON),
 				rightj.getRawButton(RobotMap.SHOOT_POWER_ON_BUTTON),
-				rightj.getRawButton(RobotMap.FEED_POWER_BUTTON));
+				rightj.getRawButton(RobotMap.FEED_POWER_BUTTON),
+				rightj.getRawButton(RobotMap.FEED_POWER_OFF_BUTTON));
 	}
 
 	@Override

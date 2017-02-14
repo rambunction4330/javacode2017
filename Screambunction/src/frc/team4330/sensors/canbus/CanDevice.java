@@ -26,8 +26,10 @@ public abstract class CanDevice {
 	    // Expected that this call will throw a CANMessageNotFoundException if no messages of that
 	    // id are available
 	    // TODO try CANJNI.CAN_IS_FRAME_11BIT
+		
 	    ByteBuffer dataBuffer = CANJNI.FRCNetCommCANSessionMuxReceiveMessage(
-	    		IntBuffer.wrap(new int[] {messageId}), CANJNI.CAN_IS_FRAME_REMOTE, ByteBuffer.wrap(new byte[4]));
+	    		ByteBuffer.allocateDirect(4).asIntBuffer().wrap(new int[] {messageId}), 
+	    		CANJNI.CAN_IS_FRAME_REMOTE, ByteBuffer.allocateDirect(4));
 
 	    // make a copy of the data from buffer since not sure if it will be changed later on
 	    int size = dataBuffer.remaining();
@@ -57,9 +59,9 @@ public abstract class CanDevice {
 				throw new RuntimeException("sendData bad parameters(data too long): arrayLength=" +
 						data.length + " but CAN protocol only support max of 8 bytes of data");
 			}
-			sendDataBuffer = ByteBuffer.wrap(data);
+			sendDataBuffer = ByteBuffer.allocateDirect(data.length).wrap(data);
 		} else {
-			sendDataBuffer = ByteBuffer.wrap(new byte[0]);
+			sendDataBuffer = ByteBuffer.allocateDirect(0);
 		}
 
 		CANJNI.FRCNetCommCANSessionMuxSendMessage(canMessage.messageId, sendDataBuffer, CANJNI.CAN_SEND_PERIOD_NO_REPEAT);

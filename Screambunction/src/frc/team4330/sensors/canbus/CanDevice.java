@@ -1,12 +1,17 @@
 package frc.team4330.sensors.canbus;
 
 import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
+import java.nio.IntBuffer;
 
 import edu.wpi.first.wpilibj.can.CANJNI;
 import edu.wpi.first.wpilibj.can.CANMessageNotFoundException;
 
 public abstract class CanDevice {
+	
+	private IntBuffer messageIdBuffer = ByteBuffer.allocateDirect(4).asIntBuffer();
+	private ByteBuffer timeStampBuffer = ByteBuffer.allocateDirect(4);
+	private ByteBuffer sendDataBuffer = ByteBuffer.allocateDirect(8);
+	
 	
 	/**
 	 * 
@@ -16,34 +21,24 @@ public abstract class CanDevice {
 	 * @throws CANMessageNotFoundException thrown if there are no CAN messages with any of
 	 * the messageIds of interest in the receive queue
 	 */
-	protected CANMessage receiveData(int messageId) throws CANMessageNotFoundException {
+	protected synchronized CANMessage receiveData(int messageId) throws CANMessageNotFoundException {
 		
 		if ( messageId < 0 ) {
 			throw new RuntimeException("canMessage cannot have a negative integer for the messageId");
 		}
 		
-		ByteBuffer targetedMessageID = ByteBuffer.allocateDirect(4);
-	    targetedMessageID.order(ByteOrder.LITTLE_ENDIAN);
-	    targetedMessageID.asIntBuffer().put(0, messageId);
-
-	    ByteBuffer timeStamp = ByteBuffer.allocateDirect(4);
+		messageIdBuffer.clear();
+		messageIdBuffer.put(messageId);
+		messageIdBuffer.rewind();
 
 	    // Get the data using full 29 bits for CAN message id mask
 	    // Expected that this call will throw a CANMessageNotFoundException if no messages of that
 	    // id are available
+	    // TODO try CANJNI.CAN_IS_FRAME_11BIT
 	    ByteBuffer dataBuffer = CANJNI.FRCNetCommCANSessionMuxReceiveMessage(
-	    	targetedMessageID.asIntBuffer(), CANJNI.CAN_IS_FRAME_REMOTE, timeStamp);
+	    	messageIdBuffer, CANJNI.CAN_IS_FRAME_REMOTE, timeStampBuffer);
 
-	    byte[] data;
-	    if ( dataBuffer == null || dataBuffer.capacity() == 0 ) {
-	    	data = null;
-	    } else {
-	    	int size = dataBuffer.capacity();
-	    	data = new byte[size];
-	    	for (int i = 0; i < size; i++) {
-	    		data[i] = dataBuffer.get(i);
-	    	}
-	    }
+	    byte[] data = dataBuffer.array();
 
 	    return new CANMessage(messageId, data);
 	}
@@ -53,11 +48,11 @@ public abstract class CanDevice {
 	 * @param canMessage messageId should not be null, but data may be null but or a 
 	 * 		byte array of max length 8 since CAN only supports data packets 8 bytes in length
 	 */
-	protected void sendData(CANMessage canMessage) {
+	protected synchronized void sendData(CANMessage canMessage) {
 		if ( canMessage.messageId < 0 ) {
 			throw new RuntimeException("canMessage cannot have a negative integer for the messageId");
 		}
-		ByteBuffer buffer;
+		sendDataBuffer.clear();
 		byte[] data = canMessage.data;
 		if (data != null) {
 			int dataSize = data.length;
@@ -65,15 +60,11 @@ public abstract class CanDevice {
 				throw new RuntimeException("sendData bad parameters(data too long): arrayLength=" +
 						data.length + " but CAN protocol only support max of 8 bytes of data");
 			}
-			buffer = ByteBuffer.allocateDirect(dataSize);
-			for (byte i = 0; i < dataSize; i++) {
-				buffer.put(i, data[i]);
-			}
-		} else {
-			buffer = null;
+			sendDataBuffer.put(data);
 		}
+		sendDataBuffer.rewind();
 
-		CANJNI.FRCNetCommCANSessionMuxSendMessage(canMessage.messageId, buffer, CANJNI.CAN_SEND_PERIOD_NO_REPEAT);
+		CANJNI.FRCNetCommCANSessionMuxSendMessage(canMessage.messageId, sendDataBuffer, CANJNI.CAN_SEND_PERIOD_NO_REPEAT);
 	}
 	
 	public class CANMessage {

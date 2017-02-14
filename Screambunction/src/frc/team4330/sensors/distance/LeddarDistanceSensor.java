@@ -59,11 +59,11 @@ public class LeddarDistanceSensor extends CanDevice {
 	}
 	
 	public int getSizeMessageId() {
-		return receiveBaseMessageId;
+		return receiveBaseMessageId + 1;
 	}
 	
 	public int getDistanceMessageId() {
-		return receiveBaseMessageId + 1;
+		return receiveBaseMessageId;
 	}
 	
 	public boolean isRecording() {
@@ -118,8 +118,16 @@ public class LeddarDistanceSensor extends CanDevice {
 						long sleepTime = 5;
 						if ( sleepTime < 1 ) sleepTime = 1;
 						Thread.sleep(sleepTime);
+						if ( recorder != null ) {
+							recorder.println(System.currentTimeMillis() + " update thread is alive");
+						}
 					} catch ( InterruptedException e ) {
 						break;
+					} catch ( Throwable e ) {
+						if ( recorder != null ) {
+							recorder.println(System.currentTimeMillis() + " caught throwable");
+							e.printStackTrace(recorder);
+						}
 					}
 				}
 			}

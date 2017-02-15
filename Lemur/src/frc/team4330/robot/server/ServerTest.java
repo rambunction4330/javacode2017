@@ -11,8 +11,6 @@ import frc.team4330.robot.Robot;
 
 public class ServerTest {
 	
-	private static String[] navInputs = {"spdX", "spdY", "angle"};
-
 //	public static void main(String[] args) throws IOException {
 //		start();
 //	}
@@ -35,20 +33,18 @@ public class ServerTest {
 							new InputStreamReader(socket.getInputStream()));
 
 					String input, output;
-
+					System.out.println("we halfway there");
 					LeddarDataProtocol ldp = new LeddarDataProtocol();
 					NavXProtocol navp = new NavXProtocol();
 
 					while ((input = in.readLine()) != null) {
-						for (String inputs : navInputs) {
-							if (input.equalsIgnoreCase(inputs))
-								output = navp.processDataRequests(input);
-							out.println(out);
-							break;
-						}
+						output = navp.processDataRequests(input);
+						System.out.println("input is " + input);
+						System.out.println("output is " + output);
+
+//						output = ldp.processDataRequests(input);
+						out.println(output);
 						
-						output = ldp.processDataRequests(input);
-						out.print(output);
 					}
 				}
 				finally {

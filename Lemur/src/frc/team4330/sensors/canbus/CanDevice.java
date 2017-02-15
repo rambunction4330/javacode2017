@@ -62,7 +62,7 @@ public abstract class CanDevice {
 		     
 		    dataBuffer.clear();
 		    if ( dataBuffer.isDirect() ) {
-		    	clean(dataBuffer);
+//		    	clean(dataBuffer);
 		    }
 		    dataBuffer = null;
 		}
@@ -94,7 +94,7 @@ public abstract class CanDevice {
 
 		CANJNI.FRCNetCommCANSessionMuxSendMessage(canMessage.messageId, sendDataBuffer, CANJNI.CAN_SEND_PERIOD_NO_REPEAT);
 		
-		clean(sendDataBuffer);
+//		clean(sendDataBuffer);
 	}
 	
 	protected void clean ( Buffer bb ) {

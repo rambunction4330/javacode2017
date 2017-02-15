@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.SerialPort.Port;
 import edu.wpi.first.wpilibj.command.Scheduler;
+import frc.team4330.robot.server.ServerTest;
 import frc.team4330.robot.subsystems.AutonomousManager;
 import frc.team4330.robot.subsystems.RobotDrive;
 import frc.team4330.robot.subsystems.RopeClimber;
@@ -51,7 +52,7 @@ public class Robot extends IterativeRobot {
 	public void robotInit() {
 		SmartDashboardSetup.allDashboards();
 
-		oi = new OI();
+//		oi = new OI();
 
 		serverOn = false;
 	}
@@ -72,15 +73,22 @@ public class Robot extends IterativeRobot {
 		leddar.setRecording(RobotMap.RECORDING_LEDDAR_VALS);
 
 		serverOn = true;
-
-		//		steveBannon.init();
+//
+//		ServerTest server = new ServerTest();
+//		try {
+//			server.start();
+//		} catch (Exception e) {
+//			
+//		}
+		
+//		steveBannon.init();
 	}
 
 
 	@Override
 	public void autonomousPeriodic() {
-
-		//		steveBannon.run();
+		leddar.getDistances();
+//		steveBannon.run();
 	}
 
 	@Override

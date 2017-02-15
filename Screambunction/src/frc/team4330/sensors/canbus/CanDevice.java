@@ -1,5 +1,7 @@
 package frc.team4330.sensors.canbus;
 
+import java.lang.reflect.Method;
+import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
@@ -7,11 +9,6 @@ import edu.wpi.first.wpilibj.can.CANJNI;
 import edu.wpi.first.wpilibj.can.CANMessageNotFoundException;
 
 public abstract class CanDevice {
-	
-	private IntBuffer messageIdBuffer = ByteBuffer.allocateDirect(4).asIntBuffer();
-	private ByteBuffer timeStampBuffer = ByteBuffer.allocateDirect(4);
-	private ByteBuffer sendDataBuffer = ByteBuffer.allocateDirect(8);
-	
 	
 	/**
 	 * 
@@ -27,11 +24,8 @@ public abstract class CanDevice {
 			throw new RuntimeException("canMessage cannot have a negative integer for the messageId");
 		}
 		
-		messageIdBuffer.clear();
-		messageIdBuffer.put(messageId);
-		messageIdBuffer.flip();
-		
-		timeStampBuffer.clear();
+		IntBuffer messageIdBuffer = ByteBuffer.allocateDirect(4).asIntBuffer().put(messageId);
+		ByteBuffer timeStampBuffer = ByteBuffer.allocateDirect(4);
 
 	    // Get the data using full 29 bits for CAN message id mask
 	    // Expected that this call will throw a CANMessageNotFoundException if no messages of that
@@ -46,8 +40,33 @@ public abstract class CanDevice {
 	    for ( int i = 0; i < size; i++ ) {
 	    	data[i] = dataBuffer.get();
 	    }
+	    
+	    if ( messageIdBuffer.isDirect() ) {
+	    	clean(messageIdBuffer);
+	    }
+	    if ( timeStampBuffer.isDirect() ) {
+	    	clean(timeStampBuffer);
+	    }
+	    // not sure if we should free this memory since we didn't allocate it
+	    if ( dataBuffer.isDirect() ) {
+	    	clean(dataBuffer);
+	    }
 
 	    return new CANMessage(messageId, data);
+	}
+	
+	protected void clean ( Buffer bb ) {
+		try {
+			Method cleanerMethod = bb.getClass().getMethod("cleaner");
+			cleanerMethod.setAccessible(true);
+			Object cleaner = cleanerMethod.invoke(bb);
+			Method cleanMethod = cleaner.getClass().getMethod("clean");
+			cleanMethod.setAccessible(true);
+			cleanMethod.invoke(cleaner);
+		} catch ( Exception e ) {
+			System.err.println("Error trying to clean byte buffer");
+			e.printStackTrace(System.err);
+		}
 	}
 	
 	/**
@@ -59,7 +78,8 @@ public abstract class CanDevice {
 		if ( canMessage.messageId < 0 ) {
 			throw new RuntimeException("canMessage cannot have a negative integer for the messageId");
 		}
-		sendDataBuffer.clear();
+		
+		ByteBuffer sendDataBuffer = ByteBuffer.allocateDirect(8);
 		byte[] data = canMessage.data;
 		if (data != null) {
 			int dataSize = data.length;
@@ -72,6 +92,10 @@ public abstract class CanDevice {
 		sendDataBuffer.flip();
 
 		CANJNI.FRCNetCommCANSessionMuxSendMessage(canMessage.messageId, sendDataBuffer, CANJNI.CAN_SEND_PERIOD_NO_REPEAT);
+		
+		if ( sendDataBuffer.isDirect() ) {
+			clean(sendDataBuffer);
+		}
 	}
 	
 	public class CANMessage {

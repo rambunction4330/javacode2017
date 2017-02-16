@@ -13,6 +13,7 @@ public abstract class CanDevice {
 	private Map<Integer,IntBuffer> messageIdMap = new HashMap<Integer,IntBuffer>();
 	private ByteBuffer timeStampBuffer = ByteBuffer.allocateDirect(4);
 	private static String lock = "lock";
+	private static final int CAN_MESSAGE_ID_MASK = 0x1fffffff;
 	
 	/**
 	 * 
@@ -48,7 +49,7 @@ public abstract class CanDevice {
 		    // id are available
 		    // TODO try CANJNI.CAN_IS_FRAME_11BIT
 		    ByteBuffer dataBuffer = CANJNI.FRCNetCommCANSessionMuxReceiveMessage(
-		    	messageIdBuffer, CANJNI.CAN_IS_FRAME_REMOTE, timeStampBuffer);
+		    	messageIdBuffer, CAN_MESSAGE_ID_MASK, timeStampBuffer);
 	
 		    // make a copy of the data from buffer since it will be changed by the next invocation
 		    // making a copy

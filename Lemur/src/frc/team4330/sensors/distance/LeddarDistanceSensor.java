@@ -159,7 +159,11 @@ public class LeddarDistanceSensor extends CanDevice {
 	}
 	
 	public synchronized List<LeddarDistanceSensorData> getDistances() {
-		return distances;
+		// make a copy of the array before giving out to clients because we will be updating
+		// the distances array
+		List<LeddarDistanceSensorData> copy = new ArrayList<LeddarDistanceSensorData>();
+		copy.addAll(distances);
+		return copy;
 	}
 	
 	private synchronized void updateClientData() {

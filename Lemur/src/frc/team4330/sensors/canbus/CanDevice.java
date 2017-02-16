@@ -22,7 +22,7 @@ public abstract class CanDevice {
 	 * @throws CANMessageNotFoundException thrown if there are no CAN messages with any of
 	 * the messageIds of interest in the receive queue
 	 */
-	protected CANMessage receiveData(int messageId) throws CANMessageNotFoundException {
+	protected synchronized CANMessage receiveData(int messageId) throws CANMessageNotFoundException {
 		
 		if ( messageId < 0 ) {
 			throw new RuntimeException("canMessage cannot have a negative integer for the messageId");
@@ -57,9 +57,7 @@ public abstract class CanDevice {
 		    for ( int i = 0; i < size; i++ ) {
 		    	data[i] = dataBuffer.get();
 		    }
-		     
-		    dataBuffer.clear();
-		    dataBuffer = null;
+		    
 		}
 
 	    return new CANMessage(messageId, data);

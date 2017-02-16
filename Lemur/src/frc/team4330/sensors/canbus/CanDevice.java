@@ -1,7 +1,5 @@
 package frc.team4330.sensors.canbus;
 
-import java.lang.reflect.Method;
-import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import java.util.HashMap;
@@ -61,9 +59,6 @@ public abstract class CanDevice {
 		    }
 		     
 		    dataBuffer.clear();
-		    if ( dataBuffer.isDirect() ) {
-//		    	clean(dataBuffer);
-		    }
 		    dataBuffer = null;
 		}
 
@@ -93,22 +88,6 @@ public abstract class CanDevice {
 		sendDataBuffer.flip();
 
 		CANJNI.FRCNetCommCANSessionMuxSendMessage(canMessage.messageId, sendDataBuffer, CANJNI.CAN_SEND_PERIOD_NO_REPEAT);
-		
-//		clean(sendDataBuffer);
-	}
-	
-	protected void clean ( Buffer bb ) {
-		try {
-			Method cleanerMethod = bb.getClass().getMethod("cleaner");
-			cleanerMethod.setAccessible(true);
-			Object cleaner = cleanerMethod.invoke(bb);
-			Method cleanMethod = cleaner.getClass().getMethod("clean");
-			cleanMethod.setAccessible(true);
-			cleanMethod.invoke(cleaner);
-		} catch ( Exception e ) {
-			System.err.println("Error trying to clean byte buffer");
-			e.printStackTrace(System.err);
-		}
 	}
 	
 	public class CANMessage {

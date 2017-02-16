@@ -1,6 +1,7 @@
 package frc.team4330.sensors.canbus;
 
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.nio.IntBuffer;
 import java.util.HashMap;
 import java.util.Map;
@@ -30,7 +31,7 @@ public abstract class CanDevice {
 		}
 		
 		if ( !messageIdMap.containsKey(messageId) ) {
-			IntBuffer messageIdBuffer = ByteBuffer.allocateDirect(4).asIntBuffer().put(messageId);
+			IntBuffer messageIdBuffer = ByteBuffer.allocateDirect(4).order(ByteOrder.LITTLE_ENDIAN).asIntBuffer().put(messageId);
 			messageIdMap.put(messageId, messageIdBuffer);
 		}
 		

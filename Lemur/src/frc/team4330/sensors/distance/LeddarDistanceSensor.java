@@ -390,9 +390,7 @@ public class LeddarDistanceSensor extends CanDevice {
 			while(!shutdown) {
 				try {
 					checkForMessages();
-					long sleepTime = 5;
-					if ( sleepTime < 1 ) sleepTime = 1;
-					Thread.sleep(sleepTime);
+					Thread.sleep(5);
 				} catch ( InterruptedException e ) {
 					break;
 				} catch ( Throwable e ) {

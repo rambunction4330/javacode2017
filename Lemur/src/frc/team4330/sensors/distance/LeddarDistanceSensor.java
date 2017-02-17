@@ -261,6 +261,10 @@ public class LeddarDistanceSensor extends CanDevice {
 			return distanceMessage;
 		} catch ( CANMessageNotFoundException e ) {
 			
+			if ( recorder != null ) {
+				recorder.println(System.currentTimeMillis() + " CANMessageNotFoundException");
+			}
+			
 			// we didn't get any distance messages, so try to get a size message
 			try {
 				CANMessage sizeMessage = receiveData(getSizeMessageId());
@@ -268,12 +272,9 @@ public class LeddarDistanceSensor extends CanDevice {
 				if ( recorder != null ) {
 					recorder.println(System.currentTimeMillis() + " Received: " + sizeMessage);
 				}
-				
-				return sizeMessage;
 			
 			} catch ( CANMessageNotFoundException e2 ) {
-				// we didn't get any distance or size messages, so record that and let caller know 
-				// that there are no distance messages
+
 				if ( recorder != null ) {
 					recorder.println(System.currentTimeMillis() + " CANMessageNotFoundException");
 				}

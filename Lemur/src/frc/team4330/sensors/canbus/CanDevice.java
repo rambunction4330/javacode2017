@@ -48,7 +48,6 @@ public abstract class CanDevice {
 		    // Get the data using full 29 bits for CAN message id mask
 		    // Expected that this call will throw a CANMessageNotFoundException if no messages of that
 		    // id are available
-		    // TODO try CANJNI.CAN_IS_FRAME_11BIT
 		    ByteBuffer dataBuffer = CANJNI.FRCNetCommCANSessionMuxReceiveMessage(
 		    	messageIdBuffer, CAN_MESSAGE_ID_MASK, timeStampBuffer);
 	

@@ -10,6 +10,7 @@ import frc.team4330.robot.commandgroups.LeftLift;
 import frc.team4330.robot.commandgroups.MiddleLift;
 import frc.team4330.robot.commandgroups.RightLift;
 import frc.team4330.robot.commands.DriveForward;
+import frc.team4330.robot.commands.DriveForwardEncoders;
 import frc.team4330.robot.commands.PhaseCompleteCommand;
 import frc.team4330.robot.commands.Turn;
 import frc.team4330.robot.commands.ZeroPhaseCommand;
@@ -112,8 +113,19 @@ public class AutonomousManager extends Subsystem {
 	}
 
 	public void testDriveCommand(double distance) {
-		Scheduler.getInstance().add(new DriveForward(distance));
+		Scheduler.getInstance().add(new DriveForwardEncoders(distance));
 	}
+	
+	public void testTurnAbsCommand(double angle) {
+		Scheduler.getInstance().add(new ZeroPhaseCommand());
+		Scheduler.getInstance().add(new Turn(angle, true));
+	}
+	
+	public void testTurnNonCommand(double angle) {
+		Scheduler.getInstance().add(new ZeroPhaseCommand());
+		Scheduler.getInstance().add(new Turn(angle, false));
+	}
+
 
 	private boolean isPhaseOneFinished() {
 		return phase == AutonomousPhase.oneComplete;

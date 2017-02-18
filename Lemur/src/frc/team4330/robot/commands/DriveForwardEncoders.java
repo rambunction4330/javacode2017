@@ -8,6 +8,7 @@ import frc.team4330.robot.parts.HeadingProvider;
 import frc.team4330.robot.parts.TankDrive;
 import frc.team4330.robot.subsystems.RobotDrive;
 import frc.team4330.robot.utils.HeadingCalculator;
+import frc.team4330.robot.utils.RobotMap;
 
 /**
  * Drive the robot forward command.
@@ -63,12 +64,12 @@ public class DriveForwardEncoders extends Command {
 		deltaDis = robot.totalDistance() - startDis;
 		distanceLeftToDrive = desDistance - deltaDis;
 
-		if (distanceLeftToDrive <= .5) {
-			rightval = .3;
-			leftval = .3;
+		if (distanceLeftToDrive <= 1) {
+			rightval = RobotMap.SLOW_SPEED;
+			leftval = RobotMap.SLOW_SPEED;
 		} else {
-			rightval = .3;
-			leftval = .3;		
+			rightval = RobotMap.FAST_SPEED;
+			leftval = RobotMap.FAST_SPEED;		
 		}
 
 		final double chg = .1;

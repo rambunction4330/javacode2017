@@ -53,15 +53,17 @@ public class RobotMap {
 	
 	// Robot Measurements (m)
 	public final static double ROBOT_WIDTH = 0.9017;
-	public final static double DISTANCE_PER_PULSE = 0.00132994;
+	public final static double DISTANCE_PER_PULSE = 0.00132994*1.55;
 
 	// Field Distances (m)
 	public final static double WALL_TO_BASELINE = 2.8448;
 	public final static double ESTIMATE_DIST_TO_LIFT = .5;
 	public final static double ONE_FOOT = 0.3048;
+	public static double TEST_DRIVE_DISTANCE = Preferences.getInstance().getDouble("Test Drive Distance", 5);
 	
 	// Angles
 	public static double TURN_ANGLE = Preferences.getInstance().getInt("Turn Angle", 60);
+	public static double TURN_ANGLE2 = Preferences.getInstance().getInt("Turn-Angle", 90);
 	
 	// Debugging
 	public static boolean RECORDING_LEDDAR_VALS = Preferences.getInstance().getBoolean("Leddar Recording", false);
@@ -89,10 +91,13 @@ public class RobotMap {
 		CLIMB_SPEED = Preferences.getInstance().getDouble("Climb Speed", .9);
 		SHOOTING_SPEED = Preferences.getInstance().getDouble("Shooting Speed", .99);
 		FEEDING_SPEED = Preferences.getInstance().getDouble("Feeding Speed", .8);
+		
+		TEST_DRIVE_DISTANCE = Preferences.getInstance().getDouble("Test Drive Distance", 5);
 	
 		// Angles
 		TURN_ANGLE = HeadingCalculator.normalize(Preferences.getInstance().getInt("Turn Angle", 60));
-	
+		TURN_ANGLE2 = Preferences.getInstance().getInt("Turn-Angle", 90);
+		
 		// Debugging
 		RECORDING_LEDDAR_VALS = Preferences.getInstance().getBoolean("Leddar Recording", false);
 	}

@@ -1,5 +1,6 @@
 package frc.team4330.robot;
 
+import java.io.IOException;
 import java.util.List;
 
 import com.kauailabs.navx.frc.AHRS;
@@ -21,14 +22,15 @@ import frc.team4330.sensors.distance.LeddarDistanceSensorData;
 /**
  * WIP 2017 Code.
  *
- * TODO Test encoders/drive command 
  * TODO Work on servers w/ Jeffrey 
- * TODO Vision works?
+ * TODO look at example code for navx (on starting)
  */
 public class Robot extends IterativeRobot {
 	//OI
 	public static OI oi;
 
+	ServerTest server = new ServerTest();
+	
 	// Subsystems
 	public final static AutonomousManager steveBannon = new AutonomousManager();
 	public final static RobotDrive myRobot = new RobotDrive();
@@ -55,6 +57,9 @@ public class Robot extends IterativeRobot {
 //		oi = new OI();
 
 		serverOn = false;
+		
+
+		
 	}
 
 
@@ -68,27 +73,32 @@ public class Robot extends IterativeRobot {
 		gyro.resetDisplacement();
 		myRobot.resetEncoders();
 
-		vision.startUp();
+		vision.shutDown();
 		leddar.startUp();
 		leddar.setRecording(RobotMap.RECORDING_LEDDAR_VALS);
 
 		serverOn = true;
-//
-//		ServerTest server = new ServerTest();
-//		try {
-//			server.start();
-//		} catch (Exception e) {
-//			
-//		}
 		
+		try {
+			server.start();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		steveBannon.testTurnAbsCommand(RobotMap.TURN_ANGLE2);
+//		steveBannon.testDriveCommand(RobotMap.TEST_DRIVE_DISTANCE);
+		Scheduler.getInstance().enable();
 //		steveBannon.init();
+
 	}
 
 
 	@Override
 	public void autonomousPeriodic() {
-		leddar.getDistances();
+//		System.out.println("leddar: " + getLeddarDistance(8));
 //		steveBannon.run();
+		Scheduler.getInstance().run();
 	}
 
 	@Override
@@ -98,6 +108,16 @@ public class Robot extends IterativeRobot {
 		vision.startUp();
 		leddar.startUp();
 		leddar.setRecording(RobotMap.RECORDING_LEDDAR_VALS);
+//		leddar.setRecording(true);
+		
+		serverOn = true;
+		
+		try {
+			server.start();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -152,7 +172,9 @@ public class Robot extends IterativeRobot {
 	public final static Double getLeddarDistance(int segment) {
 		List<LeddarDistanceSensorData> distances = leddar.getDistances();
 
-		if (distances.get(8) != null) return distances.get(8).getDistanceInCentimeters() / 100.0 - 0.18;
+		if (distances.get(segment) != null) {
+			return distances.get(segment).getDistanceInCentimeters() / 100. - .18;
+		}
 		else return null;
 	}
 

@@ -3,6 +3,7 @@ package frc.team4330.sensors.distance;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
+import java.nio.ByteBuffer;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -35,9 +36,6 @@ public class LeddarDistanceSensor extends CanDevice {
 	// the following four attributes are not thread safe and should only be changed
 	// by the update thread or by the startUp method prior to the update thread being started
 	private List<ReceivedInfo> receivedDistances = new ArrayList<ReceivedInfo>();
-	private int expectedNumberDistanceMessages = 0;
-	private int numberDistanceMessagesReceived = 0;
-	private int sizeMessageTimestamp = 0;
 	
 	// boolean values are safe to read/modify from multiple threads, so no worry about thread safety
 	private boolean active = false;
@@ -59,10 +57,6 @@ public class LeddarDistanceSensor extends CanDevice {
 	public LeddarDistanceSensor(int receiveBaseMessageId, int transmitBaseMessageId) {
 		this.receiveBaseMessageId = receiveBaseMessageId;
 		this.transmitBaseMessageId = transmitBaseMessageId;
-	}
-	
-	public int getSizeMessageId() {
-		return receiveBaseMessageId + 1;
 	}
 	
 	public int getDistanceMessageId() {
@@ -189,9 +183,6 @@ public class LeddarDistanceSensor extends CanDevice {
 	}
 	
 	private synchronized void initializeReceivedState() {
-		expectedNumberDistanceMessages = 0;
-		numberDistanceMessagesReceived = 0;
-		sizeMessageTimestamp = 0;
 		
 		// clear and initialize to null values
 		receivedDistances.clear();
@@ -205,7 +196,7 @@ public class LeddarDistanceSensor extends CanDevice {
 	private void purgeReceivedMessages() {
 		while(true) {
 			// loop till exhausted all messages from the sensor
-			int[] messageIds = new int[] { getSizeMessageId(), getDistanceMessageId() };
+			int[] messageIds = new int[] { getDistanceMessageId() };
 			boolean wasMessageReceived = false;
 			for ( int i = 0; i < messageIds.length; i++ ) {
 				try {
@@ -233,87 +224,24 @@ public class LeddarDistanceSensor extends CanDevice {
 			return;
 		}
 		
-		while(true) {
-				
-			try {
-				if ( expectedNumberDistanceMessages == 0 ) {
-					CANMessage sizeMessage = pullNextSizeMessage();
-					handleSizeMessage(sizeMessage.getTimestamp(), sizeMessage.getData());
-				} else {
-					CANMessage distanceMessage = pullNextDistanceMessage();
-					handleDistanceMessage(distanceMessage.getTimestamp(), distanceMessage.getData());
-				}
-			} catch ( CANMessageNotFoundException e ) {
-				
-				// update client data to get rid of any stale data in case we have received
-				// several consecutive CANMessageNotFound exceptions
-				updateClientData();
-				break;
-			}
-		}
-	}
-	
-	/**
-	 * Try to get a distance message
-	 * @return the CANMessage for distance
-	 * @throws CANMessageNotFoundException thrown if no distance CANMessage is available
-	 */
-	private CANMessage pullNextDistanceMessage() throws CANMessageNotFoundException {
-		
-		try {
-			CANMessage distanceMessage = receiveData(getDistanceMessageId());;		
-			if ( recorder != null ) {
-				recorder.println(System.currentTimeMillis() + " Received: " + distanceMessage);
-			}
-			return distanceMessage;
-		} catch ( CANMessageNotFoundException e ) {
-			
-			if ( recorder != null ) {
-				recorder.println(System.currentTimeMillis() + " CANMessageNotFoundException");
-			}
-			
-			throw e;
-		}
-		
-	}
-	
-	/**
-	 * Try to get a size message
-	 * @return the CANMessage for size
-	 * @throws CANMessageNotFoundException throw if no size CANMessage is available
-	 */
-	private CANMessage pullNextSizeMessage() throws CANMessageNotFoundException {
-		try {
-			CANMessage sizeMessage = receiveData(getSizeMessageId());
+		ByteBuffer[] output = new ByteBuffer[8];
+		LeddarJNI.FRCNetCommCANSessionMuxReceiveLeddarDistanceMessages(getDistanceMessageId(), CAN_MESSAGE_ID_MASK, output);
 
-			if ( recorder != null ) {
-				recorder.println(System.currentTimeMillis() + " Received: " + sizeMessage);
+		for ( int i = 0; i < output.length; i++ ) {
+			if ( output[i] == null || output[i].remaining() != 8 ) {
+				continue;
 			}
+			byte[] data = new byte[8];
+			output[i].get(data);
 			
-			return sizeMessage;
-		
-		} catch ( CANMessageNotFoundException e ) {
-
 			if ( recorder != null ) {
-				recorder.println(System.currentTimeMillis() + " CANMessageNotFoundException");
+				recorder.println(System.currentTimeMillis() + " Received " + ByteHelper.bytesToHex(data));
 			}
-			
-			throw e;
+			handleDistanceMessage(data);
 		}
 	}
 	
-	private void handleSizeMessage(int timestamp, byte[] data) {
-		sizeMessageTimestamp = timestamp;
-		expectedNumberDistanceMessages = 0xff & data[0];
-		numberDistanceMessagesReceived = 0;
-	}
-	
-	private void handleDistanceMessage(int timestamp, byte[] data) {
-		
-		// don't process any distance messages which are received before the size message timestamp
-		if ( timestamp < sizeMessageTimestamp ) {
-			return;
-		}
+	private void handleDistanceMessage(byte[] data) {
 		
 		// we got a distance data packet, the format of which is 8 bytes with following pattern repeated twice
 		// but the last four bytes will be zero filled if no data is present.
@@ -341,17 +269,8 @@ public class LeddarDistanceSensor extends CanDevice {
 		
 		// update the received distances
 		receivedDistances.set(d1.getSegmentNumber(), new ReceivedInfo(d1));
-		numberDistanceMessagesReceived++;
 		if ( d2 != null ) {
 			receivedDistances.set(d2.getSegmentNumber(), new ReceivedInfo(d2));
-			numberDistanceMessagesReceived++;
-		}
-		
-		if ( numberDistanceMessagesReceived >= expectedNumberDistanceMessages ) {
-			// we are done processing the distances messages in this size message bunch
-			sizeMessageTimestamp = 0;
-			expectedNumberDistanceMessages = 0;
-			numberDistanceMessagesReceived = 0;
 		}
 		
 		// update data for the client thread to read
@@ -390,7 +309,7 @@ public class LeddarDistanceSensor extends CanDevice {
 			while(!shutdown) {
 				try {
 					checkForMessages();
-					Thread.sleep(5);
+					Thread.sleep(15);
 				} catch ( InterruptedException e ) {
 					break;
 				} catch ( Throwable e ) {

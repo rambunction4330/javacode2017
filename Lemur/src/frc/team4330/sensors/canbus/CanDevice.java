@@ -14,7 +14,7 @@ public abstract class CanDevice {
 	private Map<Integer,IntBuffer> messageIdMap = new HashMap<Integer,IntBuffer>();
 	private ByteBuffer timeStampBuffer = ByteBuffer.allocateDirect(4);
 	private static String lock = "lock";
-	private static final int CAN_MESSAGE_ID_MASK = 0x1fffffff;
+	public static final int CAN_MESSAGE_ID_MASK = 0x1fffffff;
 	
 	/**
 	 * 
@@ -43,7 +43,6 @@ public abstract class CanDevice {
 		timeStampBuffer.clear();
 		
 		byte[] data = null;
-		int timestamp = 0;
 		synchronized ( lock ) {
 	
 		    // Get the data using full 29 bits for CAN message id mask
@@ -51,13 +50,6 @@ public abstract class CanDevice {
 		    // id are available
 		    ByteBuffer dataBuffer = CANJNI.FRCNetCommCANSessionMuxReceiveMessage(
 		    	messageIdBuffer, CAN_MESSAGE_ID_MASK, timeStampBuffer);
-		    
-		    // get the timestamp copy (little endian)
-		    byte[] timestampCopy = new byte[4];
-		    for ( int i = 0; i < 4; i++ ) {
-		    	timestampCopy[i] = timeStampBuffer.get();
-		    }
-		    timestamp = ByteBuffer.wrap(timestampCopy).order(ByteOrder.LITTLE_ENDIAN).asIntBuffer().get();
 	
 		    // make a copy of the data from buffer since it will be changed by the next invocation
 		    // making a copy
@@ -69,7 +61,7 @@ public abstract class CanDevice {
 		    
 		}
 
-	    return new CANMessage(messageId, timestamp, data);
+	    return new CANMessage(messageId, data);
 	}
 	
 	/**
@@ -99,24 +91,14 @@ public abstract class CanDevice {
 	
 	public class CANMessage {
 		int messageId;
-		int timestamp;
 		byte[] data;
-		public CANMessage(int messageId, int timestamp, byte[] data) {
-			this.messageId = messageId;
-			this.timestamp = timestamp;
-			this.data = data;
-		}
-		
 		public CANMessage(int messageId, byte[] data) {
-			this(messageId, 0, data);
+			this.messageId = messageId;
+			this.data = data;
 		}
 		
 		public int getMessageId() {
 			return messageId;
-		}
-
-		public int getTimestamp() {
-			return timestamp;
 		}
 
 		public byte[] getData() {
@@ -124,7 +106,7 @@ public abstract class CanDevice {
 		}
 
 		public String toString() {
-			return "messageId=" + messageId + " timestamp=" + timestamp + " data=" + ByteHelper.bytesToHex(data);
+			return "messageId=" + messageId + " data=" + ByteHelper.bytesToHex(data);
 		}
 	}
 

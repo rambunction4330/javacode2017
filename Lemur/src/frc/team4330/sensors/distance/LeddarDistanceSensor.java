@@ -3,6 +3,7 @@ package frc.team4330.sensors.distance;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
+import java.nio.ByteBuffer;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -32,7 +33,7 @@ public class LeddarDistanceSensor extends CanDevice {
 	// in order for sectors 0 - 15, but the value may be null if not known
 	private List<LeddarDistanceSensorData> distances = new ArrayList<LeddarDistanceSensorData>();
 	
-	// the receivedDistances attribute is not thread safe and should only be changed
+	// the following four attributes are not thread safe and should only be changed
 	// by the update thread or by the startUp method prior to the update thread being started
 	private List<ReceivedInfo> receivedDistances = new ArrayList<ReceivedInfo>();
 	
@@ -56,10 +57,6 @@ public class LeddarDistanceSensor extends CanDevice {
 	public LeddarDistanceSensor(int receiveBaseMessageId, int transmitBaseMessageId) {
 		this.receiveBaseMessageId = receiveBaseMessageId;
 		this.transmitBaseMessageId = transmitBaseMessageId;
-	}
-	
-	public int getSizeMessageId() {
-		return receiveBaseMessageId + 1;
 	}
 	
 	public int getDistanceMessageId() {
@@ -186,6 +183,8 @@ public class LeddarDistanceSensor extends CanDevice {
 	}
 	
 	private synchronized void initializeReceivedState() {
+		
+		// clear and initialize to null values
 		receivedDistances.clear();
 		distances.clear();
 		for ( int i = 0; i < NUMBER_SECTORS; i++ ) {
@@ -197,7 +196,7 @@ public class LeddarDistanceSensor extends CanDevice {
 	private void purgeReceivedMessages() {
 		while(true) {
 			// loop till exhausted all messages from the sensor
-			int[] messageIds = new int[] { getSizeMessageId(), getDistanceMessageId() };
+			int[] messageIds = new int[] { getDistanceMessageId() };
 			boolean wasMessageReceived = false;
 			for ( int i = 0; i < messageIds.length; i++ ) {
 				try {
@@ -225,75 +224,24 @@ public class LeddarDistanceSensor extends CanDevice {
 			return;
 		}
 		
-		try {
-			// read as many messages as possible since many may be queued up
-			// by looping until the CANMessageNotFoundException occurs
-			while(true) {
-				CANMessage message = pullNextDistanceMessage();
-				
-				byte[] data = message.getData();
-				// a distance message has 8 bytes of data
-				handleDistanceMessage(data);
+		ByteBuffer[] output = new ByteBuffer[8];
+		LeddarJNI.FRCNetCommCANSessionMuxReceiveLeddarDistanceMessages(getDistanceMessageId(), CAN_MESSAGE_ID_MASK, output);
+
+		for ( int i = 0; i < output.length; i++ ) {
+			if ( output[i] == null || output[i].remaining() != 8 ) {
+				continue;
 			}
-		} catch (CANMessageNotFoundException e) {
-			// no problem since just means ran out of messages to process
+			byte[] data = new byte[8];
+			output[i].get(data);
 			
-			// do this to purge any stale data if we haven't received any messages in a while
-			updateClientData();
+			if ( recorder != null ) {
+				recorder.println(System.currentTimeMillis() + " Received " + ByteHelper.bytesToHex(data));
+			}
+			handleDistanceMessage(data);
 		}
 	}
 	
-	/**
-	 * Try to get a distance message, if successful, then return the distance message.
-	 * If can't get a distance message, try to get a size message and record the if we got one, but
-	 * still throw a CANMessageNotFoundException exception since we don't have any distance messages
-	 * @return the CANMessage for distance
-	 * @throws CANMessageNotFoundException thrown if no distance CANMessages are available
-	 */
-	@SuppressWarnings("finally")
-	private CANMessage pullNextDistanceMessage() throws CANMessageNotFoundException {
-		
-		try {
-			CANMessage distanceMessage = receiveData(getDistanceMessageId());;		
-			if ( recorder != null ) {
-				recorder.println(System.currentTimeMillis() + " Received: " + distanceMessage);
-			}
-			return distanceMessage;
-		} catch ( CANMessageNotFoundException e ) {
-			
-			// we didn't get any distance messages, so try to get a size message
-			try {
-				CANMessage sizeMessage = receiveData(getSizeMessageId());
-				// we don't care about size messages, but go ahead and record them if received
-				if ( recorder != null ) {
-					recorder.println(System.currentTimeMillis() + " Received: " + sizeMessage);
-				}
-				
-				return sizeMessage;
-			
-			} catch ( CANMessageNotFoundException e2 ) {
-				// we didn't get any distance or size messages, so record that and let caller know 
-				// that there are no distance messages
-				if ( recorder != null ) {
-					recorder.println(System.currentTimeMillis() + " CANMessageNotFoundException");
-				}
-			} finally {
-				// throw the CANMessageNotFoundException since we don't have distance messages
-				throw e;
-			}
-		}
-		
-	}
-	
-	private void handleDistanceMessage(byte[] sectorRawData) {
-		if ( sectorRawData.length != 8 || (sectorRawData[0] == 0x00 && sectorRawData[1] == 0x00 
-				&& sectorRawData[2] == 0x00 && sectorRawData[3] == 0x00 )) {
-			if ( recorder != null ) {
-				recorder.println(System.currentTimeMillis() + " Distance message was weird, data=" +
-						ByteHelper.bytesToHex(sectorRawData));
-			}
-			return;
-		}
+	private void handleDistanceMessage(byte[] data) {
 		
 		// we got a distance data packet, the format of which is 8 bytes with following pattern repeated twice
 		// but the last four bytes will be zero filled if no data is present.
@@ -305,17 +253,17 @@ public class LeddarDistanceSensor extends CanDevice {
 		// 4 MSB of byte 3 is the segment number
 		
 		// always read the first 4 bytes
-		int firstDistance = ByteHelper.readShort(sectorRawData, 0, true);
-		int firstSegmentNumber = ByteHelper.getMSBValue(sectorRawData[3], 4);
-		double firstAmplitude = (((ByteHelper.getLSBValue(sectorRawData[3], 4) << 8) | (sectorRawData[2] & 0xff)))/4.0; 
+		int firstDistance = ByteHelper.readShort(data, 0, true);
+		int firstSegmentNumber = ByteHelper.getMSBValue(data[3], 4);
+		double firstAmplitude = (((ByteHelper.getLSBValue(data[3], 4) << 8) | (data[2] & 0xff)))/4.0; 
 		LeddarDistanceSensorData d1 = new LeddarDistanceSensorData(firstSegmentNumber, firstDistance, firstAmplitude);
 		LeddarDistanceSensorData d2 = null;
 			
 		// only process the last 4 bytes if they are not all zeros
-		if ( sectorRawData[7] != 0x00 || sectorRawData[6] != 0x00 || sectorRawData[5] != 0x00 || sectorRawData[4] != 0x00 ) {
-			int secondDistance = ByteHelper.readShort(sectorRawData, 4, true);
-			int secondSegmentNumber = ByteHelper.getMSBValue(sectorRawData[7], 4); 
-			double secondAmplitude = (((ByteHelper.getLSBValue(sectorRawData[7], 4) << 8) | (sectorRawData[6] & 0xff)))/4.0;
+		if ( data[7] != 0x00 || data[6] != 0x00 || data[5] != 0x00 || data[4] != 0x00 ) {
+			int secondDistance = ByteHelper.readShort(data, 4, true);
+			int secondSegmentNumber = ByteHelper.getMSBValue(data[7], 4); 
+			double secondAmplitude = (((ByteHelper.getLSBValue(data[7], 4) << 8) | (data[6] & 0xff)))/4.0;
 			d2 = new LeddarDistanceSensorData(secondSegmentNumber, secondDistance, secondAmplitude);
 		}
 		
@@ -361,9 +309,7 @@ public class LeddarDistanceSensor extends CanDevice {
 			while(!shutdown) {
 				try {
 					checkForMessages();
-					long sleepTime = 5;
-					if ( sleepTime < 1 ) sleepTime = 1;
-					Thread.sleep(sleepTime);
+					Thread.sleep(15);
 				} catch ( InterruptedException e ) {
 					break;
 				} catch ( Throwable e ) {

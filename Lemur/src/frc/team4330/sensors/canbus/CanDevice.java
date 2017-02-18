@@ -14,7 +14,7 @@ public abstract class CanDevice {
 	private Map<Integer,IntBuffer> messageIdMap = new HashMap<Integer,IntBuffer>();
 	private ByteBuffer timeStampBuffer = ByteBuffer.allocateDirect(4);
 	private static String lock = "lock";
-	private static final int CAN_MESSAGE_ID_MASK = 0x1fffffff;
+	public static final int CAN_MESSAGE_ID_MASK = 0x1fffffff;
 	
 	/**
 	 * 
@@ -48,7 +48,6 @@ public abstract class CanDevice {
 		    // Get the data using full 29 bits for CAN message id mask
 		    // Expected that this call will throw a CANMessageNotFoundException if no messages of that
 		    // id are available
-		    // TODO try CANJNI.CAN_IS_FRAME_11BIT
 		    ByteBuffer dataBuffer = CANJNI.FRCNetCommCANSessionMuxReceiveMessage(
 		    	messageIdBuffer, CAN_MESSAGE_ID_MASK, timeStampBuffer);
 	

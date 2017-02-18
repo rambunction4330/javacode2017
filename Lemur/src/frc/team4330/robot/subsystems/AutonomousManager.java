@@ -5,46 +5,42 @@ import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.command.WaitCommand;
 import frc.team4330.robot.Robot;
-import frc.team4330.robot.SmartDashboardSetup;
-import frc.team4330.robot.commandgroups.LeftLift;
-import frc.team4330.robot.commandgroups.MiddleLift;
-import frc.team4330.robot.commandgroups.RightLift;
-import frc.team4330.robot.commands.DriveForward;
-import frc.team4330.robot.commands.DriveForwardEncoders;
+import frc.team4330.robot.commands.EncoderDrive;
+import frc.team4330.robot.commands.NavXDrive;
 import frc.team4330.robot.commands.PhaseCompleteCommand;
-import frc.team4330.robot.commands.Turn;
+import frc.team4330.robot.commands.GyroTurn;
 import frc.team4330.robot.commands.ZeroPhaseCommand;
 import frc.team4330.robot.utils.AutonomousPhase;
 
 public class AutonomousManager extends Subsystem {
 
 	public AutonomousPhase phase = AutonomousPhase.one;
-	private int position;
+//	private int position;
 
 	private VisionSystem vision;
 
 	public void init() {
 		phase = AutonomousPhase.one;
-		position = SmartDashboardSetup.getStart();
+//		position = SmartDashboardSetup.getStart();
 
 		vision = Robot.vision;
 		
 		// This on start up because we want it to go once.
 		Scheduler.getInstance().add(new ZeroPhaseCommand());
-		switch(position) {
-		case 1:
-			Scheduler.getInstance().add(new LeftLift());
-			break;
-		case 2:
-			Scheduler.getInstance().add(new RightLift());
-			break;
-		case 3:
-			Scheduler.getInstance().add(new MiddleLift());
-			break;
-		default:
-			System.out.println("No autonomous was selected.");
-			break;
-		}
+//		switch(position) {
+//		case 1:
+//			Scheduler.getInstance().add(new LeftLift());
+//			break;
+//		case 2:
+//			Scheduler.getInstance().add(new RightLift());
+//			break;
+//		case 3:
+//			Scheduler.getInstance().add(new MiddleLift());
+//			break;
+//		default:
+//			System.out.println("No autonomous was selected.");
+//			break;
+//		}
 
 		Scheduler.getInstance().enable(); 
 	}
@@ -97,7 +93,7 @@ public class AutonomousManager extends Subsystem {
 			Scheduler.getInstance().add(new PhaseCompleteCommand(AutonomousPhase.twoComplete));
 		} else {
 			CommandGroup group = new CommandGroup();
-			group.addSequential(new Turn(angle, false));
+			group.addSequential(new GyroTurn(angle, false));
 			group.addSequential(new WaitCommand(0.5));
 			group.addSequential(new PhaseCompleteCommand(AutonomousPhase.twoComplete));
 			Scheduler.getInstance().add(group);
@@ -106,24 +102,24 @@ public class AutonomousManager extends Subsystem {
 
 	private void driveToLift(Double distance) {
 		CommandGroup group = new CommandGroup();
-		group.addSequential(new DriveForward(distance));
+		group.addSequential(new NavXDrive(distance));
 		group.addSequential(new WaitCommand(0.5));
 		group.addSequential(new PhaseCompleteCommand(AutonomousPhase.threeComplete));
 		Scheduler.getInstance().add(group);
 	}
 
 	public void testDriveCommand(double distance) {
-		Scheduler.getInstance().add(new DriveForwardEncoders(distance));
+		Scheduler.getInstance().add(new EncoderDrive(distance));
 	}
 	
 	public void testTurnAbsCommand(double angle) {
 		Scheduler.getInstance().add(new ZeroPhaseCommand());
-		Scheduler.getInstance().add(new Turn(angle, true));
+		Scheduler.getInstance().add(new GyroTurn(angle, true));
 	}
 	
 	public void testTurnNonCommand(double angle) {
 		Scheduler.getInstance().add(new ZeroPhaseCommand());
-		Scheduler.getInstance().add(new Turn(angle, false));
+		Scheduler.getInstance().add(new GyroTurn(angle, false));
 	}
 
 

@@ -1,6 +1,5 @@
 package frc.team4330.robot;
 
-import java.io.IOException;
 import java.util.List;
 
 import com.kauailabs.navx.frc.AHRS;
@@ -9,13 +8,13 @@ import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.SerialPort.Port;
 import edu.wpi.first.wpilibj.command.Scheduler;
-import frc.team4330.robot.server.ServerTest;
+import frc.team4330.robot.commandgroups.AutonomousCommand;
+import frc.team4330.robot.commands.VisionTurn;
 import frc.team4330.robot.subsystems.AutonomousManager;
 import frc.team4330.robot.subsystems.RobotDrive;
 import frc.team4330.robot.subsystems.RopeClimber;
 import frc.team4330.robot.subsystems.Shooter;
 import frc.team4330.robot.subsystems.VisionSystem;
-import frc.team4330.robot.utils.RobotMap;
 import frc.team4330.sensors.distance.LeddarDistanceSensor;
 import frc.team4330.sensors.distance.LeddarDistanceSensorData;
 
@@ -24,13 +23,12 @@ import frc.team4330.sensors.distance.LeddarDistanceSensorData;
  *
  * TODO Work on servers w/ Jeffrey 
  * TODO look at example code for navx (on starting)
+ * TODO test new visionturn command
  */
 public class Robot extends IterativeRobot {
 	//OI
 	public static OI oi;
 
-	ServerTest server = new ServerTest();
-	
 	// Subsystems
 	public final static AutonomousManager steveBannon = new AutonomousManager();
 	public final static RobotDrive myRobot = new RobotDrive();
@@ -47,8 +45,12 @@ public class Robot extends IterativeRobot {
 	public final static LeddarDistanceSensor leddar = new LeddarDistanceSensor();
 	public final static AHRS gyro = new AHRS(Port.kMXP);
 
-	// For Server
+	// Server
 	public static boolean serverOn;
+//	ServerTest server = new ServerTest();
+	
+	// Commands
+	AutonomousCommand autonomous;
 
 	@Override
 	public void robotInit() {
@@ -57,47 +59,45 @@ public class Robot extends IterativeRobot {
 //		oi = new OI();
 
 		serverOn = false;
-		
-
-		
 	}
 
 
 	@Override
 	public void autonomousInit() {		
-		SmartDashboardSetup.autonomousDashboard();
-
-		Scheduler.getInstance().removeAll();
-
-		gyro.reset();
-		gyro.resetDisplacement();
-		myRobot.resetEncoders();
-
-		vision.shutDown();
-		leddar.startUp();
-		leddar.setRecording(RobotMap.RECORDING_LEDDAR_VALS);
-
-		serverOn = true;
+//		SmartDashboardSetup.autonomousDashboard();
+//
+//		Scheduler.getInstance().removeAll();
+//
+//		gyro.reset();
+//		myRobot.resetEncoders();
+		vision.startUp();
+////		leddar.startUp();
+////		leddar.setRecording(RobotMap.RECORDING_LEDDAR_VALS);
+//
+//		serverOn = true;
+//		
+//		try {
+//			server.start();
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 		
-		try {
-			server.start();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+//		autonomous = new AutonomousCommand(SmartDashboardSetup.getStart());
 		
-		steveBannon.testTurnAbsCommand(RobotMap.TURN_ANGLE2);
-//		steveBannon.testDriveCommand(RobotMap.TEST_DRIVE_DISTANCE);
+//		if (autonomous != null)
+//			Scheduler.getInstance().add(autonomous);
+//		
+		Scheduler.getInstance().add(new VisionTurn());
+//		
 		Scheduler.getInstance().enable();
-//		steveBannon.init();
-
 	}
 
 
 	@Override
 	public void autonomousPeriodic() {
 //		System.out.println("leddar: " + getLeddarDistance(8));
-//		steveBannon.run();
+		
 		Scheduler.getInstance().run();
 	}
 
@@ -108,21 +108,22 @@ public class Robot extends IterativeRobot {
 		vision.startUp();
 		leddar.startUp();
 		leddar.setRecording(RobotMap.RECORDING_LEDDAR_VALS);
-//		leddar.setRecording(true);
 		
 		serverOn = true;
 		
-		try {
-			server.start();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+//		try {
+////			server.start();
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//	}
 	}
-
+	
 	@Override
 	public void teleopPeriodic() {
-		Scheduler.getInstance().run();
+		System.out.println("vision: " + vision.getLiftAngle());
+//		Scheduler.getInstance().run();
 		
 		myRobot.tankDrive(leftj, rightj,
 				leftj.getRawButton(RobotMap.REVERSE_BUTTON));
@@ -149,7 +150,9 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void disabledInit() {
-		RobotMap.updateVals();
+		if (autonomous != null)
+			autonomous.cancel();
+		
 		Scheduler.getInstance().removeAll();
 		Scheduler.getInstance().disable();
 

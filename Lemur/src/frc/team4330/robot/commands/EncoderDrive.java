@@ -4,18 +4,18 @@ import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.command.Command;
 import frc.team4330.robot.Robot;
+import frc.team4330.robot.RobotMap;
 import frc.team4330.robot.parts.HeadingProvider;
 import frc.team4330.robot.parts.TankDrive;
 import frc.team4330.robot.subsystems.RobotDrive;
 import frc.team4330.robot.utils.HeadingCalculator;
-import frc.team4330.robot.utils.RobotMap;
 
 /**
- * Drive the robot forward command.
+ * This command utilizes the encoders to drive forward in a straight line.
  * 
  * @author Amanda
  */
-public class DriveForwardEncoders extends Command {
+public class EncoderDrive extends Command {
 	private double desDistance, curHeading, pastHeading;
 	private double startDis, deltaDis;
 	
@@ -29,14 +29,14 @@ public class DriveForwardEncoders extends Command {
 	 * 
 	 * @param desDistance The distance for the robot to travel.
 	 */
-	public DriveForwardEncoders(double desDistance) {
+	public EncoderDrive(double desDistance) {
 		this.desDistance = desDistance;
 		distanceLeftToDrive = desDistance;
 		
-		requires(Robot.myRobot);
+//		requires(Robot.myRobot);
 	}
 
-	public DriveForwardEncoders(double desDistance, HeadingProvider headingProvider, TankDrive tankDrive) {
+	public EncoderDrive(double desDistance, HeadingProvider headingProvider, TankDrive tankDrive) {
 		this.desDistance = desDistance;
 
 		distanceLeftToDrive = desDistance;
@@ -85,7 +85,7 @@ public class DriveForwardEncoders extends Command {
 		} else;
 
 
-		robot.tankAuto(leftval, rightval);
+		robot.automatedDrive(leftval, rightval);
 	}
 
 	@Override

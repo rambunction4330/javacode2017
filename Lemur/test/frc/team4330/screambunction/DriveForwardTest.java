@@ -6,14 +6,14 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import frc.team4330.robot.commands.DriveForward;
+import frc.team4330.robot.RobotMap;
+import frc.team4330.robot.commands.NavXDrive;
 import frc.team4330.robot.parts.HeadingProvider;
 import frc.team4330.robot.parts.TankDrive;
-import frc.team4330.robot.utils.RobotMap;
 import frc.team4330.screambunction.testingUtils.TestTankDrive;
 
 public class DriveForwardTest {
-    private DriveForward testObject;
+    private NavXDrive testObject;
     private TankDrive tankDrive;
     
     @Before
@@ -22,7 +22,7 @@ public class DriveForwardTest {
     	tankDrive = Mockito.mock(TankDrive.class);
 
     	tankDrive = new TestTankDrive();
-    	testObject = new DriveForward(10, headingProvider, tankDrive);
+    	testObject = new NavXDrive(10, headingProvider, tankDrive);
     }
     
     @Test

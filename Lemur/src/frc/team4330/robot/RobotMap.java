@@ -1,6 +1,7 @@
-package frc.team4330.robot.utils;
+package frc.team4330.robot;
 
 import edu.wpi.first.wpilibj.Preferences;
+import frc.team4330.robot.utils.HeadingCalculator;
 
 public class RobotMap {
 
@@ -60,10 +61,14 @@ public class RobotMap {
 	public final static double ESTIMATE_DIST_TO_LIFT = .5;
 	public final static double ONE_FOOT = 0.3048;
 	public static double TEST_DRIVE_DISTANCE = Preferences.getInstance().getDouble("Test Drive Distance", 5);
+	public final static double DESIRED_DISTANCE_FROM_WALL = .2;
 	
 	// Angles
 	public static double TURN_ANGLE = Preferences.getInstance().getInt("Turn Angle", 60);
-	public static double TURN_ANGLE2 = Preferences.getInstance().getInt("Turn-Angle", 90);
+	public static double TEST_TURN_ANGLE = Preferences.getInstance().getInt("Test-Turn-Angle", 90);
+	
+	// stuff
+	public final static int LEDDAR_SEGMENT = 8;
 	
 	// Debugging
 	public static boolean RECORDING_LEDDAR_VALS = Preferences.getInstance().getBoolean("Leddar Recording", false);
@@ -96,7 +101,7 @@ public class RobotMap {
 	
 		// Angles
 		TURN_ANGLE = HeadingCalculator.normalize(Preferences.getInstance().getInt("Turn Angle", 60));
-		TURN_ANGLE2 = Preferences.getInstance().getInt("Turn-Angle", 90);
+		TEST_TURN_ANGLE = Preferences.getInstance().getInt("Turn-Angle", 90);
 		
 		// Debugging
 		RECORDING_LEDDAR_VALS = Preferences.getInstance().getBoolean("Leddar Recording", false);

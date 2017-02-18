@@ -3,8 +3,8 @@ package frc.team4330.robot.subsystems;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import frc.team4330.robot.RobotMap;
 import frc.team4330.robot.utils.Registrar;
-import frc.team4330.robot.utils.RobotMap;
 
 public class RopeClimber extends Subsystem {
 	private SpeedController motor;

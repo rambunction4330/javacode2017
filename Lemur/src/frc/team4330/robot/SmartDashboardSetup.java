@@ -2,7 +2,6 @@ package frc.team4330.robot;
 
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.team4330.robot.utils.RobotMap;
 
 
 public class SmartDashboardSetup {

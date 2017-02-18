@@ -2,12 +2,18 @@ package frc.team4330.robot.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
 import frc.team4330.robot.Robot;
+import frc.team4330.robot.RobotMap;
 import frc.team4330.robot.parts.HeadingProvider;
 import frc.team4330.robot.parts.TankDrive;
 import frc.team4330.robot.utils.HeadingCalculator;
-import frc.team4330.robot.utils.RobotMap;
 
-public class Turn extends Command {
+/**
+ * Uses the gyro to turn. You can imput the angle change you want to make. Absolute
+ * determines whether or not you want to change by x amount or go straight to inputed angle.
+ * 
+ * @author Amanda
+ */
+public class GyroTurn extends Command {
 
 	private double curHeading, desHeading, change;
 	private HeadingProvider headingProvider;
@@ -19,7 +25,7 @@ public class Turn extends Command {
 	 * 
 	 * @param headingChange The change in heading. Negative means to the right.
 	 */
-	public Turn( double heading, boolean absolute ) {
+	public GyroTurn( double heading, boolean absolute ) {
 		curHeading = Robot.gyro.getAngle();
 
 		if (absolute) this.desHeading = heading;
@@ -29,7 +35,7 @@ public class Turn extends Command {
 
 		test = false;
 
-		requires (Robot.myRobot);
+//		requires (Robot.myRobot);
 	}
 
 	/**
@@ -39,7 +45,7 @@ public class Turn extends Command {
 	 * @param headingProvider The angle provider.
 	 * @param tankDrive Abstract driver.
 	 */
-	public Turn( double desHeading, HeadingProvider headingProvider, TankDrive tankDrive ) {
+	public GyroTurn( double desHeading, HeadingProvider headingProvider, TankDrive tankDrive ) {
 		curHeading = headingProvider.getAngle();
 		this.desHeading = desHeading;
 
@@ -69,17 +75,17 @@ public class Turn extends Command {
 		
 		if (change > 0) { // means we need to turn right
 			if (change < 10) {
-				Robot.myRobot.tankAuto(RobotMap.SLOW_SPEED/2, -RobotMap.SLOW_SPEED/2);
+				Robot.myRobot.automatedDrive(RobotMap.SLOW_SPEED/2, -RobotMap.SLOW_SPEED/2);
 			} else {
 				if (test) tankDrive.setSpeed(RobotMap.TEST_SPEED, -RobotMap.TEST_SPEED);
-				else Robot.myRobot.tankAuto(RobotMap.SLOW_SPEED, -RobotMap.SLOW_SPEED);
+				else Robot.myRobot.automatedDrive(RobotMap.SLOW_SPEED, -RobotMap.SLOW_SPEED);
 			}
 		} else { // need to turn left
 			if (change > -10) {
-				Robot.myRobot.tankAuto(-RobotMap.SLOW_SPEED/2, RobotMap.SLOW_SPEED/2);
+				Robot.myRobot.automatedDrive(-RobotMap.SLOW_SPEED/2, RobotMap.SLOW_SPEED/2);
 			} else {
 				if (test) tankDrive.setSpeed(-RobotMap.TEST_SPEED, RobotMap.TEST_SPEED);
-				else Robot.myRobot.tankAuto(-RobotMap.SLOW_SPEED, RobotMap.SLOW_SPEED);
+				else Robot.myRobot.automatedDrive(-RobotMap.SLOW_SPEED, RobotMap.SLOW_SPEED);
 			}
 		}
 	}

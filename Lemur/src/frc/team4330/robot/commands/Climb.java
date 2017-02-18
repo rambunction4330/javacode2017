@@ -2,7 +2,7 @@ package frc.team4330.robot.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
 import frc.team4330.robot.Robot;
-import frc.team4330.robot.utils.RobotMap;
+import frc.team4330.robot.RobotMap;
 
 public class Climb extends Command {
 

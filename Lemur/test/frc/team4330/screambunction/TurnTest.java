@@ -6,14 +6,14 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import frc.team4330.robot.commands.Turn;
+import frc.team4330.robot.RobotMap;
+import frc.team4330.robot.commands.GyroTurn;
 import frc.team4330.robot.parts.HeadingProvider;
 import frc.team4330.robot.parts.TankDrive;
-import frc.team4330.robot.utils.RobotMap;
 import frc.team4330.screambunction.testingUtils.TestTankDrive;
 
 public class TurnTest {
-    private Turn testObject;
+    private GyroTurn testObject;
     private TankDrive tankDrive;
 //    TankDrive test;
     
@@ -22,7 +22,7 @@ public class TurnTest {
     	HeadingProvider headingProvider = Mockito.mock(HeadingProvider.class);
     	tankDrive = new TestTankDrive();
     	
-    	testObject = new Turn(10, headingProvider, tankDrive);
+    	testObject = new GyroTurn(10, headingProvider, tankDrive);
     }
 
     @Test

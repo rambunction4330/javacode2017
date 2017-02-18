@@ -10,11 +10,13 @@ import frc.team4330.robot.subsystems.RobotDrive;
 import frc.team4330.robot.utils.HeadingCalculator;
 
 /**
- * Drive the robot forward command.
+ * This command utilizes the navX function of getDisplacementX() and getDisplacementY() to
+ * drive the robot forward. It does not work seeing as the two function of the navX are HIGHLY
+ * experimental. Use at your own risk.
  * 
  * @author Amanda
  */
-public class DriveForward extends Command {
+public class NavXDrive extends Command {
 	private double desDistance, curHeading, pastHeading;
 	private double startX, startY;
 	private double deltaX, deltaY, deltaDis;
@@ -30,7 +32,7 @@ public class DriveForward extends Command {
 	 * 
 	 * @param desDistance The distance for the robot to travel.
 	 */
-	public DriveForward(double desDistance) {
+	public NavXDrive(double desDistance) {
 		this.desDistance = desDistance;
 		distanceLeftToDrive = desDistance;
 		
@@ -40,7 +42,7 @@ public class DriveForward extends Command {
 		requires(Robot.myRobot);
 	}
 
-	public DriveForward(double desDistance, HeadingProvider headingProvider, TankDrive tankDrive) {
+	public NavXDrive(double desDistance, HeadingProvider headingProvider, TankDrive tankDrive) {
 		this.desDistance = desDistance;
 
 		distanceLeftToDrive = desDistance;
@@ -92,7 +94,7 @@ public class DriveForward extends Command {
 		} else;
 
 
-		robot.tankAuto(leftval, rightval);
+		robot.automatedDrive(leftval, rightval);
 		pastX = gyro.getDisplacementX();
 		pastY = gyro.getDisplacementY();
 	}

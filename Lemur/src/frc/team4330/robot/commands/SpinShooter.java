@@ -3,11 +3,16 @@ package frc.team4330.robot.commands;
 import edu.wpi.first.wpilibj.command.Command;
 import frc.team4330.robot.Robot;
 
+/**
+ * A command that runs the shooter (independent of the feeder.)
+ * 
+ * @author Amanda
+ */
 public class SpinShooter extends Command {
 
 	@Override
 	protected void initialize() {
-		requires(Robot.bambam);
+//		requires(Robot.bambam);
 	}
 	
 	@Override

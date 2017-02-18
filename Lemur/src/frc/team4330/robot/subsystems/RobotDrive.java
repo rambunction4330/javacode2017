@@ -4,8 +4,8 @@ import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import frc.team4330.robot.RobotMap;
 import frc.team4330.robot.utils.Registrar;
-import frc.team4330.robot.utils.RobotMap;
 
 /**
  * RobotDrive drives the robot!!!
@@ -62,9 +62,9 @@ public class RobotDrive extends Subsystem {
 		reverseDrive(button);
 		
 		if (reverse) {
-			tankAuto(right.getY() * RobotMap.FAST_SPEED, left.getY() * RobotMap.FAST_SPEED);
+			automatedDrive(right.getY() * RobotMap.FAST_SPEED, left.getY() * RobotMap.FAST_SPEED);
 		} else {
-			tankAuto(-left.getY() * RobotMap.FAST_SPEED, -right.getY() * RobotMap.FAST_SPEED);
+			automatedDrive(-left.getY() * RobotMap.FAST_SPEED, -right.getY() * RobotMap.FAST_SPEED);
 			// negative because joysticks.
 		}
 	}
@@ -86,7 +86,7 @@ public class RobotDrive extends Subsystem {
 			rightval -= inc;
 		else rightval = 0;
 		
-		tankAuto(leftval, rightval);
+		automatedDrive(leftval, rightval);
 	}
 
 	// TODO Uncomment for testing only.
@@ -109,7 +109,7 @@ public class RobotDrive extends Subsystem {
 	 * @param leftv the speed of the left wheels.
 	 * @param rightv the speed of the right wheels.
 	 */
-	public void tankAuto(double leftv, double rightv) {
+	public void automatedDrive(double leftv, double rightv) {
 		if (leftv > 1 || rightv > 1 || leftv < -1 || rightv < -1) {
 			System.out.println("Check speed values.");
 		} else {
@@ -124,7 +124,7 @@ public class RobotDrive extends Subsystem {
 	 * Stops the wheels.
 	 */
 	public void stop() {
-		tankAuto(0, 0);
+		automatedDrive(0, 0);
 	}
 	
 	public void resetEncoders() {

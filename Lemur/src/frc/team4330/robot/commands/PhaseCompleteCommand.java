@@ -4,6 +4,11 @@ import edu.wpi.first.wpilibj.command.Command;
 import frc.team4330.robot.Robot;
 import frc.team4330.robot.utils.AutonomousPhase;
 
+/**
+ * Call to complete a phase in autonomous.
+ * 
+ * @author Randy
+ */
 public class PhaseCompleteCommand extends Command {
 	
 	private AutonomousPhase phase;

@@ -25,11 +25,11 @@ public class GyroTurn extends Command {
 	 * 
 	 * @param headingChange The change in heading. Negative means to the right.
 	 */
-	public GyroTurn( double heading, boolean absolute ) {
+	public GyroTurn( double heading, boolean useVision ) {
 		curHeading = Robot.gyro.getAngle();
-
-		if (absolute) this.desHeading = heading;
-		else this.desHeading = curHeading + heading;
+		
+		if (useVision) this.desHeading = curHeading + Robot.vision.getLiftAngle();
+		else desHeading = heading;
 
 		//		change = HeadingCalculator.calculateCourseChange(curHeading, desHeading);
 
@@ -67,15 +67,14 @@ public class GyroTurn extends Command {
 
 	@Override
 	public void execute() {
-		if (!test) {
-			curHeading = Robot.gyro.getAngle();
-			change = HeadingCalculator.calculateCourseChange(curHeading, desHeading);
-		} else curHeading = headingProvider.getAngle();
+		curHeading = Robot.gyro.getAngle();
+		System.out.println("current heading: " + curHeading);
+		change = HeadingCalculator.calculateCourseChange(curHeading, desHeading);
+		System.out.println("change: " + change);
 
-		
 		if (change > 0) { // means we need to turn right
 			if (change < 10) {
-				Robot.myRobot.automatedDrive(RobotMap.SLOW_SPEED/2, -RobotMap.SLOW_SPEED/2);
+				Robot.myRobot.automatedDrive(RobotMap.SLOW_SPEED, -RobotMap.SLOW_SPEED);
 			} else {
 				if (test) tankDrive.setSpeed(RobotMap.TEST_SPEED, -RobotMap.TEST_SPEED);
 				else Robot.myRobot.automatedDrive(RobotMap.SLOW_SPEED, -RobotMap.SLOW_SPEED);
@@ -88,11 +87,16 @@ public class GyroTurn extends Command {
 				else Robot.myRobot.automatedDrive(-RobotMap.SLOW_SPEED, RobotMap.SLOW_SPEED);
 			}
 		}
+		
+		curHeading = Robot.gyro.getAngle();
+		System.out.println("current heading: " + curHeading);
+		change = HeadingCalculator.calculateCourseChange(curHeading, desHeading);
+		System.out.println("change: " + change);
 	}
 
 	@Override
 	protected boolean isFinished() {
-		return (Math.abs(change) <= 1);
+		return (Math.abs(change) <= 2);
 	}
 
 	@Override

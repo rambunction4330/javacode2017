@@ -21,7 +21,7 @@ public class VisionComms {
 	
 	public static final int CONNECTION_TIMEOUT_SEC = 10;
 	// TODO maybe needs .local ?
-	public static final String DEFAULT_VISION_BOARD_HOST = "tegra-ubuntu";
+	public static final String DEFAULT_VISION_BOARD_HOST = "tegra-ubuntu.local";
 	public static final int DEFAULT_VISION_BOARD_PORT = 9001;
 	
 	// TODO update after know the mDNS name of the vision processing host
@@ -32,7 +32,7 @@ public class VisionComms {
 	private InputStream is;
 	private OutputStream os;
 	private boolean active = false;
-	private static final byte[] GET_DATA_COMMAND = "MOTORS\n".getBytes();
+	private static final byte[] GET_DATA_COMMAND = "DATA\n".getBytes();
 	private static final byte[] STOP_COMMAND = "STOP\n".getBytes();
 	
 	public static final String KEY_RELATIVE_BEARING = "rb";
@@ -76,6 +76,9 @@ public class VisionComms {
 					is = socket.getInputStream();
 					os = socket.getOutputStream();
 					active = true;
+					os.write(GET_DATA_COMMAND);
+					os.flush();
+					
 					System.out.println("Successfully connected to Jetson");
 				} catch ( Exception e ) {
 					System.err.println("Error connecting to Jetson on startup. " + e.getMessage());
@@ -94,45 +97,67 @@ public class VisionComms {
 		active = false;
 		
 		if ( os != null ) {
-			os.write(STOP_COMMAND);
-			os.flush();
-			os.close();
+			try {
+				os.write(STOP_COMMAND);
+				os.flush();
+				os.close();
+			} catch(Exception e) {
+				//				e.printStackTrace();
+			} finally {
+				os = null;
+			}
 		}
 		if ( is != null ) {
-			is.close();
+			try {
+				is.close();
+			}catch (Exception e) {
+
+			}finally {
+				is = null;
+			}
 		}
 		if ( socket != null ) {
+			try {
 			socket.close();
+			} catch (Exception e) {
+				
+			} finally {
 			socket = null;
+			}
 		}
 		System.out.println("Successfully disconnected from Jetson.");
 	}
 
 	public synchronized Map<String, Double> retrieveData() {
 		if ( !active ) {
+			System.out.println("Vision is not active.");
 			// the client may still be trying to connect
 			return new HashMap<String,Double>();
 		}
 		try {
 			return getMessages(os, is);
 		} catch ( Exception e ) {
+//			e.printStackTrace();
 			System.err.println("Error getting messages from the Jetson. " + e.getMessage());
 			return new HashMap<String, Double>();
 		}
 	}
 	
-	static protected Map<String, Double> getMessages(OutputStream outputStream, InputStream inputStream) throws IOException {
+	static protected Map<String, Double> getMessages(OutputStream os, InputStream is) throws IOException {
+		if (os == null || is == null)
+			return new HashMap<String,Double>();
+		
 		// send a request to server for data
-		outputStream.write(GET_DATA_COMMAND);
-		outputStream.flush();
+		os.write("DATA\n".getBytes());
+		os.flush();
 
 		// read the response from the server
 		ByteArrayOutputStream binaryData = new ByteArrayOutputStream();
 		int lastChar = Integer.MIN_VALUE;
 		int endLine = '\n';
 		while (true) {
-			int thisChar = inputStream.read();
-			if (thisChar == endLine && (lastChar == endLine || lastChar == Integer.MIN_VALUE) ) {
+			int thisChar = is.read();
+			if (thisChar == -1 || (thisChar == endLine && (lastChar == endLine || lastChar == Integer.MIN_VALUE) )) {
 				break;
 			}
 			binaryData.write(thisChar);
@@ -141,6 +166,7 @@ public class VisionComms {
 
 		// had no data
 		if ( binaryData.size() == 0 ) {
+			System.out.println("Vision has no data.");
 			return new HashMap<String,Double>();
 		}
 		
@@ -152,6 +178,7 @@ public class VisionComms {
 		LineNumberReader reader = new LineNumberReader(new StringReader(data));
 		String line = null;
 		while ((line = reader.readLine()) != null) {
+//			System.out.println("Vision has read line " + line);
 			int index = line.indexOf("=");
 			if (index == -1) {
 				continue;

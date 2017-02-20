@@ -13,7 +13,6 @@ public class VisionSystem extends Subsystem {
 	private VisionComms visLift, visBoiler;
 	private Relay ledSwitch;
 
-	private boolean active = false;
 	
 	public VisionSystem() {
 		visLift = new VisionComms("tegra-ubuntu.local", 9001);
@@ -24,13 +23,10 @@ public class VisionSystem extends Subsystem {
 	}
 
 	public void startUp() {
-		try {
-			if (active) return;
-			
+		try {			
 			//			visBoiler.startUp();
 			visLift.startUp();
 			ledSwitch.set(Value.kForward);
-			active = true;
 		} catch(Exception e) {
 			System.out.println("********* Error Message *********" + "\n" + e.getMessage());
 		}
@@ -38,12 +34,10 @@ public class VisionSystem extends Subsystem {
 
 	public void shutDown() {
 		try {
-			if (!active) return;
 			
 			visLift.shutDown();
 //			visBoiler.shutDown();
 			ledSwitch.set(Value.kOff);
-			active = false;
 		} catch (Exception e) {
 			System.out.println("********* Error Message *********" + "\n" + e.getMessage());
 		}
@@ -63,6 +57,11 @@ public class VisionSystem extends Subsystem {
 			return values.get("rb");
 		}
 		return null;
+	}
+	
+	public Double getLiftAngleCentered() {
+		
+		return 4.;
 	}
 
 	public Map<String, Double> getBoilerData() {

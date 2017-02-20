@@ -153,6 +153,8 @@ public class LeddarDistanceSensor extends CanDevice {
 			recorder.close();
 		}
 		
+		LeddarJNI.FRCNetCommCANSessionMuxCloseLeddarDistanceSession();
+		
 	}
 	
 	public synchronized List<LeddarDistanceSensorData> getDistances() {

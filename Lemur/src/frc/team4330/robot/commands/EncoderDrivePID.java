@@ -16,7 +16,7 @@ import frc.team4330.robot.utils.HeadingCalculator;
  * 
  * @author Amanda
  */
-public class LeddarDrive extends Command {
+public class EncoderDrivePID extends Command {
 	private double curHeading, pastHeading;
 	public double val = 0;
 	public double basespeed = 0;
@@ -29,10 +29,7 @@ public class LeddarDrive extends Command {
 		
 		@Override
 		public double pidGet() {
-			if (Robot.getLeddarDistance(RobotMap.LEDDAR_SEGMENT) == null) return 0;
-			
-			val = RobotMap.DESIRED_DISTANCE_FROM_WALL - Robot.getLeddarDistance(RobotMap.LEDDAR_SEGMENT);
-			return val;
+			return Robot.myRobot.totalDistance() - startDis;
 		}
 		
 		@Override
@@ -68,29 +65,35 @@ public class LeddarDrive extends Command {
 	};
 	PIDController pid = new PIDController(.8, 0, 8, scr, out, .005);
 	
-	public LeddarDrive() {
-		System.out.println("Starting a new " + this.getName() + " command.");
-
+	private double desDistance;
+	private double startDis;
+	
+	/**
+	 * A command that can be used to drive forward for a designated distance.
+	 * 
+	 * @param desDistance The distance for the robot to travel.
+	 */
+	public EncoderDrivePID(double desDistance) {
+		this.desDistance = desDistance;
 //		requires(Robot.myRobot);
 	}
 	
 	@Override
 	protected void initialize() {
 		System.out.println("Initializing " + this.getName() + " command.");
+		startDis = Robot.myRobot.totalDistance();
 
 		pastHeading = Robot.gyro.getAngle();
 		pid.setOutputRange(-.4, .4);
-		pid.setSetpoint(0);
+		pid.setSetpoint(desDistance);
 		pid.enable();
 	}
 	
 	@Override
 	protected boolean isFinished() {
-		if (Robot.getLeddarDistance(RobotMap.LEDDAR_SEGMENT) != null) {
-			if (Robot.getLeddarDistance(RobotMap.LEDDAR_SEGMENT) <= RobotMap.DESIRED_DISTANCE_FROM_WALL + .02) {
+		if (Robot.myRobot.totalDistance() - startDis >= desDistance) {
 				System.out.println(this.getName() + " command is finished.");
 				return true;
-			} else return false;
 		} else return false;
 	}
 	

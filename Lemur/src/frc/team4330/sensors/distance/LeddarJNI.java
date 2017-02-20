@@ -8,5 +8,7 @@ public class LeddarJNI extends JNIWrapper {
 	
 	public static native void FRCNetCommCANSessionMuxReceiveLeddarDistanceMessages(
 		int messageID, int messageIDMask, ByteBuffer[] output);
+	
+	public static native void FRCNetCommCANSessionMuxCloseLeddarDistanceSession();
 
 }

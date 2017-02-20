@@ -5,42 +5,45 @@ import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.command.WaitCommand;
 import frc.team4330.robot.Robot;
+import frc.team4330.robot.RobotMap;
+import frc.team4330.robot.SmartDashboardSetup;
 import frc.team4330.robot.commands.EncoderDrive;
-import frc.team4330.robot.commands.NavXDrive;
-import frc.team4330.robot.commands.PhaseCompleteCommand;
 import frc.team4330.robot.commands.GyroTurn;
+import frc.team4330.robot.commands.PhaseCompleteCommand;
 import frc.team4330.robot.commands.ZeroPhaseCommand;
 import frc.team4330.robot.utils.AutonomousPhase;
 
 public class AutonomousManager extends Subsystem {
 
 	public AutonomousPhase phase = AutonomousPhase.one;
-//	private int position;
-
-	private VisionSystem vision;
+	private int position;
 
 	public void init() {
 		phase = AutonomousPhase.one;
-//		position = SmartDashboardSetup.getStart();
-
-		vision = Robot.vision;
+		position = SmartDashboardSetup.getStart();
 		
 		// This on start up because we want it to go once.
+		CommandGroup group = new CommandGroup();
 		Scheduler.getInstance().add(new ZeroPhaseCommand());
-//		switch(position) {
-//		case 1:
-//			Scheduler.getInstance().add(new LeftLift());
-//			break;
-//		case 2:
-//			Scheduler.getInstance().add(new RightLift());
-//			break;
-//		case 3:
-//			Scheduler.getInstance().add(new MiddleLift());
-//			break;
-//		default:
-//			System.out.println("No autonomous was selected.");
-//			break;
-//		}
+		switch(position) {
+		case SmartDashboardSetup.left:
+			group.addSequential(new EncoderDrive(RobotMap.WALL_TO_BASELINE));
+			group.addSequential(new WaitCommand(.5));
+			group.addSequential(new GyroTurn(RobotMap.TURN_ANGLE, false));
+			break;
+		case SmartDashboardSetup.right:
+			group.addSequential(new EncoderDrive( RobotMap.WALL_TO_BASELINE));
+			group.addSequential(new WaitCommand(.5));
+			group.addSequential(new GyroTurn(-RobotMap.TURN_ANGLE, false)); 
+			break;
+		case SmartDashboardSetup.middle:
+			group.addSequential(new EncoderDrive(RobotMap.WALL_TO_BASELINE 
+					- RobotMap.ROBOT_WIDTH - 1.1));
+			break;
+		}
+		group.addSequential(new WaitCommand(0.5));
+		group.addSequential(new PhaseCompleteCommand(AutonomousPhase.oneComplete));
+		Scheduler.getInstance().add(group);
 
 		Scheduler.getInstance().enable(); 
 	}
@@ -65,10 +68,10 @@ public class AutonomousManager extends Subsystem {
 
 	private void loadPhases() {
 		if (phase == AutonomousPhase.two) {
-			if (vision.getLiftAngle() != null) {
-				double visionTargetAngle = vision.getLiftAngle();
+			Double visionTargetAngle = Robot.vision.getLiftAngle();
+			if (visionTargetAngle != null) {
 				System.out.println("Vision reporting angle " + visionTargetAngle);
-				turnToAngle(visionTargetAngle);
+				turnToAngle();
 				System.out.println("Phase two loaded.");
 			} else {
 				System.out.println("Phase two skipped.");
@@ -88,12 +91,14 @@ public class AutonomousManager extends Subsystem {
 		} else;
 	}
 
-	private void turnToAngle(double angle) {
-		if (angle == 0) {
+	private void turnToAngle() {
+		if (Robot.vision.getLiftAngle() == 0) {
 			Scheduler.getInstance().add(new PhaseCompleteCommand(AutonomousPhase.twoComplete));
 		} else {
 			CommandGroup group = new CommandGroup();
-			group.addSequential(new GyroTurn(angle, false));
+			group.addSequential(new GyroTurn(0, true));
+			group.addSequential(new WaitCommand(0.5));
+			group.addSequential(new GyroTurn(0, true));
 			group.addSequential(new WaitCommand(0.5));
 			group.addSequential(new PhaseCompleteCommand(AutonomousPhase.twoComplete));
 			Scheduler.getInstance().add(group);
@@ -102,7 +107,7 @@ public class AutonomousManager extends Subsystem {
 
 	private void driveToLift(Double distance) {
 		CommandGroup group = new CommandGroup();
-		group.addSequential(new NavXDrive(distance));
+		group.addSequential(new EncoderDrive(distance));
 		group.addSequential(new WaitCommand(0.5));
 		group.addSequential(new PhaseCompleteCommand(AutonomousPhase.threeComplete));
 		Scheduler.getInstance().add(group);

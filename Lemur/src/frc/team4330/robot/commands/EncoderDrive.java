@@ -18,9 +18,6 @@ import frc.team4330.robot.utils.HeadingCalculator;
 public class EncoderDrive extends Command {
 	private double desDistance, curHeading, pastHeading;
 	private double startDis, deltaDis;
-	
-	private AHRS gyro;
-	private RobotDrive robot;
 
 	double distanceLeftToDrive = 0;
 
@@ -44,32 +41,30 @@ public class EncoderDrive extends Command {
 
 	@Override
 	protected void initialize() {
-		this.gyro = Robot.gyro;
-		robot = Robot.myRobot;
 
 	//	System.out.print("gyro start value: " + gyro.getDisplacementY()); 
 		pastHeading = HeadingCalculator.normalize(Robot.gyro.getAngle());
-		startDis = robot.totalDistance();
+		startDis = Robot.myRobot.totalDistance();
 	}
 
 
 	@Override
 	public void execute() {
 		//		System.out.println("" + distanceLeftToDrive);
-		curHeading = HeadingCalculator.normalize(gyro.getAngle());
+		curHeading = HeadingCalculator.normalize(Robot.gyro.getAngle());
 
 		double rightval = 0;
 		double leftval = 0;
 
-		deltaDis = robot.totalDistance() - startDis;
+		deltaDis = Robot.myRobot.totalDistance() - startDis;
 		distanceLeftToDrive = desDistance - deltaDis;
 
 		if (distanceLeftToDrive <= 1) {
-			rightval = RobotMap.SLOW_SPEED;
-			leftval = RobotMap.SLOW_SPEED;
+			rightval = RobotMap.SLOW_SPEED/2;
+			leftval = RobotMap.SLOW_SPEED/2;
 		} else {
-			rightval = RobotMap.FAST_SPEED;
-			leftval = RobotMap.FAST_SPEED;		
+			rightval = RobotMap.SLOW_SPEED;
+			leftval = RobotMap.SLOW_SPEED;		
 		}
 
 		final double chg = .1;
@@ -85,7 +80,7 @@ public class EncoderDrive extends Command {
 		} else;
 
 
-		robot.automatedDrive(leftval, rightval);
+		Robot.myRobot.automatedDrive(leftval, rightval);
 	}
 
 	@Override
@@ -96,7 +91,7 @@ public class EncoderDrive extends Command {
 	@Override
 	public void end() {
 		//System.out.print("gyro finished value: " + robot.totalDistance()); 
-		robot.stop();
+		Robot.myRobot.stop();
 	}
 
 	// TODO change back to protected?

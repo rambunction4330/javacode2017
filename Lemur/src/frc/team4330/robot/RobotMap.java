@@ -53,7 +53,7 @@ public class RobotMap {
 	public static double FEEDING_SPEED = Preferences.getInstance().getDouble("Feeding Speed", .8);
 	
 	// Robot Measurements (m)
-	public final static double ROBOT_WIDTH = 0.9017;
+	public final static double ROBOT_WIDTH = 0.9017; // w bumpers
 	public final static double DISTANCE_PER_PULSE = 0.00132994*1.55;
 
 	// Field Distances (m)
@@ -61,14 +61,15 @@ public class RobotMap {
 	public final static double ESTIMATE_DIST_TO_LIFT = .5;
 	public final static double ONE_FOOT = 0.3048;
 	public static double TEST_DRIVE_DISTANCE = Preferences.getInstance().getDouble("Test Drive Distance", 5);
-	public final static double DESIRED_DISTANCE_FROM_WALL = .2;
+	public final static double DESIRED_DISTANCE_FROM_WALL = .3; // TODO change back
+	public final static double BOILER_TO_CENTER_OF_ROBOT = 58.5;
 	
 	// Angles
 	public static double TURN_ANGLE = Preferences.getInstance().getInt("Turn Angle", 60);
 	public static double TEST_TURN_ANGLE = Preferences.getInstance().getInt("Test-Turn-Angle", 90);
 	
 	// stuff
-	public final static int LEDDAR_SEGMENT = 8;
+	public final static int LEDDAR_SEGMENT = 7;
 	
 	// Debugging
 	public static boolean RECORDING_LEDDAR_VALS = Preferences.getInstance().getBoolean("Leddar Recording", false);

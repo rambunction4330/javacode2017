@@ -10,7 +10,7 @@ import java.net.Socket;
 import frc.team4330.robot.Robot;
 
 public class ServerTest {
-
+	Thread thread;
 	//	public static void main(String[] args) throws IOException {
 	//		start();
 	//	}
@@ -19,7 +19,7 @@ public class ServerTest {
 		int portNumber=9003;
 		ServerSocket listener=new ServerSocket(portNumber);
 
-		Thread thread = new Thread() {
+		thread = new Thread() {
 			public void run() {
 				try {
 					while (Robot.serverOn) {
@@ -53,5 +53,10 @@ public class ServerTest {
 		};
 
 		thread.start();
+	}
+	
+	public void stop() throws IOException {
+		if (thread != null)
+			thread.interrupt();
 	}
 }

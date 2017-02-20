@@ -8,9 +8,9 @@ public class SmartDashboardSetup {
 
 	//Auto Stuff
 	static SendableChooser<Integer> positionChooser;
-	public static final int one = 1;
-	public static final int two = 2;
-	public static final int three = 3;
+	public static final int left = 1;
+	public static final int middle = 2;
+	public static final int right = 3;
 
 
 	public static void testDashboard() {
@@ -65,9 +65,9 @@ public class SmartDashboardSetup {
 
 	public static void allDashboards() {
 		positionChooser = new SendableChooser<Integer>();
-		positionChooser.addDefault("Left", one);
-		positionChooser.addObject("Middle", two);
-		positionChooser.addObject("Right", three);
+		positionChooser.addDefault("Left", left);
+		positionChooser.addObject("Middle", middle);
+		positionChooser.addObject("Right", right);
 		SmartDashboard.putData("Autonomous Position", positionChooser);		
 	}
 

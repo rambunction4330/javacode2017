@@ -25,23 +25,13 @@ public class SmartDashboardSetup {
 		System.out.println("********** BUTTONS FOR DRIVERS *********");
 		System.out.println("\nLEFT joystick controls :" + "\nPRESS "
 				+ RobotMap.REVERSE_BUTTON
-				+ "to reverse the drive direction." + "\nPRESS "
-				//				 + [button here]
-				+ "to [action]." + "\nPRESS "
-				//				 + [button here]
-				+ " to [action]." + "\n");
+				+ "to reverse the drive direction." + "\n");
 
-		System.out.println("RIGHT joystick controls : " + "\nPRESS "
-				//				+ [button here]
-				+ " to [action]." + "\nPRESS " 
-				//				+ [button here]
-				+ " to [action]." + "\nPRESS "
-				//				+ [button here] 
-				+ " to [action]." + "\n");
-
-		System.out.println("THIRD joystick controls : " + "\nPRESS "
+		System.out.println("\nTHIRD joystick controls : " + "\nPRESS "
 					+ RobotMap.FEED_POWER_BUTTON
-				+ " to turn on the feeder." + "\nPRESS " 
+				+ " to turn on the agitator." + "\nPRESS " 
+				+ RobotMap.FEED_POWER_OFF_BUTTON
+			+ " to turn off the agitator." + "\nPRESS " 
 					+ RobotMap.SHOOT_POWER_ON_BUTTON
 				+ " to turn on the shooter." + "\nPRESS "
 					+ RobotMap.SHOOT_POWER_OFF_BUTTON

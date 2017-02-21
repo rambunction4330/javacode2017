@@ -20,6 +20,9 @@ public class GyroTurn extends Command {
 	private TankDrive tankDrive;
 	private boolean test;
 
+	private boolean vision;
+	private double thing;
+	
 	/**
 	 * Turn Command for if you don't know the current or desired heading.
 	 * 
@@ -28,8 +31,9 @@ public class GyroTurn extends Command {
 	public GyroTurn( double heading, boolean useVision ) {
 		curHeading = Robot.gyro.getAngle();
 		
-		if (useVision) this.desHeading = curHeading + Robot.vision.getLiftAngle();
-		else desHeading = heading;
+		vision = useVision;
+		
+		thing = heading;
 
 		//		change = HeadingCalculator.calculateCourseChange(curHeading, desHeading);
 
@@ -62,15 +66,17 @@ public class GyroTurn extends Command {
 	protected void initialize() {
 		if (!test) curHeading = Robot.gyro.getAngle();
 		else curHeading = HeadingCalculator.normalize(headingProvider.getAngle());
+		
+
+		if (vision) this.desHeading = curHeading + Robot.vision.getLiftAngle();
+		else desHeading = thing;
 
 	}
 
 	@Override
 	public void execute() {
 		curHeading = Robot.gyro.getAngle();
-		System.out.println("current heading: " + curHeading);
 		change = HeadingCalculator.calculateCourseChange(curHeading, desHeading);
-		System.out.println("change: " + change);
 
 		if (change > 0) { // means we need to turn right
 			if (change < 10) {

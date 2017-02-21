@@ -10,14 +10,13 @@ import frc.team4330.robot.Robot;
  */
 public class StartAgitator extends Command {
 
-	@Override
-	protected void initialize() {
-//		requires(Robot.bambam);
+	public StartAgitator() {
+		requires(Robot.bamm);
 	}
 	
 	@Override
-	protected void execute() {
-		Robot.bambam.automatedFeeder();
+	protected void initialize() {
+		Robot.bamm.start();
 	}
 	
 	@Override
@@ -27,7 +26,7 @@ public class StartAgitator extends Command {
 	
 	@Override
 	protected void end() {
-		Robot.bambam.stopFeed();
+		Robot.bamm.stop();
 	}
 
 }

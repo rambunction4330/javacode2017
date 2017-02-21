@@ -25,9 +25,9 @@ public class RopeClimber extends Subsystem {
 	}
 	
 	public void testClimb(boolean slowSpd, boolean fastSpd, boolean backwards) {
-		if (slowSpd) set(RobotMap.REEL_SPEED);
+		if (backwards) set(-RobotMap.REEL_SPEED);
+		else if (slowSpd) set(RobotMap.REEL_SPEED);
 		else if (fastSpd) set(RobotMap.CLIMB_SPEED);
-		else if (backwards) set(-RobotMap.REEL_SPEED);
 		else stop();
 	}
 	

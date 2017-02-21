@@ -9,27 +9,24 @@ import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.SerialPort.Port;
 import edu.wpi.first.wpilibj.command.Scheduler;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team4330.robot.commandgroups.AutonomousCommand;
-import frc.team4330.robot.commands.LeddarDrive;
 import frc.team4330.robot.commands.VisionTurn;
 import frc.team4330.robot.server.ServerTest;
 import frc.team4330.robot.subsystems.AutonomousManager;
 import frc.team4330.robot.subsystems.RobotDrive;
 import frc.team4330.robot.subsystems.RopeClimber;
-import frc.team4330.robot.subsystems.Shooter;
+import frc.team4330.robot.subsystems.ShooterFeed;
+import frc.team4330.robot.subsystems.ShooterWheel;
 import frc.team4330.robot.subsystems.VisionSystem;
 import frc.team4330.sensors.distance.LeddarDistanceSensor;
 import frc.team4330.sensors.distance.LeddarDistanceSensorData;
 
 /**
  * WIP 2017 Code.
- *
- * TODO Work on servers w/ Jeffrey 
- * TODO look at example code for navx (on starting)
- * TODO test new visionturn command
+ * 
  */
 public class Robot extends IterativeRobot {
+	
 	//OI
 	public static OI oi;
 
@@ -37,7 +34,8 @@ public class Robot extends IterativeRobot {
 	public final static AutonomousManager steveBannon = new AutonomousManager();
 	public final static RobotDrive myRobot = new RobotDrive();
 	public final static RopeClimber tarzan = new RopeClimber();
-	public final static Shooter bambam = new Shooter();
+	public final static ShooterWheel bam = new ShooterWheel();
+	public final static ShooterFeed bamm = new ShooterFeed();
 	public final static VisionSystem vision = new VisionSystem();
 	
 	// Joysticks
@@ -55,12 +53,13 @@ public class Robot extends IterativeRobot {
 	
 	// Commands
 	AutonomousCommand autonomous;
+	
 
 	@Override
 	public void robotInit() {
 		SmartDashboardSetup.allDashboards();
 		
-//		oi = new OI();
+		oi = new OI();
 
 		serverOn = false;
 	}
@@ -71,39 +70,41 @@ public class Robot extends IterativeRobot {
 		SmartDashboardSetup.autonomousDashboard();
 
 		Scheduler.getInstance().removeAll();
-
 		gyro.reset();
 		myRobot.resetEncoders();
 		vision.startUp();
-		leddar.startUp();
-		leddar.setRecording(RobotMap.RECORDING_LEDDAR_VALS);
+//		leddar.startUp();
+//		leddar.setRecording(RobotMap.RECORDING_LEDDAR_VALS);
 
 		serverOn = true;
 		
-//		try {
-//			server.start();
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
+		try {
+			server.start();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		
+		// TODO Uncomment for single group auto.
 //		autonomous = new AutonomousCommand(SmartDashboardSetup.getStart());
-//		
-//		if (autonomous != null)
-//			Scheduler.getInstance().add(autonomous);
 		
-//		Scheduler.getInstance().add(new VisionTurn());
+		if (autonomous != null)
+			Scheduler.getInstance().add(autonomous);
 //		Scheduler.getInstance().enable();
 		
+		// TODO Uncomment for managed auto.
 		steveBannon.init();
 	}
 	
 
 	@Override
 	public void autonomousPeriodic() {
-		vision.getLiftAngle();
 //		System.out.println("leddar: " + getLeddarDistance(8));
+		
+		// TODO Uncomment if using single command auto.
 //		Scheduler.getInstance().run();
+		
+		// TODO Uncomment if using managed auto.
+		vision.getLiftAngle();
 		steveBannon.run();
 	}
 
@@ -112,38 +113,35 @@ public class Robot extends IterativeRobot {
 		SmartDashboardSetup.teleOpDashboard();
 		
 		vision.startUp();
-		leddar.startUp();
-		leddar.setRecording(RobotMap.RECORDING_LEDDAR_VALS);
+//		leddar.startUp();
+//		leddar.setRecording(RobotMap.RECORDING_LEDDAR_VALS);
 		
 		serverOn = true;
 		
-		try {
-			server.start();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		Scheduler.getInstance().enable();
 	}
 	
 	@Override
 	public void teleopPeriodic() {
 		System.out.println("vision: " + vision.getLiftAngle());
 //		System.out.println("leddar: " + leddar.getDistances().toString());
-//		Scheduler.getInstance().run();
+		
+		Scheduler.getInstance().run();
 		
 		myRobot.tankDrive(leftj, rightj,
 				leftj.getRawButton(RobotMap.REVERSE_BUTTON));
 
-		tarzan.testClimb(leftj.getRawButton(RobotMap.CLIMB_SLOW_SPEED_BUTTON), 
-				leftj.getRawButton(RobotMap.CLIMB_FAST_SPEED_BUTTON),
-				leftj.getRawButton(RobotMap.CLIMB_REVERSE_BUTTON));
+		tarzan.testClimb(buttonj.getRawButton(RobotMap.CLIMB_SLOW_SPEED_BUTTON), 
+				buttonj.getRawButton(RobotMap.CLIMB_FAST_SPEED_BUTTON),
+				buttonj.getRawButton(7));
 
-		bambam.manualShoot(rightj.getRawButton(RobotMap.SHOOT_POWER_OFF_BUTTON),
-				rightj.getRawButton(RobotMap.SHOOT_POWER_ON_BUTTON),
-				rightj.getRawButton(RobotMap.FEED_POWER_BUTTON),
-				rightj.getRawButton(RobotMap.FEED_POWER_OFF_BUTTON));
-	}
-
+		bam.teleShoot(buttonj.getRawButton(RobotMap.SHOOT_POWER_OFF_BUTTON),
+				buttonj.getRawButton(RobotMap.SHOOT_POWER_ON_BUTTON));
+		
+		bamm.teleShoot(buttonj.getRawButton(RobotMap.FEED_POWER_OFF_BUTTON),
+				buttonj.getRawButton(RobotMap.FEED_POWER_BUTTON));
+	}	
+	
 	@Override
 	public void testInit() {
 		vision.startUp();
@@ -158,11 +156,10 @@ public class Robot extends IterativeRobot {
 	}
 
 	@Override
-	public void disabledInit() {
+	public void disabledInit() {		
 		try {
 			server.stop();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -174,7 +171,8 @@ public class Robot extends IterativeRobot {
 		
 		leddar.shutDown();
 		vision.shutDown();
-		bambam.stop();
+		bam.stop();
+		bamm.stop();
 		tarzan.stop();
 		myRobot.stop();
 
@@ -199,7 +197,5 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void robotPeriodic() {
 		RobotMap.updateVals();
-		
-		
 	}
 }

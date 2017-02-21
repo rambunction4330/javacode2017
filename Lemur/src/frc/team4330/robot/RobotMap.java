@@ -1,7 +1,6 @@
 package frc.team4330.robot;
 
 import edu.wpi.first.wpilibj.Preferences;
-import frc.team4330.robot.utils.HeadingCalculator;
 
 public class RobotMap {
 
@@ -30,27 +29,26 @@ public class RobotMap {
 	public final static int SHOOT_JOYSTICK_PORT = 2;
 	
 	// Button Joystick Buttons
-	public static int CLIMB_SLOW_SPEED_BUTTON = Preferences.getInstance().getInt("Reel-In-Button", 11);
-	public static int CLIMB_FAST_SPEED_BUTTON = Preferences.getInstance().getInt("Climb-Up-Button", 12);
-	public static int CLIMB_REVERSE_BUTTON = Preferences.getInstance().getInt("Reverse-Climb-Button", 7);
-	
-	// Left Joystick Buttons
-	public static int REVERSE_BUTTON = Preferences.getInstance().getInt("Reverse-Button", 3);
-	
-	// Right Joystick Buttons
+	public static int CLIMB_SLOW_SPEED_BUTTON = Preferences.getInstance().getInt("Reel-In-Button", 2);
+	public static int CLIMB_FAST_SPEED_BUTTON = Preferences.getInstance().getInt("Climb-Up-Button", 1);
+//	public static int CLIMB_REVERSE_BUTTON = Preferences.getInstance().getInt("Reverse-Climb-Button", 7);
 	public static int FEED_POWER_BUTTON = Preferences.getInstance().getInt("Feeder-On-Button", 4);
 	public static int FEED_POWER_OFF_BUTTON = Preferences.getInstance().getInt("Feeder-Off-Button", 6);
 	public static int SHOOT_POWER_OFF_BUTTON = Preferences.getInstance().getInt("Shooter-Off-Button", 5);
 	public static int SHOOT_POWER_ON_BUTTON = Preferences.getInstance().getInt("Shooter-On-Button", 3);
+	
+	// Left Joystick Buttons
+	public static int REVERSE_BUTTON = Preferences.getInstance().getInt("Reverse-Button", 3);
+	
 
 	// Motor Speeds
-	public static double SLOW_SPEED = Preferences.getInstance().getDouble("Slow Speed", .5);
-	public static double FAST_SPEED = Preferences.getInstance().getDouble("Fast Speed", .8);
-	public static double TEST_SPEED = Preferences.getInstance().getDouble("Test Speed", .5);
-	public static double REEL_SPEED = Preferences.getInstance().getDouble("Reel Speed", .3);
-	public static double CLIMB_SPEED = Preferences.getInstance().getDouble("Climb Speed", .9);
-	public static double SHOOTING_SPEED = Preferences.getInstance().getDouble("Shooting Speed", .99);
-	public static double FEEDING_SPEED = Preferences.getInstance().getDouble("Feeding Speed", .8);
+	public final static double SLOW_SPEED = .5;
+	public final static double FAST_SPEED = .8;
+	public final static double TEST_SPEED = .5;
+	public final static double REEL_SPEED = .4;
+	public final static double CLIMB_SPEED = .9;
+	public final static double SHOOTING_SPEED =.99;
+	public final static double FEEDING_SPEED = .8;
 	
 	// Robot Measurements (m)
 	public final static double ROBOT_WIDTH = 0.9017; // w bumpers
@@ -65,7 +63,7 @@ public class RobotMap {
 	public final static double BOILER_TO_CENTER_OF_ROBOT = 58.5;
 	
 	// Angles
-	public static double TURN_ANGLE = Preferences.getInstance().getInt("Turn Angle", 60);
+	public final static double TURN_ANGLE = 60;
 	public static double TEST_TURN_ANGLE = Preferences.getInstance().getInt("Test-Turn-Angle", 90);
 	
 	// stuff
@@ -76,32 +74,20 @@ public class RobotMap {
 
 	public static void updateVals() {
 		// Button Joystick Buttons
-		CLIMB_SLOW_SPEED_BUTTON = Preferences.getInstance().getInt("Reel-In-Button", 11);
-		CLIMB_FAST_SPEED_BUTTON = Preferences.getInstance().getInt("Climb-Up-Button", 12);
-		CLIMB_REVERSE_BUTTON = Preferences.getInstance().getInt("Reverse-Climb-Button", 7);
-		
-		// Left Joystick Buttons
-		REVERSE_BUTTON = Preferences.getInstance().getInt("Reverse-Button", 3);
-		
-		// Right Joystick Buttons
+		CLIMB_SLOW_SPEED_BUTTON = Preferences.getInstance().getInt("Reel-In-Button", 2);
+		CLIMB_FAST_SPEED_BUTTON = Preferences.getInstance().getInt("Climb-Up-Button", 1);
 		FEED_POWER_BUTTON = Preferences.getInstance().getInt("Feeder-On-Button", 4);
 		FEED_POWER_OFF_BUTTON = Preferences.getInstance().getInt("Feeder-Off-Button", 6);
 		SHOOT_POWER_OFF_BUTTON = Preferences.getInstance().getInt("Shooter-Off-Button", 5);
 		SHOOT_POWER_ON_BUTTON = Preferences.getInstance().getInt("Shooter-On-Button", 3);
 		
-		// Motor Speeds
-		SLOW_SPEED = Preferences.getInstance().getDouble("Slow Speed", .5);
-		FAST_SPEED = Preferences.getInstance().getDouble("Fast Speed", .8);
-		TEST_SPEED = Preferences.getInstance().getDouble("Test Speed", .5);
-		REEL_SPEED = Preferences.getInstance().getDouble("Reel Speed", .3);
-		CLIMB_SPEED = Preferences.getInstance().getDouble("Climb Speed", .9);
-		SHOOTING_SPEED = Preferences.getInstance().getDouble("Shooting Speed", .99);
-		FEEDING_SPEED = Preferences.getInstance().getDouble("Feeding Speed", .8);
+		// Left Joystick Buttons
+		REVERSE_BUTTON = Preferences.getInstance().getInt("Reverse-Button", 3);
 		
+		// Field Measurements
 		TEST_DRIVE_DISTANCE = Preferences.getInstance().getDouble("Test Drive Distance", 5);
 	
 		// Angles
-		TURN_ANGLE = HeadingCalculator.normalize(Preferences.getInstance().getInt("Turn Angle", 60));
 		TEST_TURN_ANGLE = Preferences.getInstance().getInt("Turn-Angle", 90);
 		
 		// Debugging

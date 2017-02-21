@@ -10,14 +10,13 @@ import frc.team4330.robot.Robot;
  */
 public class SpinShooter extends Command {
 
-	@Override
-	protected void initialize() {
-//		requires(Robot.bambam);
+	public SpinShooter() {
+		requires(Robot.bam);
 	}
 	
 	@Override
-	protected void execute() {
-		Robot.bambam.automatedShooter();
+	protected void initialize() {
+		Robot.bam.start();
 	}
 	
 	@Override
@@ -27,6 +26,6 @@ public class SpinShooter extends Command {
 
 	@Override
 	protected void end() {
-		Robot.bambam.stopShooter();
+		Robot.bam.stop();
 	}
 }

@@ -13,10 +13,11 @@ public class VisionSystem extends Subsystem {
 	private VisionComms visLift, visBoiler;
 	private Relay ledSwitch;
 
-	
+	public final static String VISION_KEY = "rb";
+
 	public VisionSystem() {
-		visLift = new VisionComms("tegra-ubuntu.local", 9001);
-//		visBoiler = new VisionComms("tegra-ubuntu", 9002);
+		visLift = new VisionComms("10.43.30.103", 9001);
+		//		visBoiler = new VisionComms("tegra-ubuntu", 9002);
 
 		ledSwitch = new Relay(3, Direction.kForward);
 		ledSwitch.set(Value.kForward);
@@ -28,18 +29,18 @@ public class VisionSystem extends Subsystem {
 			visLift.startUp();
 			ledSwitch.set(Value.kForward);
 		} catch(Exception e) {
-			System.out.println("********* Error Message *********" + "\n" + e.getMessage());
+			e.printStackTrace();
 		}
 	}
 
 	public void shutDown() {
 		try {
-			
+
 			visLift.shutDown();
-//			visBoiler.shutDown();
+			//			visBoiler.shutDown();
 			ledSwitch.set(Value.kOff);
 		} catch (Exception e) {
-			System.out.println("********* Error Message *********" + "\n" + e.getMessage());
+			e.printStackTrace();
 		}
 	}
 
@@ -48,19 +49,20 @@ public class VisionSystem extends Subsystem {
 	}
 
 	public Double getBoilerAngle() {		
-		return visBoiler.retrieveData().get("rb");
+		return visBoiler.retrieveData().get(VISION_KEY);
 	}
 
 	public Double getLiftAngle() {
 		Map<String,Double> values = visLift.retrieveData();
-		if ( values.containsKey("rb")) {
-			return values.get("rb");
+		if ( values.containsKey(VISION_KEY)) {
+			return values.get(VISION_KEY);
 		}
+		System.out.println("No " + VISION_KEY + " messages.");
 		return null;
 	}
-	
+
 	public Double getLiftAngleCentered() {
-		
+
 		return 4.;
 	}
 

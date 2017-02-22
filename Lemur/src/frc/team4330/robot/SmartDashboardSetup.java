@@ -7,17 +7,23 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class SmartDashboardSetup {
 
 	//Auto Stuff
-	static SendableChooser<Integer> positionChooser;
-	public static final int left = 1;
-	public static final int middle = 2;
-	public static final int right = 3;
 
+
+	public static final Integer left = 1;
+	public static final Integer middle = 2;
+	public static final Integer right = 3;
+	static SendableChooser<Integer> positionChooser = new SendableChooser<Integer>();
+	static {
+		positionChooser.addDefault("Middle", middle);
+		positionChooser.addObject("Left", left);
+		positionChooser.addObject("Right", right);
+		SmartDashboard.putData("Autonomous Position", positionChooser);	
+	}
 
 	public static void testDashboard() {
 		System.out.println("\n*****************************************");
 		System.out.println("************ TEST INITIATED ************" + "\n");
 
-		allDashboards();
 	}
 
 	public static void teleOpDashboard() {
@@ -45,23 +51,13 @@ public class SmartDashboardSetup {
 				+ "\n");
 
 
-		allDashboards();
 	}
 
 	public static void autonomousDashboard() {
 
-		allDashboards();
-	}
-
-	public static void allDashboards() {
-		positionChooser = new SendableChooser<Integer>();
-		positionChooser.addDefault("Left", left);
-		positionChooser.addObject("Middle", middle);
-		positionChooser.addObject("Right", right);
-		SmartDashboard.putData("Autonomous Position", positionChooser);		
 	}
 
 	public static int getStart(){
-		return (int) positionChooser.getSelected();
+		return positionChooser.getSelected();
 	}
 }

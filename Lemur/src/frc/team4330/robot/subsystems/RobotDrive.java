@@ -141,18 +141,20 @@ public class RobotDrive extends Subsystem {
 	}
 	
 	public double totalDistance() {
-		double val1 = right.getDistance();
-		double val2 = left.getDistance();
+		double val1 = right.getDistance(), val2 = left.getDistance();
+		double vel1 = right.getRate(), vel2 = left.getRate();
 		
-		if (val1 < .0005 && val2 > .0005) {
-			return val2;
-		} else if (val2 < .0005 && val1 > .0005) {
-			return val1;
-		} else if (val1 > .0005 && val2 > .0005) {
-			return (val1 + val2) / 2;
-		} else {
-			return 0;
-		}
+		return (val1 + val2)/2;
+		
+//		if (vel1 < .001 && vel2 > .001) {
+//			return val2;
+//		} else if (v < .0005 && val1 > .0005) {
+//			return val1;
+//		} else if (val1 > .0005 && val2 > .0005) {
+//			return (val1 + val2) / 2;
+//		} else {
+//			return 0;
+//		}
 	}
 
 	@Override

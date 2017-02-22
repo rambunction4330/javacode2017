@@ -1,4 +1,4 @@
-package frc.team4330.sensors.vision;
+package frc.team4330.sensors.distance;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -14,17 +14,15 @@ import java.util.Map;
 /**
  * The vision board has a custom TCP/IP protocol to indicate where the target is located.
  * The client sends a "DATA\n" request to ask for target data.  The server will respond
- * with "key1=value\nkey2=value\n\n" where an empty line indicates the end of the response.
+ * with "seg=value\nseg=value\n" where an empty line indicates the end of the response.
  * If the server has no target data, it will respond with "\n" ( an empty line only ). 
  */
-public class VisionComms {
+public class LeddarComms {
 	
 	public static final int CONNECTION_TIMEOUT_SEC = 10;
-	// TODO maybe needs .local ?
 	public static final String DEFAULT_VISION_BOARD_HOST = "tegra-ubuntu.local";
-	public static final int DEFAULT_VISION_BOARD_PORT = 9001;
+	public static final int DEFAULT_VISION_BOARD_PORT = 9004;
 	
-	// TODO update after know the mDNS name of the vision processing host
 	private String host = DEFAULT_VISION_BOARD_HOST;
 	private int port = DEFAULT_VISION_BOARD_PORT;
 	
@@ -35,13 +33,10 @@ public class VisionComms {
 	private static final byte[] GET_DATA_COMMAND = "DATA\n".getBytes();
 	private static final byte[] STOP_COMMAND = "STOP\n".getBytes();
 	
-	public static final String KEY_RELATIVE_BEARING = "rb";
-	public static final String KEY_VERTICAL_ANGLE = "nya";
-	
 	/**
 	 * This constructor will use the default values for hostname and constructor
 	 */
-	public VisionComms() {
+	public LeddarComms() {
 		
 	}
 	
@@ -50,14 +45,14 @@ public class VisionComms {
 	 * @param host
 	 * @param port
 	 */
-	public VisionComms(String host, int port) {
+	public LeddarComms(String host, int port) {
 		this.host = host;
 		this.port = port;
 	}
 	
 	public synchronized void startUp() throws IOException {
 		
-		System.out.println("Opening connection to Jetson on " + host + ":" + port + 
+		System.out.println("Opening connection to Jetson (Leddar) on " + host + ":" + port + 
 				" with " + CONNECTION_TIMEOUT_SEC + " second timeout");
 		
 		socket = new Socket();
@@ -79,9 +74,9 @@ public class VisionComms {
 					os.write(GET_DATA_COMMAND);
 					os.flush();
 					
-					System.out.println("Successfully connected to Jetson");
+					System.out.println("Successfully connected to Jetson (Leddar).");
 				} catch ( Exception e ) {
-					System.err.println("Error connecting to Jetson on startup. " + e.getMessage());
+					System.err.println("Error connecting to Jetson (Leddar) on startup. " + e.getMessage());
 				}
 			}
 			
@@ -93,7 +88,7 @@ public class VisionComms {
 	}
 	
 	public synchronized void shutDown() throws IOException {
-		System.out.println("Disconnecting from Jetson.");
+		System.out.println("Disconnecting from Jetson (Leddar).");
 		active = false;
 		
 		if ( os != null ) {
@@ -128,24 +123,24 @@ public class VisionComms {
 		System.out.println("Successfully disconnected from Jetson.");
 	}
 
-	public synchronized Map<String, Double> retrieveData() {
+	public synchronized Map<Integer, Integer> retrieveData() {
 		if ( !active ) {
-			System.out.println("Vision is not active.");
+			System.out.println("Leddar is not active.");
 			// the client may still be trying to connect
-			return new HashMap<String,Double>();
+			return new HashMap<Integer,Integer>();
 		}
 		try {
 			return getMessages(os, is);
 		} catch ( Exception e ) {
 //			e.printStackTrace();
 			System.err.println("Error getting messages from the Jetson. " + e.getMessage());
-			return new HashMap<String, Double>();
+			return new HashMap<Integer,Integer>();
 		}
 	}
 	
-	static protected Map<String, Double> getMessages(OutputStream os, InputStream is) throws IOException {
+	static protected Map<Integer, Integer> getMessages(OutputStream os, InputStream is) throws IOException {
 		if (os == null || is == null)
-			return new HashMap<String,Double>();
+			return new HashMap<Integer,Integer>();
 		
 		// send a request to server for data
 		os.write("DATA\n".getBytes());
@@ -166,13 +161,13 @@ public class VisionComms {
 
 		// had no data
 		if ( binaryData.size() == 0 ) {
-//			System.out.println("Vision has no data.");
-			return new HashMap<String,Double>();
+			System.out.println("Leddar has no data.");
+			return new HashMap<Integer,Integer>();
 		}
 		
 		// get the data as a string
 		String data = binaryData.toString();
-		Map<String, Double> map = new HashMap<String, Double>();
+		Map<Integer,Integer> map = new HashMap<Integer,Integer>();
 
 		// parse the data into map
 		LineNumberReader reader = new LineNumberReader(new StringReader(data));
@@ -183,8 +178,8 @@ public class VisionComms {
 			if (index == -1) {
 				continue;
 			}
-			String key = line.substring(0, index);
-			Double value = Double.parseDouble(line.substring(index + 1));
+			Integer key = Integer.parseInt(line.substring(0, index));
+			Integer value = Integer.parseInt(line.substring(index + 1));
 			map.put(key, value);
 		}
 

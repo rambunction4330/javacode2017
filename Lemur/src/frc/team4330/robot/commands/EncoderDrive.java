@@ -60,14 +60,14 @@ public class EncoderDrive extends Command {
 		distanceLeftToDrive = desDistance - deltaDis;
 
 		if (distanceLeftToDrive <= 1) {
-			rightval = RobotMap.SLOW_SPEED/2;
-			leftval = RobotMap.SLOW_SPEED/2;
+			rightval = RobotMap.SLOW_SPEED;
+			leftval = RobotMap.SLOW_SPEED;
 		} else {
 			rightval = RobotMap.SLOW_SPEED;
 			leftval = RobotMap.SLOW_SPEED;		
 		}
 
-		final double chg = .1;
+		final double chg = .2;
 		final double thr = 2;
 		double courseChange = HeadingCalculator.calculateCourseChange(curHeading, pastHeading);
 

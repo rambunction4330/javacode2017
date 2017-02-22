@@ -15,7 +15,8 @@ import frc.team4330.robot.utils.HeadingCalculator;
  */
 public class GyroTurn extends Command {
 
-	private double curHeading, desHeading, change;
+	private double curHeading, change;
+	private Double desHeading;
 	private HeadingProvider headingProvider;
 	private TankDrive tankDrive;
 	private boolean test;
@@ -68,41 +69,44 @@ public class GyroTurn extends Command {
 		else curHeading = HeadingCalculator.normalize(headingProvider.getAngle());
 		
 
-		if (vision) this.desHeading = curHeading + Robot.vision.getLiftAngle();
+		if (vision && Robot.vision.getLiftAngle() != null) 
+			this.desHeading = curHeading + Robot.vision.getLiftAngle();
+		else if (vision)
+			desHeading = null;
 		else desHeading = thing;
 
 	}
 
 	@Override
 	public void execute() {
+		if (desHeading == null)
+			return;
+		
 		curHeading = Robot.gyro.getAngle();
 		change = HeadingCalculator.calculateCourseChange(curHeading, desHeading);
 
 		if (change > 0) { // means we need to turn right
 			if (change < 10) {
-				Robot.myRobot.automatedDrive(RobotMap.SLOW_SPEED, -RobotMap.SLOW_SPEED);
+				Robot.myRobot.automatedDrive(.37, -.37);
 			} else {
-				if (test) tankDrive.setSpeed(RobotMap.TEST_SPEED, -RobotMap.TEST_SPEED);
-				else Robot.myRobot.automatedDrive(RobotMap.SLOW_SPEED, -RobotMap.SLOW_SPEED);
+				Robot.myRobot.automatedDrive(.5, -.5);
 			}
 		} else { // need to turn left
 			if (change > -10) {
-				Robot.myRobot.automatedDrive(-RobotMap.SLOW_SPEED/2, RobotMap.SLOW_SPEED/2);
+				Robot.myRobot.automatedDrive(-.37, .37);
 			} else {
-				if (test) tankDrive.setSpeed(-RobotMap.TEST_SPEED, RobotMap.TEST_SPEED);
-				else Robot.myRobot.automatedDrive(-RobotMap.SLOW_SPEED, RobotMap.SLOW_SPEED);
+				Robot.myRobot.automatedDrive(-.5, .5);
 			}
 		}
 		
 		curHeading = Robot.gyro.getAngle();
-		System.out.println("current heading: " + curHeading);
 		change = HeadingCalculator.calculateCourseChange(curHeading, desHeading);
 		System.out.println("change: " + change);
 	}
 
 	@Override
 	protected boolean isFinished() {
-		return (Math.abs(change) <= 2);
+		return (Math.abs(change) <= 2) || desHeading == null;
 	}
 
 	@Override

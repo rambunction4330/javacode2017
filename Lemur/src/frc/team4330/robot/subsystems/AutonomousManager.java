@@ -10,38 +10,38 @@ import frc.team4330.robot.SmartDashboardSetup;
 import frc.team4330.robot.commands.EncoderDrive;
 import frc.team4330.robot.commands.GyroTurn;
 import frc.team4330.robot.commands.PhaseCompleteCommand;
+import frc.team4330.robot.commands.VisionTurnNoPID;
 import frc.team4330.robot.commands.ZeroPhaseCommand;
 import frc.team4330.robot.utils.AutonomousPhase;
 
 public class AutonomousManager extends Subsystem {
 
 	public AutonomousPhase phase = AutonomousPhase.one;
-	private int position;
+	private Integer position;
 
 	public void init() {
 		phase = AutonomousPhase.one;
-		position = SmartDashboardSetup.getStart();
+		position = SmartDashboardSetup.middle; // SmartDashboardSetup.getStart();
 		
 		// This on start up because we want it to go once.
 		CommandGroup group = new CommandGroup();
 		Scheduler.getInstance().add(new ZeroPhaseCommand());
-		switch(position) {
-		case SmartDashboardSetup.left:
+		if (position.equals(SmartDashboardSetup.left)) {
+			System.out.println("Going to the LEFT");
 			group.addSequential(new EncoderDrive(RobotMap.WALL_TO_BASELINE));
-			group.addSequential(new WaitCommand(.5));
+			group.addSequential(new WaitCommand(1));
 			group.addSequential(new GyroTurn(RobotMap.TURN_ANGLE, false));
-			break;
-		case SmartDashboardSetup.right:
-			group.addSequential(new EncoderDrive( RobotMap.WALL_TO_BASELINE));
-			group.addSequential(new WaitCommand(.5));
+		} else if (position.equals(SmartDashboardSetup.right)) {
+			System.out.println("Going to the RIGHT");
+			group.addSequential(new EncoderDrive(1.8));
+			group.addSequential(new WaitCommand(1));
 			group.addSequential(new GyroTurn(-RobotMap.TURN_ANGLE, false)); 
-			break;
-		case SmartDashboardSetup.middle:
+		} else {
+			System.out.println("Going to the MIDDLE");
 			group.addSequential(new EncoderDrive(RobotMap.WALL_TO_BASELINE 
-					- RobotMap.ROBOT_WIDTH - 1.1));
-			break;
+					- RobotMap.ROBOT_WIDTH - .9));
 		}
-		group.addSequential(new WaitCommand(0.5));
+		group.addSequential(new WaitCommand(1));
 		group.addSequential(new PhaseCompleteCommand(AutonomousPhase.oneComplete));
 		Scheduler.getInstance().add(group);
 
@@ -83,10 +83,10 @@ public class AutonomousManager extends Subsystem {
 			Double distance = Robot.getLeddarDistance(7);
 			if ( distance == null ) {
 				System.out.println("Leddar doesn't know distance");
-				driveToLift(0.5);
+				driveToLift(0.3);
 			} else {
 				System.out.println("Leddar says distance is " + distance);
-				driveToLift(distance);
+				driveToLift(distance - RobotMap.DESIRED_DISTANCE_FROM_WALL);
 			}
 		} else;
 	}
@@ -97,9 +97,9 @@ public class AutonomousManager extends Subsystem {
 		} else {
 			CommandGroup group = new CommandGroup();
 			group.addSequential(new GyroTurn(0, true));
-			group.addSequential(new WaitCommand(0.5));
+			group.addSequential(new WaitCommand(1));
 			group.addSequential(new GyroTurn(0, true));
-			group.addSequential(new WaitCommand(0.5));
+			group.addSequential(new WaitCommand(1));
 			group.addSequential(new PhaseCompleteCommand(AutonomousPhase.twoComplete));
 			Scheduler.getInstance().add(group);
 		}
@@ -108,7 +108,7 @@ public class AutonomousManager extends Subsystem {
 	private void driveToLift(Double distance) {
 		CommandGroup group = new CommandGroup();
 		group.addSequential(new EncoderDrive(distance));
-		group.addSequential(new WaitCommand(0.5));
+		group.addSequential(new WaitCommand(1));
 		group.addSequential(new PhaseCompleteCommand(AutonomousPhase.threeComplete));
 		Scheduler.getInstance().add(group);
 	}

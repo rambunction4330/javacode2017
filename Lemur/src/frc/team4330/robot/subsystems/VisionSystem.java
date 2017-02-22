@@ -55,9 +55,9 @@ public class VisionSystem extends Subsystem {
 	public Double getLiftAngle() {
 		Map<String,Double> values = visLift.retrieveData();
 		if ( values.containsKey(VISION_KEY)) {
-			return values.get(VISION_KEY);
+			return values.get(VISION_KEY) - 3;
 		}
-		System.out.println("No " + VISION_KEY + " messages.");
+//		System.out.println("No " + VISION_KEY + " messages.");
 		return null;
 	}
 

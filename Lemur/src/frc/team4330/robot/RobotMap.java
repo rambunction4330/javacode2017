@@ -40,9 +40,8 @@ public class RobotMap {
 	// Left Joystick Buttons
 	public static int REVERSE_BUTTON = Preferences.getInstance().getInt("Reverse-Button", 3);
 	
-
 	// Motor Speeds
-	public final static double SLOW_SPEED = .5;
+	public final static double SLOW_SPEED = .3;
 	public final static double FAST_SPEED = .8;
 	public final static double TEST_SPEED = .5;
 	public final static double REEL_SPEED = .4;
@@ -55,11 +54,11 @@ public class RobotMap {
 	public final static double DISTANCE_PER_PULSE = 0.00132994*1.55;
 
 	// Field Distances (m)
-	public final static double WALL_TO_BASELINE = 2.8448;
+	public final static double WALL_TO_BASELINE = 2.37;
 	public final static double ESTIMATE_DIST_TO_LIFT = .5;
 	public final static double ONE_FOOT = 0.3048;
 	public static double TEST_DRIVE_DISTANCE = Preferences.getInstance().getDouble("Test Drive Distance", 5);
-	public final static double DESIRED_DISTANCE_FROM_WALL = .3; // TODO change back
+	public final static double DESIRED_DISTANCE_FROM_WALL = .13; // TODO change back
 	public final static double BOILER_TO_CENTER_OF_ROBOT = 58.5;
 	
 	// Angles

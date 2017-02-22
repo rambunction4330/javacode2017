@@ -1,7 +1,7 @@
 package frc.team4330.robot;
 
 import java.io.IOException;
-import java.util.List;
+import java.util.Map;
 
 import com.kauailabs.navx.frc.AHRS;
 
@@ -18,11 +18,11 @@ import frc.team4330.robot.subsystems.RopeClimber;
 import frc.team4330.robot.subsystems.ShooterFeed;
 import frc.team4330.robot.subsystems.ShooterWheel;
 import frc.team4330.robot.subsystems.VisionSystem;
-import frc.team4330.sensors.distance.LeddarDistanceSensor;
-import frc.team4330.sensors.distance.LeddarDistanceSensorData;
+import frc.team4330.sensors.distance.LeddarComms;
 
 /**
- * WIP 2017 Code.
+ * 
+ * 2017 WORKING CODE!!!
  * 
  */
 public class Robot extends IterativeRobot {
@@ -44,9 +44,9 @@ public class Robot extends IterativeRobot {
 			buttonj = new Joystick(RobotMap.SHOOT_JOYSTICK_PORT);
 
 	// Components
-	public final static LeddarDistanceSensor leddar = new LeddarDistanceSensor();
+	public final static LeddarComms leddar = new LeddarComms();
 	public final static AHRS gyro = new AHRS(Port.kMXP);
-
+	
 	// Server
 	public static boolean serverOn;
 	ServerTest server = new ServerTest();
@@ -57,24 +57,27 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void robotInit() {
-		SmartDashboardSetup.allDashboards();
 		
-		oi = new OI();
-
+//		oi = new OI();
+		
 		serverOn = false;
 	}
 
 
 	@Override
 	public void autonomousInit() {		
-		SmartDashboardSetup.autonomousDashboard();
-
+//		SmartDashboardSetup.autonomousDashboard();
+		
 		Scheduler.getInstance().removeAll();
+		
 		gyro.reset();
 		myRobot.resetEncoders();
 		vision.startUp();
-//		leddar.startUp();
-//		leddar.setRecording(RobotMap.RECORDING_LEDDAR_VALS);
+		try {
+			leddar.startUp();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
 
 		serverOn = true;
 		
@@ -88,7 +91,7 @@ public class Robot extends IterativeRobot {
 //		autonomous = new AutonomousCommand(SmartDashboardSetup.getStart());
 		
 		if (autonomous != null)
-			Scheduler.getInstance().add(autonomous);
+			autonomous.start();
 //		Scheduler.getInstance().enable();
 		
 		// TODO Uncomment for managed auto.
@@ -103,7 +106,9 @@ public class Robot extends IterativeRobot {
 		// TODO Uncomment if using single command auto.
 //		Scheduler.getInstance().run();
 		
+		
 		// TODO Uncomment if using managed auto.
+		leddar.retrieveData();
 		vision.getLiftAngle();
 		steveBannon.run();
 	}
@@ -113,18 +118,22 @@ public class Robot extends IterativeRobot {
 		SmartDashboardSetup.teleOpDashboard();
 		
 		vision.startUp();
-//		leddar.startUp();
-//		leddar.setRecording(RobotMap.RECORDING_LEDDAR_VALS);
+		try {
+			leddar.startUp();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		
 		serverOn = true;
 		
-		Scheduler.getInstance().enable();
+//		Scheduler.getInstance().enable();
 	}
 	
 	@Override
 	public void teleopPeriodic() {
+		System.out.println("encoders: " + myRobot.getLeftDistance() + ", " + myRobot.getRightDistance());
 		System.out.println("vision: " + vision.getLiftAngle());
-//		System.out.println("leddar: " + leddar.getDistances().toString());
+		System.out.println("leddar: " + getLeddarDistance(8));
 		
 		Scheduler.getInstance().run();
 		
@@ -169,7 +178,11 @@ public class Robot extends IterativeRobot {
 		Scheduler.getInstance().removeAll();
 		Scheduler.getInstance().disable();
 		
-		leddar.shutDown();
+		try {
+			leddar.shutDown();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		vision.shutDown();
 		bam.stop();
 		bamm.stop();
@@ -186,11 +199,10 @@ public class Robot extends IterativeRobot {
 	 * @return distance for that segment or null (in meters.)
 	 */
 	public final static Double getLeddarDistance(int segment) {
-		List<LeddarDistanceSensorData> distances = leddar.getDistances();
-
-		if (distances.get(segment) != null) {
-			return distances.get(segment).getDistanceInCentimeters() / 100. - .18;
-		}
+		Map<Integer, Integer> distances = leddar.retrieveData();
+		
+		if ( distances.get(segment) != null)
+			return distances.get(segment)/ 100. - .18;
 		else return null;
 	}
 

@@ -10,7 +10,6 @@ import frc.team4330.robot.SmartDashboardSetup;
 import frc.team4330.robot.commands.EncoderDrive;
 import frc.team4330.robot.commands.GyroTurn;
 import frc.team4330.robot.commands.PhaseCompleteCommand;
-import frc.team4330.robot.commands.VisionTurnNoPID;
 import frc.team4330.robot.commands.ZeroPhaseCommand;
 import frc.team4330.robot.utils.AutonomousPhase;
 
@@ -21,14 +20,14 @@ public class AutonomousManager extends Subsystem {
 
 	public void init() {
 		phase = AutonomousPhase.one;
-		position = SmartDashboardSetup.middle; // SmartDashboardSetup.getStart();
+		position = SmartDashboardSetup.middle; // Preferences.getInstance().getString("auto position", "middle");
 		
 		// This on start up because we want it to go once.
 		CommandGroup group = new CommandGroup();
 		Scheduler.getInstance().add(new ZeroPhaseCommand());
 		if (position.equals(SmartDashboardSetup.left)) {
 			System.out.println("Going to the LEFT");
-			group.addSequential(new EncoderDrive(RobotMap.WALL_TO_BASELINE));
+			group.addSequential(new EncoderDrive(1.8));
 			group.addSequential(new WaitCommand(1));
 			group.addSequential(new GyroTurn(RobotMap.TURN_ANGLE, false));
 		} else if (position.equals(SmartDashboardSetup.right)) {

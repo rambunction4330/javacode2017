@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.SerialPort.Port;
 import edu.wpi.first.wpilibj.command.Scheduler;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team4330.robot.commandgroups.AutonomousCommand;
 import frc.team4330.robot.commands.VisionTurn;
 import frc.team4330.robot.server.ServerTest;
@@ -116,7 +117,7 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void teleopInit() {
 		SmartDashboardSetup.teleOpDashboard();
-		
+				
 		vision.startUp();
 		try {
 			leddar.startUp();
@@ -131,9 +132,13 @@ public class Robot extends IterativeRobot {
 	
 	@Override
 	public void teleopPeriodic() {
-		System.out.println("encoders: " + myRobot.getLeftDistance() + ", " + myRobot.getRightDistance());
-		System.out.println("vision: " + vision.getLiftAngle());
-		System.out.println("leddar: " + getLeddarDistance(8));
+//		System.out.println("encoders: " + myRobot.getLeftDistance() + ", " + myRobot.getRightDistance());
+//		System.out.println("vision: " + vision.getLiftAngle());
+//		System.out.println("leddar: " + getLeddarDistance(8));
+		
+		
+		SmartDashboard.putNumber("Leddar Distance", getLeddarDistance(8));
+		SmartDashboard.putNumber("Gyro Angle", vision.getLiftAngle());
 		
 		Scheduler.getInstance().run();
 		

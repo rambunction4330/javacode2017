@@ -28,5 +28,10 @@ public class StartAgitator extends Command {
 	protected void end() {
 		Robot.bamm.stop();
 	}
-
+	
+	@Override
+	protected void interrupted() {
+		System.out.println(this.getName() + "was interrupted!");
+		end();
+	}
 }

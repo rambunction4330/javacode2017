@@ -4,9 +4,7 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.command.WaitCommand;
 import frc.team4330.robot.RobotMap;
 import frc.team4330.robot.commands.EncoderDrive;
-import frc.team4330.robot.commands.LeddarDrive;
 import frc.team4330.robot.commands.GyroTurn;
-import frc.team4330.robot.commands.VisionTurn;
 import frc.team4330.robot.commands.ZeroPhaseCommand;
 
 /**
@@ -37,8 +35,6 @@ public class AutonomousCommand extends CommandGroup {
 		}
 		
 		addSequential(new WaitCommand(.5));
-		addSequential(new VisionTurn());
-		addSequential(new WaitCommand(.5));
-		addSequential(new LeddarDrive());
+		addSequential(new AutomatedLiftProcedure());
 	}
 }

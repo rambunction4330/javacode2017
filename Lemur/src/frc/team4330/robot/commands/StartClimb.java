@@ -25,4 +25,10 @@ public class StartClimb extends Command {
 	protected void end() {
 		Robot.tarzan.stop();
 	}
+	
+	@Override
+	protected void interrupted() {
+		System.out.println(this.getName() + "was interrupted!");
+		end();
+	}
 }

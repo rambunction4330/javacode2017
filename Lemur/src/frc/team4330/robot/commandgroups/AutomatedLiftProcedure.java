@@ -16,7 +16,7 @@ public class AutomatedLiftProcedure extends CommandGroup {
 		addSequential(new GyroTurn(0, true));
 		addSequential(new WaitCommand(0.5));
 		addSequential(new GyroTurn(0, true));
-		addSequential(new WaitCommand(.5));
+		addSequential(new WaitCommand(0.5));
 		addSequential(new LeddarDrive());
 	}
 }

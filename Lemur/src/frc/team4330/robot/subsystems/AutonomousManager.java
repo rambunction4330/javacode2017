@@ -6,7 +6,7 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.command.WaitCommand;
 import frc.team4330.robot.Robot;
 import frc.team4330.robot.RobotMap;
-import frc.team4330.robot.SmartDashboardSetup;
+import frc.team4330.robot.DashboardManager;
 import frc.team4330.robot.commands.EncoderDrive;
 import frc.team4330.robot.commands.GyroTurn;
 import frc.team4330.robot.commands.PhaseCompleteCommand;
@@ -20,17 +20,17 @@ public class AutonomousManager extends Subsystem {
 
 	public void init() {
 		phase = AutonomousPhase.one;
-		position = SmartDashboardSetup.middle; // Preferences.getInstance().getString("auto position", "middle");
+		position = DashboardManager.middle; // SmartDashboardSetup.getPosition();
 		
 		// This on start up because we want it to go once.
 		CommandGroup group = new CommandGroup();
 		Scheduler.getInstance().add(new ZeroPhaseCommand());
-		if (position.equals(SmartDashboardSetup.left)) {
+		if (position.equals(DashboardManager.left)) {
 			System.out.println("Going to the LEFT");
 			group.addSequential(new EncoderDrive(1.8));
 			group.addSequential(new WaitCommand(1));
 			group.addSequential(new GyroTurn(RobotMap.TURN_ANGLE, false));
-		} else if (position.equals(SmartDashboardSetup.right)) {
+		} else if (position.equals(DashboardManager.right)) {
 			System.out.println("Going to the RIGHT");
 			group.addSequential(new EncoderDrive(1.8));
 			group.addSequential(new WaitCommand(1));

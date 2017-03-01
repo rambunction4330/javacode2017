@@ -28,4 +28,10 @@ public class SpinShooter extends Command {
 	protected void end() {
 		Robot.bam.stop();
 	}
+	
+	@Override
+	protected void interrupted() {
+		System.out.println(this.getName() + "was interrupted!");
+		end();
+	}
 }

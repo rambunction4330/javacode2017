@@ -10,7 +10,8 @@ public class ServerProtocol {
 		if (requestSeg.equalsIgnoreCase("DATA"))
 			output = "[" + Robot.gyro.getVelocityX() + ", " 
 					+ Robot.gyro.getVelocityY() + ", " 
-					+ Robot.gyro.getAngle() + "]";
+					+ Robot.gyro.getAngle() + ", "
+					+ Robot.gyro.getRate() + "]";
 		else
 			output = null;
 

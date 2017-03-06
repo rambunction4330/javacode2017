@@ -125,7 +125,6 @@ public class LeddarComms {
 
 	public synchronized Map<Integer, Integer> retrieveData() {
 		if ( !active ) {
-			System.out.println("Leddar is not active.");
 			// the client may still be trying to connect
 			return new HashMap<Integer,Integer>();
 		}

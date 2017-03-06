@@ -1,0 +1,24 @@
+<xml version="1.0">
+<dashboard>
+	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.RobotPreferences">
+		<location x="64" y="326"/>
+	</static-widget>
+	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.MjpgStreamViewerImpl">
+		<location x="432" y="30"/>
+		<width>725</width>
+		<height>474</height>
+		<property name="MJPG Server URL" value="http://10.43.30.40/mjpg/1/video.mjpg"/>
+	</static-widget>
+	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.MjpgStreamViewerImpl">
+		<location x="1216" y="26"/>
+		<width>656</width>
+		<height>477</height>
+		<property name="MJPG Server URL" value="http://10.43.30.11/mjpg/1/video.mjpg"/>
+	</static-widget>
+	<widget field="Autonomous Position" type="String Chooser" class="edu.wpi.first.smartdashboard.gui.elements.Chooser">
+		<location x="75" y="60"/>
+	</widget>
+</dashboard>
+<live-window>
+</live-window>
+</xml>

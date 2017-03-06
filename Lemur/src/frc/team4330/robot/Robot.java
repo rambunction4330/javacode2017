@@ -98,6 +98,8 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void autonomousPeriodic() {
+		Scheduler.getInstance().disable();
+		
 		leddar.retrieveData();
 		vision.getLiftAngle();
 		
@@ -126,7 +128,7 @@ public class Robot extends IterativeRobot {
 		//		System.out.println("encoders: " + myRobot.getLeftDistance() + ", " + myRobot.getRightDistance());
 		//		System.out.println("vision: " + vision.getLiftAngle());
 		//		System.out.println("leddar: " + getLeddarDistance(8));
-
+		
 		if (getLeddarDistance(8) != null) SmartDashboard.putNumber("Leddar Distance", getLeddarDistance(8));
 		if (vision.getLiftAngle() != null) SmartDashboard.putNumber("Gyro Angle", vision.getLiftAngle());
 

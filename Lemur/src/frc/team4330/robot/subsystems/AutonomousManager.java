@@ -20,23 +20,23 @@ public class AutonomousManager extends Subsystem {
 
 	public void init() {
 		phase = AutonomousPhase.one;
-		position = DashboardManager.middle; // SmartDashboardSetup.getPosition();
+		position = DashboardManager.getStart();
 		
 		// This on start up because we want it to go once.
 		CommandGroup group = new CommandGroup();
 		Scheduler.getInstance().add(new ZeroPhaseCommand());
 		if (position.equals(DashboardManager.left)) {
-			System.out.println("Going to the LEFT");
+			System.out.println("Going to the LEFT.");
 			group.addSequential(new EncoderDrive(1.8));
 			group.addSequential(new WaitCommand(1));
 			group.addSequential(new GyroTurn(RobotMap.TURN_ANGLE, false));
 		} else if (position.equals(DashboardManager.right)) {
-			System.out.println("Going to the RIGHT");
+			System.out.println("Going to the RIGHT.");
 			group.addSequential(new EncoderDrive(1.8));
 			group.addSequential(new WaitCommand(1));
 			group.addSequential(new GyroTurn(-RobotMap.TURN_ANGLE, false)); 
 		} else {
-			System.out.println("Going to the MIDDLE");
+			System.out.println("Going to the MIDDLE.");
 			group.addSequential(new EncoderDrive(RobotMap.WALL_TO_BASELINE 
 					- RobotMap.ROBOT_WIDTH - .9));
 		}

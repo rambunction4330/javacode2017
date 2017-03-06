@@ -130,7 +130,6 @@ public class VisionComms {
 
 	public synchronized Map<String, Double> retrieveData() {
 		if ( !active ) {
-			System.out.println("Vision is not active.");
 			// the client may still be trying to connect
 			return new HashMap<String,Double>();
 		}

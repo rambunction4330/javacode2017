@@ -12,7 +12,6 @@ import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team4330.robot.commandgroups.AutonomousCommand;
 import frc.team4330.robot.commands.VisionTurn;
-import frc.team4330.robot.server.ServerTest;
 import frc.team4330.robot.subsystems.AutonomousManager;
 import frc.team4330.robot.subsystems.RobotDrive;
 import frc.team4330.robot.subsystems.RopeClimber;
@@ -48,10 +47,6 @@ public class Robot extends IterativeRobot {
 	public final static LeddarComms leddar = new LeddarComms();
 	public final static AHRS gyro = new AHRS(Port.kMXP);
 
-	// Server
-	public static boolean serverOn;
-	ServerTest server = new ServerTest();
-
 	// Commands
 	AutonomousCommand autonomous;
 
@@ -60,7 +55,7 @@ public class Robot extends IterativeRobot {
 	public void robotInit() {		
 		oi = new OI();
 
-		serverOn = false;
+		DashboardManager.start();
 	}
 
 
@@ -77,14 +72,6 @@ public class Robot extends IterativeRobot {
 			e1.printStackTrace();
 		}
 
-		serverOn = true;
-
-		try {
-			server.start();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
 		if (DashboardManager.getMethod() == DashboardManager.autoCommands) 
 			autonomous = new AutonomousCommand(DashboardManager.getStart());
 		else steveBannon.init();
@@ -97,9 +84,7 @@ public class Robot extends IterativeRobot {
 
 
 	@Override
-	public void autonomousPeriodic() {
-		Scheduler.getInstance().disable();
-		
+	public void autonomousPeriodic() {		
 		leddar.retrieveData();
 		vision.getLiftAngle();
 		
@@ -113,12 +98,9 @@ public class Robot extends IterativeRobot {
 		vision.startUp();
 		try {
 			leddar.startUp();
-			server.start();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
-		serverOn = true;
 
 		Scheduler.getInstance().enable();
 	}
@@ -129,23 +111,15 @@ public class Robot extends IterativeRobot {
 		//		System.out.println("vision: " + vision.getLiftAngle());
 		//		System.out.println("leddar: " + getLeddarDistance(8));
 		
-		if (getLeddarDistance(8) != null) SmartDashboard.putNumber("Leddar Distance", getLeddarDistance(8));
-		if (vision.getLiftAngle() != null) SmartDashboard.putNumber("Gyro Angle", vision.getLiftAngle());
+		if (getLeddarDistance(7) != null) SmartDashboard.putNumber("Leddar Distance Seg 7", getLeddarDistance(7));
+		if (getLeddarDistance(8) != null) SmartDashboard.putNumber("Leddar Distance Seg 8", getLeddarDistance(8));
+		if (getLeddarDistance(9) != null) SmartDashboard.putNumber("Leddar Distance Seg 9", getLeddarDistance(9));
+//		if (vision.getLiftAngle() != null) SmartDashboard.putNumber("Gyro Angle", vision.getLiftAngle());
 
 		Scheduler.getInstance().run();
 
 		myRobot.tankDrive(leftj, rightj,
 				leftj.getRawButton(RobotMap.REVERSE_BUTTON));
-
-		tarzan.testClimb(buttonj.getRawButton(RobotMap.CLIMB_SLOW_SPEED_BUTTON), 
-				buttonj.getRawButton(RobotMap.CLIMB_FAST_SPEED_BUTTON),
-				buttonj.getRawButton(7));
-
-		bam.teleShoot(buttonj.getRawButton(RobotMap.SHOOT_POWER_OFF_BUTTON),
-				buttonj.getRawButton(RobotMap.SHOOT_POWER_ON_BUTTON));
-
-		bamm.teleShoot(buttonj.getRawButton(RobotMap.FEED_POWER_OFF_BUTTON),
-				buttonj.getRawButton(RobotMap.FEED_POWER_BUTTON));
 	}	
 
 	@Override
@@ -163,11 +137,6 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void disabledInit() {		
-		try {
-			server.stop();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 
 		if (autonomous != null)
 			autonomous.cancel();
@@ -186,7 +155,6 @@ public class Robot extends IterativeRobot {
 		tarzan.stop();
 		myRobot.stop();
 
-		serverOn = false;
 	}
 
 	/**

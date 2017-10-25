@@ -7,8 +7,6 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-import frc.team4330.robot.Robot;
-
 public class ServerTest {
 	Thread thread;
 	//	public static void main(String[] args) throws IOException {
@@ -22,7 +20,7 @@ public class ServerTest {
 		thread = new Thread() {
 			public void run() {
 				try {
-					while (Robot.serverOn) {
+					while (true) {
 						Socket socket=listener.accept();
 						System.out.println("server on");
 						try {

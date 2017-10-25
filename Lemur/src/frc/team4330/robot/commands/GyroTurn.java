@@ -2,7 +2,6 @@ package frc.team4330.robot.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
 import frc.team4330.robot.Robot;
-import frc.team4330.robot.RobotMap;
 import frc.team4330.robot.parts.HeadingProvider;
 import frc.team4330.robot.parts.TankDrive;
 import frc.team4330.robot.utils.HeadingCalculator;
@@ -101,7 +100,6 @@ public class GyroTurn extends Command {
 		
 		curHeading = Robot.gyro.getAngle();
 		change = HeadingCalculator.calculateCourseChange(curHeading, desHeading);
-		System.out.println("change: " + change);
 	}
 
 	@Override

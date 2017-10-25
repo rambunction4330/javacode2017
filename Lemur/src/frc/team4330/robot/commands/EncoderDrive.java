@@ -1,13 +1,10 @@
 package frc.team4330.robot.commands;
 
-import com.kauailabs.navx.frc.AHRS;
-
 import edu.wpi.first.wpilibj.command.Command;
 import frc.team4330.robot.Robot;
 import frc.team4330.robot.RobotMap;
 import frc.team4330.robot.parts.HeadingProvider;
 import frc.team4330.robot.parts.TankDrive;
-import frc.team4330.robot.subsystems.RobotDrive;
 import frc.team4330.robot.utils.HeadingCalculator;
 
 /**
@@ -59,11 +56,11 @@ public class EncoderDrive extends Command {
 		deltaDis = Robot.myRobot.totalDistance() - startDis;
 		distanceLeftToDrive = desDistance - deltaDis;
 
-		if (distanceLeftToDrive <= 1) {
-			rightval = RobotMap.SLOW_SPEED;
-			leftval = RobotMap.SLOW_SPEED;
+		if (distanceLeftToDrive <= .3) {
+			rightval = RobotMap.SLOW_SPEED - .2 + .02;
+			leftval = RobotMap.SLOW_SPEED - .2;
 		} else {
-			rightval = RobotMap.SLOW_SPEED;
+			rightval = RobotMap.SLOW_SPEED + .02;
 			leftval = RobotMap.SLOW_SPEED;		
 		}
 
@@ -90,7 +87,6 @@ public class EncoderDrive extends Command {
 
 	@Override
 	public void end() {
-		//System.out.print("gyro finished value: " + robot.totalDistance()); 
 		Robot.myRobot.stop();
 	}
 

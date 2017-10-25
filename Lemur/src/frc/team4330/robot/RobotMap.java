@@ -41,12 +41,12 @@ public class RobotMap {
 	public static int REVERSE_BUTTON = Preferences.getInstance().getInt("Reverse-Button", 3);
 	
 	// Motor Speeds
-	public final static double SLOW_SPEED = .3;
+	public final static double SLOW_SPEED = .5;
 	public final static double FAST_SPEED = .8;
 	public final static double TEST_SPEED = .5;
 	public final static double REEL_SPEED = .4;
-	public final static double CLIMB_SPEED = .9;
-	public final static double SHOOTING_SPEED =.99;
+	public final static double CLIMB_SPEED = .95;
+	public final static double SHOOTING_SPEED = .99;
 	public final static double FEEDING_SPEED = .8;
 	
 	// Robot Measurements (m)
@@ -55,18 +55,20 @@ public class RobotMap {
 
 	// Field Distances (m)
 	public final static double WALL_TO_BASELINE = 2.37;
+	public final static double INITIAL_LEFTRIGHT_DISTANCE = 2;
 	public final static double ESTIMATE_DIST_TO_LIFT = .5;
 	public final static double ONE_FOOT = 0.3048;
 	public static double TEST_DRIVE_DISTANCE = Preferences.getInstance().getDouble("Test Drive Distance", 5);
-	public final static double DESIRED_DISTANCE_FROM_WALL = .13; // TODO change back
+	public final static double DESIRED_DISTANCE_FROM_WALL = .08; // TODO change back
 	public final static double BOILER_TO_CENTER_OF_ROBOT = 58.5;
 	
 	// Angles
-	public final static double TURN_ANGLE = 60;
+	public final static double TURN_ANGLE = 45;
 	public static double TEST_TURN_ANGLE = Preferences.getInstance().getInt("Test-Turn-Angle", 90);
 	
 	// stuff
 	public final static int LEDDAR_SEGMENT = 7;
+	public final static double WAIT_TIMES = .5;
 	
 	// Debugging
 	public static boolean RECORDING_LEDDAR_VALS = Preferences.getInstance().getBoolean("Leddar Recording", false);

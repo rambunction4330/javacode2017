@@ -27,6 +27,11 @@ public class DashboardManager {
 		autoChooser.addObject("Use commands", autoCommands);
 		SmartDashboard.putData("Autonomous Method", autoChooser);
 	}
+	
+	public static void start() {
+		SmartDashboard.putData("Autonomous Position", positionChooser);	
+		SmartDashboard.putData("Autonomous Method", autoChooser);
+	}
 
 	public static String getMethod() {
 		return autoChooser.getSelected();

@@ -6,15 +6,14 @@ import frc.team4330.robot.RobotMap;
 
 public class StartClimb extends Command {
 
-	@Override
-	protected void initialize() {
+	public StartClimb() {
 		requires(Robot.tarzan);
 	}
-	
 	@Override
-	protected void execute() {
+	protected void initialize() {
 		Robot.tarzan.set(RobotMap.REEL_SPEED);
 	}
+	
 	
 	@Override
 	protected boolean isFinished() {

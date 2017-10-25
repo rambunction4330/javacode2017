@@ -4,15 +4,15 @@ import edu.wpi.first.wpilibj.command.Command;
 import frc.team4330.robot.Robot;
 import frc.team4330.robot.RobotMap;
 
-public class Climb extends Command {
+public class Reverse extends Command {
 
-	public Climb() {
+	public Reverse() {
 		requires(Robot.tarzan);
 	}
 	
 	@Override
 	protected void initialize() {
-		Robot.tarzan.set(RobotMap.CLIMB_SPEED);
+		Robot.tarzan.set(-.3);
 	}
 	
 	@Override

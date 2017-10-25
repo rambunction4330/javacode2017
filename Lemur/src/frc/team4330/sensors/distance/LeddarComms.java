@@ -20,7 +20,7 @@ import java.util.Map;
 public class LeddarComms {
 	
 	public static final int CONNECTION_TIMEOUT_SEC = 10;
-	public static final String DEFAULT_VISION_BOARD_HOST = "tegra-ubuntu.local";
+	public static final String DEFAULT_VISION_BOARD_HOST = "tegra-ubuntu";
 	public static final int DEFAULT_VISION_BOARD_PORT = 9004;
 	
 	private String host = DEFAULT_VISION_BOARD_HOST;

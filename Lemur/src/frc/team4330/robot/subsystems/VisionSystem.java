@@ -16,7 +16,7 @@ public class VisionSystem extends Subsystem {
 	public final static String VISION_KEY = "rb";
 
 	public VisionSystem() {
-		visLift = new VisionComms("10.43.30.103", 9001);
+		visLift = new VisionComms("tegra-ubuntu", 9001);
 		//		visBoiler = new VisionComms("tegra-ubuntu", 9002);
 
 		ledSwitch = new Relay(3, Direction.kForward);

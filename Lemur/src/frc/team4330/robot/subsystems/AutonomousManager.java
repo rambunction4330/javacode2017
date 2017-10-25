@@ -21,26 +21,26 @@ public class AutonomousManager extends Subsystem {
 	public void init() {
 		phase = AutonomousPhase.one;
 		position = DashboardManager.getStart();
+		double leftright_distance = 2;
 		
 		// This on start up because we want it to go once.
 		CommandGroup group = new CommandGroup();
 		Scheduler.getInstance().add(new ZeroPhaseCommand());
 		if (position.equals(DashboardManager.left)) {
 			System.out.println("Going to the LEFT.");
-			group.addSequential(new EncoderDrive(1.8));
-			group.addSequential(new WaitCommand(1));
+			group.addSequential(new EncoderDrive(leftright_distance));
+			group.addSequential(new WaitCommand(RobotMap.WAIT_TIMES));
 			group.addSequential(new GyroTurn(RobotMap.TURN_ANGLE, false));
 		} else if (position.equals(DashboardManager.right)) {
 			System.out.println("Going to the RIGHT.");
-			group.addSequential(new EncoderDrive(1.8));
-			group.addSequential(new WaitCommand(1));
+			group.addSequential(new EncoderDrive(leftright_distance));
+			group.addSequential(new WaitCommand(RobotMap.WAIT_TIMES));
 			group.addSequential(new GyroTurn(-RobotMap.TURN_ANGLE, false)); 
 		} else {
 			System.out.println("Going to the MIDDLE.");
-			group.addSequential(new EncoderDrive(RobotMap.WALL_TO_BASELINE 
-					- RobotMap.ROBOT_WIDTH - .9));
+			group.addSequential(new EncoderDrive(.6));
 		}
-		group.addSequential(new WaitCommand(1));
+		group.addSequential(new WaitCommand(RobotMap.WAIT_TIMES));
 		group.addSequential(new PhaseCompleteCommand(AutonomousPhase.oneComplete));
 		Scheduler.getInstance().add(group);
 
@@ -49,15 +49,15 @@ public class AutonomousManager extends Subsystem {
 
 	public void run() {
 		if (isPhaseOneFinished()) {
-			System.out.println("Phase one finished.");
+			System.out.println("Phase one FINISHED.");
 			phase = AutonomousPhase.two;
 			loadPhases();
 		} else if (isPhaseTwoFinished()) {
-			System.out.println("Phase two finished.");
+			System.out.println("Phase two FINISHED.");
 			phase = AutonomousPhase.three;
 			loadPhases();
 		} else if (isPhaseThreeFinished()) {
-			System.out.println("Phase three finished.");
+			System.out.println("Phase three FINISHED.");
 			phase = AutonomousPhase.done;
 			System.out.println("Autonomous is done");
 		} else;
@@ -71,18 +71,18 @@ public class AutonomousManager extends Subsystem {
 			if (visionTargetAngle != null) {
 				System.out.println("Vision reporting angle " + visionTargetAngle);
 				turnToAngle();
-				System.out.println("Phase two loaded.");
+				System.out.println("Phase two LOADED.");
 			} else {
-				System.out.println("Phase two skipped.");
+				System.out.println("Phase two SKIPPED.");
 				phase = AutonomousPhase.three;
 				loadPhases();
 			}
 		} else if (phase == AutonomousPhase.three) {
-			System.out.println("Phase three loaded.");
+			System.out.println("Phase three LOADED.");
 			Double distance = Robot.getLeddarDistance(7);
 			if ( distance == null ) {
-				System.out.println("Leddar doesn't know distance");
-				driveToLift(0.3);
+				System.out.println("Phase three SKIPPED");
+				driveToLift(1.36);
 			} else {
 				System.out.println("Leddar says distance is " + distance);
 				driveToLift(distance - RobotMap.DESIRED_DISTANCE_FROM_WALL);
@@ -96,9 +96,9 @@ public class AutonomousManager extends Subsystem {
 		} else {
 			CommandGroup group = new CommandGroup();
 			group.addSequential(new GyroTurn(0, true));
-			group.addSequential(new WaitCommand(1));
+			group.addSequential(new WaitCommand(RobotMap.WAIT_TIMES));
 			group.addSequential(new GyroTurn(0, true));
-			group.addSequential(new WaitCommand(1));
+			group.addSequential(new WaitCommand(RobotMap.WAIT_TIMES));
 			group.addSequential(new PhaseCompleteCommand(AutonomousPhase.twoComplete));
 			Scheduler.getInstance().add(group);
 		}
@@ -107,7 +107,7 @@ public class AutonomousManager extends Subsystem {
 	private void driveToLift(Double distance) {
 		CommandGroup group = new CommandGroup();
 		group.addSequential(new EncoderDrive(distance));
-		group.addSequential(new WaitCommand(1));
+		group.addSequential(new WaitCommand(RobotMap.WAIT_TIMES));
 		group.addSequential(new PhaseCompleteCommand(AutonomousPhase.threeComplete));
 		Scheduler.getInstance().add(group);
 	}

@@ -1,5 +1,8 @@
 <xml version="1.0">
 <dashboard>
+	<widget field="Autonomous Method" type="String Chooser" class="edu.wpi.first.smartdashboard.gui.elements.Chooser">
+		<location x="0" y="0"/>
+	</widget>
 	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.RobotPreferences">
 		<location x="64" y="326"/>
 	</static-widget>

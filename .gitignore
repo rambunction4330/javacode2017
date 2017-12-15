@@ -1,77 +1,58 @@
-# Directories #
-build/**
-bin/**
-target/**
-/**/.gitignore
-dist/**
-/**/build/**
-/**/dist/**
- 
-# FRC stuff
-sysProps.xml
-/**/sysProps.xml
- 
-# OS Files #
-.DS_Store
- 
+
+# Compiled source #
+###################
+*.com
 *.class
- 
-# Package Files #
-*.war
-*.ear
-*.db
- 
+*.dll
+*.exe
+*.o
+*.so
+
+# Intellij #
+############
+*.ipr
+*.iws
+*.iml
+
+# Folders #
+###########
+.gradle
+build
+.idea
+.pyc
+
+# Gradle #
+##########
+gradle-app.setting
+!gradle-wrapper.jar
+.gradletasknamecache
+
+
+# Packages #
+############
+# it's better to unpack these files and commit the raw source
+# git has its own built in compression methods
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+
+# Logs and databases #
 ######################
-# Windows
+*.log
+*.sql
+*.sqlite
+
+# OS generated files #
 ######################
- 
-# Windows image file caches
-Thumbs.db 
- 
-# Folder config file
-Desktop.ini
- 
-######################
-# OSX
-######################
- 
 .DS_Store
-.svn
- 
-# Thumbnails
+.DS_Store?
 ._*
- 
-# Files that might appear on external disk
 .Spotlight-V100
 .Trashes
- 
- 
-######################
-# Eclipse
-######################
- 
-*.pydevproject
-.metadata
-bin/**
-tmp/**
-tmp/**/*
-*.tmp
-*.bak
-*.swp
-*~.nib
-local.properties
-.settings/
-.loadpath
-/src/main/resources/rebel.xml
-# External tool builders
-.externalToolBuilders/
- 
-# Locally stored "Eclipse launch configurations"
-*.launch
- 
-# CDT-specific
-.cproject
- 
-# PDT-specific
-.buildpath
-
+ehthumbs.db
+Thumbs.db

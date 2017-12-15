@@ -19,6 +19,7 @@ import frc.team4330.robot.subsystems.ShooterFeed;
 import frc.team4330.robot.subsystems.ShooterWheel;
 import frc.team4330.robot.subsystems.VisionSystem;
 import frc.team4330.sensors.distance.LeddarComms;
+import edu.wpi.first.wpilibj.CameraServer;
 
 /**
  * 
@@ -54,7 +55,7 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void robotInit() {		
 		oi = new OI();
-
+        CameraServer.getInstance().startAutomaticCapture();
 		DashboardManager.start();
 	}
 
@@ -80,6 +81,7 @@ public class Robot extends IterativeRobot {
 			autonomous.start();
 			Scheduler.getInstance().enable();
 		}
+
 	}
 
 
